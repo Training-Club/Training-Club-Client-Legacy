@@ -290,6 +290,9 @@ dependencies {
     }
 }
 
+// Copies over React Native builds files at build time
+apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
+
 if (isNewArchitectureEnabled()) {
     // If new architecture is enabled, we let you build RN from source
     // Otherwise we fallback to a prebuilt .aar bundled in the NPM package.

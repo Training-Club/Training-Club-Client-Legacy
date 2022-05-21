@@ -8,9 +8,44 @@ export default function () {
 
     components: {
       Button: {
-        baseStyle: {
-          borderRadius: '12px',
-          py: 3,
+        variants: {
+          info: ({colorMode}: any) => {
+            return {
+              bgColor:
+                colorMode === 'dark' ? 'apple.blue.dark' : 'apple.blue.light',
+            };
+          },
+          basic: ({colorMode}: any) => {
+            return {
+              bgColor: colorMode === 'dark' ? 'white' : 'black',
+              _text: {
+                color: colorMode === 'dark' ? 'black' : 'white',
+                fontWeight: 'semibold',
+              },
+            };
+          },
+        },
+        baseStyle: ({colorMode}: any) => {
+          return {
+            _text: {
+              color: colorMode === 'dark' ? 'white' : 'black',
+              fontWeight: 'semibold',
+            },
+            size: 'lg',
+            py: 3,
+            borderRadius: '12px',
+          };
+        },
+      },
+
+      View: {
+        baseStyle: ({colorMode}: any) => {
+          return {
+            bgColor: colorMode === 'dark' ? 'black' : 'white',
+            width: '100%',
+            height: '100%',
+            pt: '32px',
+          };
         },
       },
     },

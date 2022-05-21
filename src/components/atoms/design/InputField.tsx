@@ -57,6 +57,7 @@ const InputField = ({
 
   return (
     <Input
+      testID={'input-field'}
       value={value}
       onChangeText={e => setValue(e)}
       bgColor={backgroundColor}

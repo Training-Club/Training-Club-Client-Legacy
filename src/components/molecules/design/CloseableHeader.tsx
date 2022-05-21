@@ -45,13 +45,14 @@ const CloseableHeader = ({
   );
 
   return (
-    <Box w={'100%'} mt={4}>
+    <Box testID={'closeable-header'} w={'100%'} mt={4}>
       <Heading size={'xl'} color={textColor ?? defaultTextColor}>
         {title}
       </Heading>
 
       {closeButton && (
         <IconButton
+          testID={'closeable-header-btn'}
           position={'absolute'}
           right={0}
           size={'sm'}

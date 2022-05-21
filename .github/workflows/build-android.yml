@@ -7,21 +7,18 @@ on:
     branches: [ main ]
 
 jobs:
-  install-and-test:
+  install-deps:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Install npm dependencies
+      - name: Install Node Dependencies
         run: |
           npm install
   build-android:
-    needs: install-and-test
+    needs: install-deps
     runs-on: ubuntu-latest
     steps: 
       - uses: actions/checkout@v2
-      - name: Install npm dependencies
-        run: |
-          npm install
       - name: Build Android Release
         run: |
-          cd android && ./gradlew clean build
+          cd android && ./gradlew assembleRelease

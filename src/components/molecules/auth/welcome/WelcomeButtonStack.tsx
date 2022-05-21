@@ -21,7 +21,12 @@ const WelcomeButtonStack = ({
   const logoColor = useColorModeValue('white', 'black');
 
   return (
-    <Box position={'absolute'} bottom={4} left={spacing} w={'100%'}>
+    <Box
+      testID={'welcome-btn-stack'}
+      position={'absolute'}
+      bottom={4}
+      left={spacing}
+      w={'100%'}>
       <VStack space={2}>
         <Button
           variant={'info'}

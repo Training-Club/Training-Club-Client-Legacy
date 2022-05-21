@@ -17,8 +17,19 @@ const WelcomeButtonStack = ({
   onPressCreateAccount,
 }: IWelcomeButtonStackProps): JSX.Element => {
   const os = Platform.OS;
+
   const textColor = useColorModeValue('black', 'white');
   const logoColor = useColorModeValue('white', 'black');
+
+  const createButtonPressedColor = useColorModeValue(
+    'apple.blue.dark',
+    'apple.blue.light',
+  );
+
+  const appleButtonPressedColor = useColorModeValue(
+    'apple.gray.800',
+    'apple.gray.300',
+  );
 
   return (
     <Box
@@ -32,6 +43,9 @@ const WelcomeButtonStack = ({
           variant={'info'}
           size={'lg'}
           onPress={() => onPressCreateAccount()}
+          _pressed={{
+            bgColor: createButtonPressedColor,
+          }}
           _text={{
             color: 'white',
             fontWeight: 'semibold',
@@ -44,6 +58,9 @@ const WelcomeButtonStack = ({
             variant={'basic'}
             size={'lg'}
             onPress={() => onPressContinueWithApple()}
+            _pressed={{
+              bgColor: appleButtonPressedColor,
+            }}
             _text={{
               color: 'white',
               fontWeight: 'semibold',
@@ -63,6 +80,9 @@ const WelcomeButtonStack = ({
         <Button
           variant={'ghost'}
           size={'lg'}
+          _pressed={{
+            bgColor: 'rgba(0,0,0,0.0)',
+          }}
           onPress={() => onPressContinueWithEmail()}
           _text={{color: textColor}}>
           Continue with Email

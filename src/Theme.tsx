@@ -13,6 +13,10 @@ export default function () {
             return {
               bgColor:
                 colorMode === 'dark' ? 'apple.blue.dark' : 'apple.blue.light',
+              _pressed: {
+                bgColor:
+                  colorMode === 'dark' ? 'apple.blue.light' : 'apple.blue.dark',
+              },
             };
           },
           basic: ({colorMode}: any) => {

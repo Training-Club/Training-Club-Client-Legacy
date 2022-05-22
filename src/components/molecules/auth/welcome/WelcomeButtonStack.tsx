@@ -62,7 +62,7 @@ const WelcomeButtonStack = ({
               bgColor: appleButtonPressedColor,
             }}
             _text={{
-              color: 'white',
+              color: logoColor,
               fontWeight: 'semibold',
             }}
             leftIcon={

@@ -1,10 +1,11 @@
 import React from 'react';
-import {Heading, View} from 'native-base';
+import {Button, Heading, useColorMode, View} from 'native-base';
 import WelcomeButtonStack from '../../molecules/auth/welcome/WelcomeButtonStack';
 import {useNavigation} from '@react-navigation/native';
 
 const WelcomeScreen = () => {
   const navigation = useNavigation();
+  const {colorMode, setColorMode} = useColorMode();
 
   const spacing = 4;
 
@@ -23,6 +24,11 @@ const WelcomeScreen = () => {
   return (
     <View px={spacing}>
       <Heading>Training Club</Heading>
+
+      <Button
+        onPress={() => setColorMode(colorMode === 'light' ? 'dark' : 'light')}>
+        Change color mode
+      </Button>
 
       <WelcomeButtonStack
         spacing={spacing}

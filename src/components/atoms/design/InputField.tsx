@@ -5,6 +5,10 @@ interface IInputFieldProps {
   value: string;
   setValue: (s: string) => void;
   options?: {
+    inputRightElement?: JSX.Element | JSX.Element[];
+    inputLeftElement?: JSX.Element | JSX.Element[];
+    type?: 'text' | 'password';
+    placeholder?: string;
     autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters' | undefined;
     autoComplete?:
       | 'birthdate-day'
@@ -61,9 +65,14 @@ const InputField = ({
       value={value}
       onChangeText={e => setValue(e)}
       bgColor={backgroundColor}
+      type={options?.type}
       autoCapitalize={options?.autoCapitalize}
       autoComplete={options?.autoComplete}
       size={'lg'}
+      InputLeftElement={options?.inputLeftElement}
+      InputRightElement={options?.inputRightElement}
+      rounded={'12px'}
+      placeholder={options?.placeholder}
     />
   );
 };

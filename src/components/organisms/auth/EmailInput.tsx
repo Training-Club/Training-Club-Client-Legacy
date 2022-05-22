@@ -7,44 +7,42 @@ import {
   Box,
   Button,
   Heading,
-  Text,
   View,
+  VStack,
   useColorModeValue,
-  FormControl,
 } from 'native-base';
 
-export interface IUsernameInputErrors {
+export interface IEmailInputErrors {
+  format: boolean;
   minLength: boolean;
   maxLength: boolean;
-  specialChars: boolean;
   available: boolean;
 }
 
-interface IUsernameInputProps {
+interface IEmailInputProps {
   value: string;
   setValue: (s: string) => void;
-  errors: IUsernameInputErrors;
+  errors: IEmailInputErrors;
   onSubmit: () => void;
+  onBack: () => void;
 }
 
-const UsernameInput = ({
+const EmailInput = ({
   value,
   setValue,
   errors,
   onSubmit,
-}: IUsernameInputProps): JSX.Element => {
+  onBack,
+}: IEmailInputProps): JSX.Element => {
   const textColor = useColorModeValue('black', 'white');
+  const backButtonTextColor = useColorModeValue('white', 'black');
 
   return (
     <View w={'100%'} h={'100%'}>
       <Box mt={-4} mb={4}>
         <Heading size={'md'} color={textColor}>
-          Username
+          Email
         </Heading>
-
-        <Text color={textColor} fontSize={'xs'}>
-          This is how other club members will see you.
-        </Text>
       </Box>
 
       <Box my={2}>
@@ -57,8 +55,8 @@ const UsernameInput = ({
             Max. length of 16 characters
           </InputRequirementItem>
 
-          <InputRequirementItem valid={errors.specialChars}>
-            No special characters (besides _, -, and .)
+          <InputRequirementItem valid={errors.format}>
+            Valid Email Address
           </InputRequirementItem>
 
           <InputRequirementItem valid={errors.available}>
@@ -67,40 +65,45 @@ const UsernameInput = ({
         </InputRequirement>
       </Box>
 
-      <FormControl
-        isInvalid={
-          value.length > 0 &&
-          (!errors.minLength ||
-            !errors.maxLength ||
-            !errors.specialChars ||
-            !errors.available)
-        }>
-        <InputField
-          value={value}
-          setValue={setValue}
-          options={{
-            autoCapitalize: 'none',
-            autoComplete: 'off',
-            placeholder: 'Enter a username',
-          }}
-        />
-      </FormControl>
+      <InputField
+        value={value}
+        setValue={setValue}
+        options={{
+          autoCapitalize: 'none',
+          autoComplete: 'email',
+          placeholder: 'example@email.com',
+        }}
+      />
 
       <Box position={'absolute'} bottom={20} w={'100%'}>
-        <Button
-          w={'100%'}
-          variant={'info'}
-          size={'lg'}
-          _text={{
-            color: 'white',
-            fontWeight: 'semibold',
-          }}
-          onPress={() => onSubmit()}>
-          Next
-        </Button>
+        <VStack space={2}>
+          <Button
+            w={'100%'}
+            variant={'info'}
+            size={'lg'}
+            _text={{
+              color: 'white',
+              fontWeight: 'semibold',
+            }}
+            onPress={() => onSubmit()}>
+            Next
+          </Button>
+
+          <Button
+            w={'100%'}
+            variant={'basic'}
+            size={'lg'}
+            _text={{
+              color: backButtonTextColor,
+              fontWeight: 'semibold',
+            }}
+            onPress={() => onBack()}>
+            Back
+          </Button>
+        </VStack>
       </Box>
     </View>
   );
 };
 
-export default React.memo(UsernameInput);
+export default React.memo(EmailInput);

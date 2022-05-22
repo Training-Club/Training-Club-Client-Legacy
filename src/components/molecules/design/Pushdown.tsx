@@ -83,7 +83,10 @@ const Pushdown = ({
           borderRadius={'12px'}
           p={3}
           shadow={'1'}>
-          <Heading color={textColor()}>{title}</Heading>
+          <Heading size={'sm'} color={textColor()}>
+            {title}
+          </Heading>
+
           <Text color={textColor()}>{body}</Text>
 
           <IconButton

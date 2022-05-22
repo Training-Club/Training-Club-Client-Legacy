@@ -1,8 +1,8 @@
 import React from 'react';
-import {Box, Button, Heading, Text, useColorModeValue, View} from 'native-base';
 import InputRequirement from '../../molecules/design/input/InputRequirement';
 import InputRequirementItem from '../../atoms/design/InputRequirementItem';
 import InputField from '../../atoms/design/InputField';
+import {Box, Button, Heading, Text, View, useColorModeValue} from 'native-base';
 
 export interface IUsernameInputErrors {
   minLength: boolean;
@@ -58,7 +58,11 @@ const UsernameInput = ({
         </InputRequirement>
       </Box>
 
-      <InputField value={value} setValue={setValue} />
+      <InputField
+        value={value}
+        setValue={setValue}
+        options={{autoCapitalize: 'none', autoComplete: 'off'}}
+      />
 
       <Box position={'absolute'} bottom={20} w={'100%'}>
         <Button

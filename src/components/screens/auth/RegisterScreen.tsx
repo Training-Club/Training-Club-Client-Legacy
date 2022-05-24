@@ -4,7 +4,7 @@ import CloseableHeader from '../../molecules/design/CloseableHeader';
 import {useDebounce} from 'use-debounce';
 import Animated, {FadeOut, SlideInRight} from 'react-native-reanimated';
 import EmailInput, {IEmailInputErrors} from '../../organisms/auth/EmailInput';
-import {usePushdownContext} from '../../../context/PushdownContext';
+import {usePushdownContext} from '../../../context/pushdown/PushdownContext';
 
 import UsernameInput, {
   IUsernameInputErrors,
@@ -92,7 +92,6 @@ const RegisterScreen = () => {
 
   async function submitUsernameSelection() {
     const result: UsernameValidatorResponse = await isValidUsername(username);
-    console.log(`valid ${result.valid}`);
 
     if (!result.valid) {
       setUsernameErrors(result.errors);

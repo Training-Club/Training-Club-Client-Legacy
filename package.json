@@ -10,6 +10,7 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.17.5",
     "@react-navigation/native": "6.0.10",
     "axios": "0.27.2",
     "nanoid": "3.3.4",
@@ -53,7 +54,9 @@
     "transformIgnorePatterns": [
       "node_modules/(?!(@react-native|react-native|react-native-vector-icons)/)"
     ],
-    "setupFiles": ["<rootDir>/jest-setup.js"],
+    "setupFiles": [
+      "<rootDir>/jest-setup.js"
+    ],
     "moduleFileExtensions": [
       "ts",
       "tsx",

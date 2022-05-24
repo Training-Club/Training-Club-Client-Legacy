@@ -5,6 +5,8 @@ import CloseableHeader from '../src/components/molecules/design/CloseableHeader'
 import {NavigationContainer} from '@react-navigation/native';
 import theme from '../src/Theme';
 import UsernameInput from '../src/components/organisms/auth/UsernameInput';
+import EmailInput from '../src/components/organisms/auth/EmailInput';
+import PasswordInput from '../src/components/organisms/auth/PasswordInput';
 
 describe('RegisterScreen ->', () => {
   const inset = {
@@ -64,5 +66,77 @@ describe('RegisterScreen ->', () => {
     expect(requirement).toBeTruthy();
     expect(inputField).toBeTruthy();
     expect(nextBtn).toBeTruthy();
+  });
+
+  it('should render email input content', () => {
+    const {getByText, getByTestId} = render(
+      <NativeBaseProvider initialWindowMetrics={inset} theme={theme()}>
+        <EmailInput
+          value={''}
+          setValue={jest.fn}
+          onSubmit={() => {}}
+          onBack={() => {}}
+          errors={{
+            format: true,
+            minLength: false,
+            maxLength: true,
+            available: false,
+          }}
+        />
+      </NativeBaseProvider>,
+    );
+
+    const heading = getByText('Email');
+    const minRequirement = getByText('Min. length of 3 characters');
+    const validRequirement = getByText('Valid Email Address');
+    const inputField = getByTestId('input-field');
+    const nextBtn = getByText('Next');
+    const backBtn = getByText('Back');
+
+    expect(heading).toBeTruthy();
+    expect(minRequirement).toBeTruthy();
+    expect(validRequirement).toBeTruthy();
+    expect(inputField).toBeTruthy();
+    expect(nextBtn).toBeTruthy();
+    expect(backBtn).toBeTruthy();
+  });
+
+  it('should render password input content', () => {
+    const {getByText, getByTestId} = render(
+      <NativeBaseProvider initialWindowMetrics={inset} theme={theme()}>
+        <PasswordInput
+          value={''}
+          confirmValue={''}
+          setValue={jest.fn}
+          setConfirmValue={jest.fn}
+          isVisible={false}
+          setVisible={jest.fn}
+          onSubmit={() => {}}
+          onBack={() => {}}
+          errors={{
+            match: true,
+            minLength: false,
+            maxLength: true,
+            specialChars: false,
+          }}
+        />
+      </NativeBaseProvider>,
+    );
+
+    const heading = getByTestId('password-heading');
+
+    const minRequirement = getByText('Min. length of 8 characters');
+    const validRequirement = getByText(
+      'Contains at least 1 digit and special character',
+    );
+
+    const createBtn = getByText('Create Account');
+    const backBtn = getByText('Back');
+
+    expect(heading).toBeTruthy();
+    expect(minRequirement).toBeTruthy();
+    expect(validRequirement).toBeTruthy();
+    expect(createBtn).toBeTruthy();
+    expect(backBtn).toBeTruthy();
   });
 });

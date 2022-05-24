@@ -1,6 +1,6 @@
 import React from 'react';
 import {PushdownContext, IPushdownConfig} from './PushdownContext';
-import Pushdown from '../components/molecules/design/Pushdown';
+import Pushdown from '../../components/molecules/design/Pushdown';
 import {Box} from 'native-base';
 
 export function PushdownContextProvider({children}: any) {
@@ -23,7 +23,6 @@ export function PushdownContextProvider({children}: any) {
   }, [pushdownConfig]);
 
   function handleClose() {
-    console.log('handleClose');
     setPushdownConfig({...pushdownConfig, show: false});
   }
 

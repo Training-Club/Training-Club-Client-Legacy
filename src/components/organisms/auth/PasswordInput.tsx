@@ -8,7 +8,8 @@ import {
   Box,
   Button,
   FormControl,
-  Heading, Icon,
+  Heading,
+  Icon,
   useColorModeValue,
   View,
   VStack,
@@ -63,7 +64,7 @@ const EmailInput = ({
   return (
     <View w={'100%'} h={'100%'}>
       <Box mt={-4} mb={4}>
-        <Heading size={'md'} color={textColor}>
+        <Heading testID={'password-heading'} size={'md'} color={textColor}>
           Password
         </Heading>
       </Box>

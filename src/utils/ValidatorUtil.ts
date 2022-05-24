@@ -82,7 +82,7 @@ export async function isValidEmail(
   let format = true;
   let available = true;
 
-  if (email.length < 2) {
+  if (email.length < 3) {
     minLength = false;
   }
 

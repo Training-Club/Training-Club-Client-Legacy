@@ -48,11 +48,11 @@ const EmailInput = ({
       <Box my={2}>
         <InputRequirement direction={'column'} space={2}>
           <InputRequirementItem valid={errors.minLength}>
-            Min. length of 2 characters
+            Min. length of 3 characters
           </InputRequirementItem>
 
           <InputRequirementItem valid={errors.maxLength}>
-            Max. length of 16 characters
+            Max. length of 64 characters
           </InputRequirementItem>
 
           <InputRequirementItem valid={errors.format}>

@@ -1,5 +1,6 @@
 import axios, {AxiosError} from 'axios';
 import {IAccount} from '../models/Account';
+import {LoginResponse} from './responses/Account';
 
 // TODO: Replace with api.trainingclubapp.com
 const url: string = 'http://144.126.218.29:8080/v1';
@@ -26,6 +27,37 @@ export async function attemptLoginWithToken(token: string): Promise<IAccount> {
       return resolve(result.data);
     } catch (err) {
       reject(new Error('account not found'));
+    }
+  });
+}
+
+/**
+ * Accepts a username, email and password and attempts to build a
+ * request to the services to create a new standard account
+ *
+ * @param {string} username Username
+ * @param {string} email Email Address
+ * @param {string} password Password
+ */
+export async function attemptStandardAccountCreate(
+  username: string,
+  email: string,
+  password: string,
+): Promise<LoginResponse> {
+  return new Promise<LoginResponse>(async (resolve, reject) => {
+    try {
+      const result = await axios.post<LoginResponse>(
+        `${url}/account/recipe/standard/`,
+        {
+          username: username,
+          email: email,
+          password: password,
+        },
+      );
+
+      resolve(result.data);
+    } catch (err) {
+      reject(err);
     }
   });
 }

@@ -2,9 +2,13 @@ import React from 'react';
 import {View} from 'native-base';
 import CloseableHeader from '../../molecules/design/CloseableHeader';
 import {useDebounce} from 'use-debounce';
-import Animated, {FadeOut, SlideInRight} from 'react-native-reanimated';
+import Animated, {FadeIn, FadeOut, SlideInRight} from 'react-native-reanimated';
 import EmailInput, {IEmailInputErrors} from '../../organisms/auth/EmailInput';
 import {usePushdownContext} from '../../../context/pushdown/PushdownContext';
+import LoadingIndicator from '../../molecules/design/LoadingIndicator';
+import {attemptStandardAccountCreate} from '../../../requests/Account';
+import {useAccountContext} from '../../../context/account/AccountContext';
+import {setToken} from '../../../data/Account';
 
 import UsernameInput, {
   IUsernameInputErrors,
@@ -30,11 +34,14 @@ export enum RegisterScreenState {
 }
 
 const RegisterScreen = () => {
+  const {setAccount} = useAccountContext();
   const {setPushdownConfig} = usePushdownContext();
 
   const [state, setState] = React.useState<RegisterScreenState>(
     RegisterScreenState.USERNAME,
   );
+
+  const [submitting, setSubmitting] = React.useState(false);
 
   const [username, setUsername] = React.useState<string>('');
   const [usernameDebounced] = useDebounce(username, 500);
@@ -150,7 +157,32 @@ const RegisterScreen = () => {
       return;
     }
 
-    // TODO: Complete registration process
+    setSubmitting(true);
+
+    attemptStandardAccountCreate(username, email, password)
+      .then(submitResult => {
+        setPushdownConfig({
+          status: 'success',
+          title: 'Welcome',
+          body: `We've sent a confirmation email to ${email}. In the meantime, welcome aboard!`,
+          duration: 5000,
+          show: true,
+        });
+
+        setAccount(submitResult.account);
+        setToken(submitResult.token);
+      })
+      .catch(err => {
+        setSubmitting(false);
+
+        setPushdownConfig({
+          status: 'error',
+          title: 'Something went wrong',
+          body: err.message,
+          duration: 5000,
+          show: true,
+        });
+      });
   }
 
   return (
@@ -162,6 +194,20 @@ const RegisterScreen = () => {
           screenName: 'Welcome',
         }}
       />
+
+      {submitting && (
+        <Animated.View
+          style={{
+            width: '100%',
+            height: '100%',
+            zIndex: 10,
+            position: 'absolute',
+          }}
+          entering={FadeIn.springify()}
+          exiting={FadeOut.springify()}>
+          <LoadingIndicator loadingText={'Creating Account...'} />
+        </Animated.View>
+      )}
 
       {state === RegisterScreenState.USERNAME && (
         <Animated.View entering={SlideInRight.delay(100)} exiting={FadeOut}>

@@ -8,6 +8,7 @@ export interface IAccount {
   profile?: IProfile;
   preferences?: IPreferences;
   personal?: IPersonalData;
+  type?: 'standard' | 'google' | 'apple';
 }
 
 export interface IProfile {

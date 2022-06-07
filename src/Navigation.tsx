@@ -4,14 +4,15 @@ import WelcomeScreen from './components/screens/auth/WelcomeScreen';
 import LoginScreen from './components/screens/auth/LoginScreen';
 import RegisterScreen from './components/screens/auth/RegisterScreen';
 import {createNativeStackNavigator} from 'react-native-screens/native-stack';
+import {useAccountContext} from './context/account/AccountContext';
 
 const Stack = createNativeStackNavigator();
 
 const Navigation = () => {
+  const {account} = useAccountContext();
   const {colorMode} = useColorMode();
 
-  const initialStack =
-    'Auth'; /* TODO: Swap this based on if account is not undefined */
+  const initialStack = account ? 'Main' : 'Auth';
 
   const AuthStack = () => {
     return (

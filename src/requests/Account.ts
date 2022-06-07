@@ -9,7 +9,7 @@ const url: string = 'http://144.126.218.29:8080/v1';
  * Accepts an auth token as a param and attempts to obtain an account authorized
  * with provided token.
  *
- * If not account is found the promise will reject with 'account not found' error
+ * If no account is found the promise will reject with 'account not found' error
  *
  * @param token Auth token stored locally on the current device
  */
@@ -27,6 +27,34 @@ export async function attemptLoginWithToken(token: string): Promise<IAccount> {
       return resolve(result.data);
     } catch (err) {
       reject(new Error('account not found'));
+    }
+  });
+}
+
+/**
+ * Accepts an email and password and attempts to authenticate an account
+ * using the standard account creation recipe (email/username/password)
+ *
+ * If no account is found the promise will reject with 'account not found'
+ * Additionally, this request can fail with 401 Unauthorized if the credentials do not match
+ *
+ * @param {string} email Email of the account
+ * @param {string} password Password of the account
+ */
+export async function attemptStandardLogin(
+  email: string,
+  password: string,
+): Promise<LoginResponse> {
+  return new Promise<LoginResponse>(async (resolve, reject) => {
+    try {
+      const result = await axios.post<LoginResponse>(`${url}/auth/`, {
+        email: email,
+        password: password,
+      });
+
+      resolve(result.data);
+    } catch (err) {
+      reject(err);
     }
   });
 }

@@ -1,10 +1,12 @@
 import React from 'react';
 import {StatusBar, useColorMode} from 'native-base';
-import WelcomeScreen from './components/screens/auth/WelcomeScreen';
-import LoginScreen from './components/screens/auth/LoginScreen';
-import RegisterScreen from './components/screens/auth/RegisterScreen';
 import {createNativeStackNavigator} from 'react-native-screens/native-stack';
 import {useAccountContext} from './context/account/AccountContext';
+
+import FeedScreen from './components/screens/main/FeedScreen';
+import RegisterScreen from './components/screens/auth/RegisterScreen';
+import WelcomeScreen from './components/screens/auth/WelcomeScreen';
+import LoginScreen from './components/screens/auth/LoginScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -38,6 +40,18 @@ const Navigation = () => {
     );
   };
 
+  const MainStack = () => {
+    return (
+      <Stack.Navigator initialRouteName={'Feed'}>
+        <Stack.Screen
+          name={'Feed'}
+          component={FeedScreen}
+          options={{headerShown: false}}
+        />
+      </Stack.Navigator>
+    );
+  };
+
   return (
     <>
       <StatusBar
@@ -49,6 +63,15 @@ const Navigation = () => {
         <Stack.Screen
           name={'Auth'}
           component={AuthStack}
+          options={{
+            headerShown: false,
+            gestureEnabled: false,
+          }}
+        />
+
+        <Stack.Screen
+          name={'Main'}
+          component={MainStack}
           options={{
             headerShown: false,
             gestureEnabled: false,

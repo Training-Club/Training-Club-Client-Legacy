@@ -7,6 +7,10 @@ import FeedScreen from './components/screens/main/FeedScreen';
 import RegisterScreen from './components/screens/auth/RegisterScreen';
 import WelcomeScreen from './components/screens/auth/WelcomeScreen';
 import LoginScreen from './components/screens/auth/LoginScreen';
+import MainNavigation from './components/molecules/main/MainNavigation';
+import AnalyticsScreen from './components/screens/main/AnalyticsScreen';
+import DiscoveryScreen from './components/screens/main/DiscoveryScreen';
+import ProfileScreen from './components/screens/main/ProfileScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -42,13 +46,37 @@ const Navigation = () => {
 
   const MainStack = () => {
     return (
-      <Stack.Navigator initialRouteName={'Feed'}>
-        <Stack.Screen
-          name={'Feed'}
-          component={FeedScreen}
-          options={{headerShown: false}}
-        />
-      </Stack.Navigator>
+      <>
+        <MainNavigation />
+
+        <Stack.Navigator
+          initialRouteName={'Feed'}
+          screenOptions={{stackAnimation: 'none'}}>
+          <Stack.Screen
+            name={'Feed'}
+            component={FeedScreen}
+            options={{headerShown: false}}
+          />
+
+          <Stack.Screen
+            name={'Discovery'}
+            component={DiscoveryScreen}
+            options={{headerShown: false}}
+          />
+
+          <Stack.Screen
+            name={'Analytics'}
+            component={AnalyticsScreen}
+            options={{headerShown: false}}
+          />
+
+          <Stack.Screen
+            name={'Profile'}
+            component={ProfileScreen}
+            options={{headerShown: false}}
+          />
+        </Stack.Navigator>
+      </>
     );
   };
 

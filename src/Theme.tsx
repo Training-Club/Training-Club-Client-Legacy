@@ -1,6 +1,10 @@
 import {extendTheme} from 'native-base';
+import {Dimensions} from 'react-native';
 
 export default function () {
+  const {width} = Dimensions.get('screen');
+  const smallScreen = width <= 375;
+
   return extendTheme({
     config: {
       useSystemColorMode: true,
@@ -48,7 +52,7 @@ export default function () {
             bgColor: colorMode === 'dark' ? 'black' : 'white',
             width: '100%',
             height: '100%',
-            pt: '32px',
+            pt: smallScreen ? '16px' : '32px',
           };
         },
       },

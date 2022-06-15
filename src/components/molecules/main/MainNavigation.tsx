@@ -46,6 +46,7 @@ const MainNavigation = (): JSX.Element => {
       pb={smallDevice ? 2 : 10}
       pt={2}
       borderTopColor={borderTopColor}
+      borderTopWidth={2}
       bgColor={backgroundColor}
       w={'100%'}>
       <Center>

@@ -27,7 +27,6 @@ const LoginScreen = () => {
 
     attemptStandardLogin(email, password)
       .then(result => {
-        console.log(result.account);
         setAccount(result.account);
 
         setToken(result.token)

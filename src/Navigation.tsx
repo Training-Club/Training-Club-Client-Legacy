@@ -11,6 +11,7 @@ import MainNavigation from './components/molecules/main/MainNavigation';
 import AnalyticsScreen from './components/screens/main/AnalyticsScreen';
 import DiscoveryScreen from './components/screens/main/DiscoveryScreen';
 import ProfileScreen from './components/screens/main/ProfileScreen';
+import AccountDrawer from './components/organisms/main/AccountDrawer';
 
 const Stack = createNativeStackNavigator();
 
@@ -47,6 +48,7 @@ const Navigation = () => {
   const MainStack = () => {
     return (
       <>
+        <AccountDrawer />
         <MainNavigation />
 
         <Stack.Navigator

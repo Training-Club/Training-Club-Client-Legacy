@@ -11,7 +11,7 @@ const AccountDrawerFooter = ({}: IAccountDrawerFooterProps): JSX.Element => {
   const smallDevice = width <= 375;
 
   return (
-    <Box w={'100%'} position={'absolute'} bottom={smallDevice ? 0 : 8} left={4}>
+    <Box w={'100%'} position={'absolute'} bottom={smallDevice ? 4 : 8} left={4}>
       <HStack space={2}>
         <Box w={'80%'}>
           <AccountDrawerPressable

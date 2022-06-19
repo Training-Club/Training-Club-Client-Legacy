@@ -65,7 +65,7 @@ const AccountDrawer = () => {
             bgColor={backgroundColor}
             w={'100%'}
             h={'100%'}
-            pt={smallDevice ? 0 : 12}
+            pt={12}
             px={4}>
             {account && <AccountDrawerHeader account={account} />}
 

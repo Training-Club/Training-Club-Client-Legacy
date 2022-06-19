@@ -9,6 +9,7 @@ import LoadingIndicator from '../../molecules/design/LoadingIndicator';
 import {attemptStandardAccountCreate} from '../../../requests/Account';
 import {useAccountContext} from '../../../context/account/AccountContext';
 import {setToken} from '../../../data/Account';
+import {useNavigation} from '@react-navigation/native';
 
 import UsernameInput, {
   IUsernameInputErrors,
@@ -34,6 +35,7 @@ export enum RegisterScreenState {
 }
 
 const RegisterScreen = () => {
+  const navigation = useNavigation();
   const {setAccount} = useAccountContext();
   const {setPushdownConfig} = usePushdownContext();
 
@@ -171,6 +173,8 @@ const RegisterScreen = () => {
 
         setAccount(submitResult.account);
         setToken(submitResult.token);
+
+        navigation.navigate('Main' as never, {screen: 'Feed'} as never);
       })
       .catch(err => {
         setSubmitting(false);

@@ -8,7 +8,7 @@ const AccountDrawerButtonStack = (): JSX.Element => {
   return (
     <Box w={'100%'} h={'100%'}>
       <AccountDrawerPressable
-        onPress={() => console.log('A')}
+        onPress={() => console.log('Not implemented')}
         text={'My Account'}
         styling={{
           roundedTop: true,
@@ -17,7 +17,7 @@ const AccountDrawerButtonStack = (): JSX.Element => {
       />
 
       <AccountDrawerPressable
-        onPress={() => console.log('B')}
+        onPress={() => console.log('Not implemented')}
         text={'Inbox'}
         badge={{
           color: dangerColor,
@@ -27,7 +27,7 @@ const AccountDrawerButtonStack = (): JSX.Element => {
       />
 
       <AccountDrawerPressable
-        onPress={() => console.log('C')}
+        onPress={() => console.log('Not implemented')}
         text={'Settings'}
         styling={{
           roundedBottom: true,
@@ -36,7 +36,7 @@ const AccountDrawerButtonStack = (): JSX.Element => {
       />
 
       <AccountDrawerPressable
-        onPress={() => console.log('D')}
+        onPress={() => console.log('Not implemented')}
         text={'Exercise Templates'}
         styling={{
           roundedTop: true,
@@ -45,7 +45,7 @@ const AccountDrawerButtonStack = (): JSX.Element => {
       />
 
       <AccountDrawerPressable
-        onPress={() => console.log('E')}
+        onPress={() => console.log('Not implemented')}
         text={'Your Foods'}
         styling={{
           roundedBottom: true,
@@ -54,7 +54,7 @@ const AccountDrawerButtonStack = (): JSX.Element => {
       />
 
       <AccountDrawerPressable
-        onPress={() => console.log('F')}
+        onPress={() => console.log('Not implemented')}
         text={'Sign out'}
         styling={{
           roundedTop: true,

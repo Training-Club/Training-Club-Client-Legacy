@@ -6,7 +6,7 @@ import {useAccountDrawerContext} from '../../../context/account/AccountDrawerCon
 
 const FeedScreen = (): JSX.Element => {
   const {account} = useAccountContext();
-  const {setOpen} = useAccountDrawerContext();
+  const {setAccountDrawerOpen} = useAccountDrawerContext();
 
   const name = account?.profile?.name ?? account?.username;
   const spacing = 4;

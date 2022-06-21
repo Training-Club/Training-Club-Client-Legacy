@@ -1,13 +1,13 @@
 import React from 'react';
 
 interface IAccountDrawerContext {
-  isOpen: boolean;
-  setOpen: (b: boolean) => void;
+  isAccountDrawerOpen: boolean;
+  setAccountDrawerOpen: (b: boolean) => void;
 }
 
 export const AccountDrawerContext = React.createContext<IAccountDrawerContext>({
-  isOpen: false,
-  setOpen: () => {},
+  isAccountDrawerOpen: false,
+  setAccountDrawerOpen: () => {},
 });
 
 export const useAccountDrawerContext = () =>

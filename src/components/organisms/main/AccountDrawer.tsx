@@ -1,8 +1,7 @@
 import React from 'react';
 import {useAccountDrawerContext} from '../../../context/account/AccountDrawerContext';
-import {Dimensions} from 'react-native';
-import AccountDrawerHeader from '../../molecules/main/account-drawer/AccountDrawerHeader';
 import {useAccountContext} from '../../../context/account/AccountContext';
+import AccountDrawerHeader from '../../molecules/main/account-drawer/AccountDrawerHeader';
 import AccountDrawerButtonStack from '../../molecules/main/account-drawer/AccountDrawerButtonStack';
 import AccountDrawerFooter from '../../molecules/main/account-drawer/AccountDrawerFooter';
 import {Box, HStack, Pressable, useColorModeValue} from 'native-base';
@@ -15,13 +14,11 @@ import Animated, {
 
 const AccountDrawer = () => {
   const {account} = useAccountContext();
-  const {isOpen, setOpen} = useAccountDrawerContext();
-  const {width} = Dimensions.get('screen');
+  const {isAccountDrawerOpen, setAccountDrawerOpen} = useAccountDrawerContext();
 
   const backgroundColor = useColorModeValue('apple.gray.50', 'apple.gray.900');
-  const smallDevice = width <= 375;
 
-  if (!isOpen) {
+  if (!isAccountDrawerOpen) {
     return null;
   }
 
@@ -46,7 +43,7 @@ const AccountDrawer = () => {
             height: '100%',
           }}>
           <Pressable
-            onPress={() => setOpen(false)}
+            onPress={() => setAccountDrawerOpen(false)}
             w={'100%'}
             h={'100%'}
             bgColor={backgroundColor}
@@ -61,12 +58,7 @@ const AccountDrawer = () => {
             width: '80%',
             height: '100%',
           }}>
-          <Box
-            bgColor={backgroundColor}
-            w={'100%'}
-            h={'100%'}
-            pt={12}
-            px={4}>
+          <Box bgColor={backgroundColor} w={'100%'} h={'100%'} pt={12} px={4}>
             {account && <AccountDrawerHeader account={account} />}
 
             <AccountDrawerButtonStack />

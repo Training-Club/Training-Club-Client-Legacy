@@ -1,8 +1,9 @@
 import React from 'react';
-import {Box, Button, View} from 'native-base';
+import {Box, HStack, View} from 'native-base';
 import GreetingText from '../../atoms/main/home/GreetingText';
 import {useAccountContext} from '../../../context/account/AccountContext';
 import {useAccountDrawerContext} from '../../../context/account/AccountDrawerContext';
+import AccountDrawerAvatar from '../../molecules/main/account-drawer/AccountDrawerAvatar';
 
 const FeedScreen = (): JSX.Element => {
   const {account} = useAccountContext();
@@ -14,10 +15,16 @@ const FeedScreen = (): JSX.Element => {
   return (
     <View>
       {name && (
-        <Box w={'100%'} px={spacing}>
+        <HStack w={'100%'} px={spacing} justifyContent={'space-between'}>
           <GreetingText name={name} />
-          <Button onPressIn={() => setOpen(true)}>Test</Button>
-        </Box>
+
+          <Box mt={4}>
+            <AccountDrawerAvatar
+              setAccountDrawerOpen={setAccountDrawerOpen}
+              avatar={{uri: '', showNotificationBubble: true}}
+            />
+          </Box>
+        </HStack>
       )}
     </View>
   );

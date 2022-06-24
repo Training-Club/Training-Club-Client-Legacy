@@ -3,6 +3,9 @@ import {Box, Center, HStack, useColorModeValue} from 'native-base';
 import MainNavigationItem from '../../atoms/main/MainNavigationItem';
 import {useNavigation} from '@react-navigation/native';
 import {Dimensions} from 'react-native';
+import {useActionsheetContext} from '../../../context/actionsheet/ActionsheetContext';
+import StartNewActionsheet from './StartNewActionsheet';
+import DarkActionsheetTheme from '../../organisms/design/themes/DarkActionsheetTheme';
 
 enum MainNavigationScreen {
   FEED = 'Feed',
@@ -12,6 +15,9 @@ enum MainNavigationScreen {
 }
 
 const MainNavigation = (): JSX.Element => {
+  const {actionSheetRef, actionSheetConfig, setActionSheetConfig} =
+    useActionsheetContext();
+
   const navigation = useNavigation();
   const {width} = Dimensions.get('screen');
 
@@ -35,6 +41,25 @@ const MainNavigation = (): JSX.Element => {
 
     setSelectedScreen(newScreen);
     navigation.navigate('Main' as never, {screen: newScreen} as never);
+  }
+
+  /**
+   * Sets the action sheet content and toggles open an action sheet view
+   * displayed the 'Start New' dialog
+   */
+  function handleStartNewActionsheet() {
+    if (!actionSheetRef || !actionSheetRef.current) {
+      return;
+    }
+
+    setActionSheetConfig({
+      children: <StartNewActionsheet />,
+      index: -1,
+      backgroundComponent: DarkActionsheetTheme,
+      snapPoints: actionSheetConfig.snapPoints,
+    });
+
+    actionSheetRef.current.snapToIndex(0);
   }
 
   return (
@@ -70,9 +95,7 @@ const MainNavigation = (): JSX.Element => {
           <MainNavigationItem
             text={'New'}
             icon={{name: 'add', size: 8}}
-            onPress={() =>
-              handleNavigationToggle(MainNavigationScreen.ANALYTICS)
-            }
+            onPress={() => handleStartNewActionsheet()}
           />
 
           <MainNavigationItem

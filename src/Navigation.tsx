@@ -12,6 +12,7 @@ import AnalyticsScreen from './components/screens/main/AnalyticsScreen';
 import DiscoveryScreen from './components/screens/main/DiscoveryScreen';
 import ProfileScreen from './components/screens/main/ProfileScreen';
 import AccountDrawer from './components/organisms/main/AccountDrawer';
+import CurrentSessionScreen from './components/screens/training/CurrentSessionScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -82,6 +83,22 @@ const Navigation = () => {
     );
   };
 
+  const TrainingStack = () => {
+    return (
+      <>
+        <Stack.Navigator
+          initialRouteName={'CurrentSession'}
+          screenOptions={{stackAnimation: 'none'}}>
+          <Stack.Screen
+            name={'CurrentSession'}
+            component={CurrentSessionScreen}
+            options={{headerShown: false}}
+          />
+        </Stack.Navigator>
+      </>
+    );
+  };
+
   return (
     <>
       <StatusBar
@@ -102,6 +119,15 @@ const Navigation = () => {
         <Stack.Screen
           name={'Main'}
           component={MainStack}
+          options={{
+            headerShown: false,
+            gestureEnabled: false,
+          }}
+        />
+
+        <Stack.Screen
+          name={'Training'}
+          component={TrainingStack}
           options={{
             headerShown: false,
             gestureEnabled: false,

@@ -1,9 +1,25 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {Heading, Text, VStack} from 'native-base';
 import {BottomSheetView} from '@gorhom/bottom-sheet';
 import PressablePill from '../../atoms/design/PressablePill';
+import {useNavigation} from '@react-navigation/core';
+import {useActionsheetContext} from '../../../context/actionsheet/ActionsheetContext';
 
 const StartNewActionsheet = (): JSX.Element => {
+  const navigation = useNavigation();
+  const {actionSheetRef} = useActionsheetContext();
+
+  const handleNewSessionTransition = useCallback(() => {
+    navigation.navigate(
+      'Training' as never,
+      {screen: 'CurrentSession'} as never,
+    );
+
+    if (actionSheetRef && actionSheetRef.current) {
+      actionSheetRef.current.close();
+    }
+  }, [actionSheetRef, navigation]);
+
   return (
     <BottomSheetView>
       <VStack px={4}>
@@ -12,7 +28,7 @@ const StartNewActionsheet = (): JSX.Element => {
         </Heading>
 
         <PressablePill
-          onPress={() => console.log('Blank Training Session')}
+          onPress={() => handleNewSessionTransition()}
           style={{roundedTop: true}}
           icon={{name: 'fitness-center', size: 6}}>
           <Text fontWeight={'semibold'}>Blank Training Session</Text>
@@ -55,4 +71,4 @@ const StartNewActionsheet = (): JSX.Element => {
   );
 };
 
-export default StartNewActionsheet;
+export default React.memo(StartNewActionsheet);

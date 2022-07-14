@@ -13,6 +13,7 @@ import DiscoveryScreen from './components/screens/main/DiscoveryScreen';
 import ProfileScreen from './components/screens/main/ProfileScreen';
 import AccountDrawer from './components/organisms/main/AccountDrawer';
 import CurrentSessionScreen from './components/screens/training/CurrentSessionScreen';
+import ExerciseSearchScreen from './components/screens/training/ExerciseSearchScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -92,6 +93,12 @@ const Navigation = () => {
           <Stack.Screen
             name={'CurrentSession'}
             component={CurrentSessionScreen}
+            options={{headerShown: false}}
+          />
+
+          <Stack.Screen
+            name={'ExerciseSearch'}
+            component={ExerciseSearchScreen}
             options={{headerShown: false}}
           />
         </Stack.Navigator>

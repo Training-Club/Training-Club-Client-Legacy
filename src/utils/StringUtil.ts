@@ -4,5 +4,12 @@
  * @param text string to capitalize
  */
 export const Capitalize = (text: string): string => {
-  return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+  const split: string[] = text.split(' ');
+  let result: string[] = [];
+
+  split.map(s => {
+    result.push(s.charAt(0).toUpperCase() + s.slice(1).toLowerCase());
+  });
+
+  return result.join(' ');
 };

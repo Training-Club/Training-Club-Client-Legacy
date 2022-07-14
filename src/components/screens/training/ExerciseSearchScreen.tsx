@@ -92,7 +92,7 @@ const ExerciseSearchScreen = (): JSX.Element => {
                 key={`tp-${i}`}
                 selected={isSelected(muscleGroup as MuscleGroup)}
                 onToggle={() => toggleFilter(muscleGroup as MuscleGroup)}>
-                {Capitalize(muscleGroup)}
+                {Capitalize(muscleGroup.replace('_', ' '))}
               </TogglePill>
             );
           })}

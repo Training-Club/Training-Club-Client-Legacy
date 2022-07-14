@@ -22,7 +22,7 @@ describe('Exercise Search Screen ->', () => {
             {Object.keys(MuscleGroup).map(muscleGroup => {
               return (
                 <TogglePill selected={false} onToggle={jest.fn()}>
-                  {Capitalize(muscleGroup)}
+                  {Capitalize(muscleGroup.replace('_', ' '))}
                 </TogglePill>
               );
             })}

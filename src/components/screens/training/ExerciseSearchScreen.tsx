@@ -2,21 +2,25 @@ import React, {useCallback} from 'react';
 import CloseableHeader from '../../molecules/design/CloseableHeader';
 import TogglePillRow from '../../molecules/design/TogglePillRow';
 import TogglePill from '../../atoms/design/TogglePill';
-import {MuscleGroup} from '../../../models/Training';
+import {ExerciseInfo, MuscleGroup} from '../../../models/Training';
 import {Capitalize} from '../../../utils/StringUtil';
+import {getExerciseSearchResults} from '../../../requests/Training';
 import InputField from '../../atoms/design/InputField';
 import {useDebounce} from 'use-debounce';
 import {default as MaterialIcons} from 'react-native-vector-icons/MaterialIcons';
+import ExerciseSearchResultList from '../../organisms/training/ExerciseSearchResultList';
 import {Box, Icon, View, VStack} from 'native-base';
+import {usePushdownContext} from '../../../context/pushdown/PushdownContext';
+import {AxiosError} from 'axios';
 
 const ExerciseSearchScreen = (): JSX.Element => {
+  const {setPushdownConfig} = usePushdownContext();
   const [filters, setFilters] = React.useState<MuscleGroup[]>([]);
   const [nameQuery, setNameQuery] = React.useState<string>('');
   const [nameQueryDebounced] = useDebounce(nameQuery, 500);
+  const [searchResults, setSearchResults] = React.useState<ExerciseInfo[]>([]);
 
   const spacing = 4;
-
-  console.log(filters);
 
   /**
    * Returns true if the provided muscle group is currently selected
@@ -50,9 +54,35 @@ const ExerciseSearchScreen = (): JSX.Element => {
     [filters, isSelected],
   );
 
+  /**
+   * Performs an Exercise Info lookup on
+   * each debounce update and sets state accordingly
+   */
   React.useEffect(() => {
-    console.log(nameQueryDebounced);
-  }, [nameQueryDebounced]);
+    if (!nameQueryDebounced || nameQueryDebounced.length <= 0) {
+      return;
+    }
+
+    getExerciseSearchResults(nameQueryDebounced)
+      .then(result => {
+        setSearchResults(result);
+      })
+      .catch(err => {
+        const axiosError = err as AxiosError;
+
+        if (axiosError.response && axiosError.response?.status === 404) {
+          return;
+        }
+
+        setPushdownConfig({
+          title: 'Something went wrong.',
+          body: 'We encountered an error while trying to perform your search request.',
+          status: 'error',
+          duration: 5000,
+          show: true,
+        });
+      });
+  }, [nameQueryDebounced, setPushdownConfig]);
 
   return (
     <View>
@@ -97,6 +127,10 @@ const ExerciseSearchScreen = (): JSX.Element => {
             );
           })}
         </TogglePillRow>
+      </Box>
+
+      <Box mt={1}>
+        <ExerciseSearchResultList data={searchResults} />
       </Box>
     </View>
   );

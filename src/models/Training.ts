@@ -48,6 +48,15 @@ export interface AdditionalExercise extends ITrainable {
   type: AdditionalExerciseType;
 }
 
+export type ExerciseInfo = {
+  id: string;
+  name: string;
+  type: ExerciseType;
+  verified?: boolean;
+  muscleGroups?: MuscleGroup[];
+  exerciseEquipment?: ExerciseEquipment[];
+};
+
 export type GroupedExercise = {
   name: string;
   timestamp: Date;

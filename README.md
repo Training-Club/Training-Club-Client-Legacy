@@ -16,8 +16,8 @@ To get started, see [Getting Started]('')
   * **assets** - Images, SVGs and Videos rendered throughout the client
   * **components**
     * **atoms** - Lowest level reuseable components
-    * **molecules** - Mid level reuseable components, typically comprising over 3-5 atomic components
-    * **organisims** - High level reuseable components, typically comprising over 3+ molecular components
+    * **molecules** - Mid level reuseable components, typically comprising of 3-5 atomic components
+    * **organisims** - High level reuseable components, typically comprising of 3+ molecular components
     * **screens** - Physical screens rendered by the navigator
   * **context** - Context Providers
   * **data** - Data manipulation, typically tied closely to Models

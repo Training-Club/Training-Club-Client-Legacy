@@ -1,12 +1,12 @@
 import React from 'react';
 import {render} from '@testing-library/react-native';
 import {NativeBaseProvider} from 'native-base';
-import theme from '../src/Theme';
 import {NavigationContainer} from '@react-navigation/native';
-import TogglePillRow from '../src/components/molecules/design/TogglePillRow';
-import TogglePill from '../src/components/atoms/design/TogglePill';
 import {MuscleGroup} from '../src/models/Training';
 import {Capitalize} from '../src/utils/StringUtil';
+import TogglePillRow from '../src/components/molecules/design/TogglePillRow';
+import TogglePill from '../src/components/atoms/design/TogglePill';
+import theme from '../src/Theme';
 
 describe('Exercise Search Screen ->', () => {
   const inset = {

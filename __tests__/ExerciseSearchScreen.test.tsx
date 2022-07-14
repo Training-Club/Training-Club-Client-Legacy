@@ -19,9 +19,12 @@ describe('Exercise Search Screen ->', () => {
       <NativeBaseProvider initialWindowMetrics={inset} theme={theme()}>
         <NavigationContainer>
           <TogglePillRow>
-            {Object.keys(MuscleGroup).map(muscleGroup => {
+            {Object.keys(MuscleGroup).map((muscleGroup, i) => {
               return (
-                <TogglePill selected={false} onToggle={jest.fn()}>
+                <TogglePill
+                  key={`tp-${i}`}
+                  selected={false}
+                  onToggle={jest.fn()}>
                   {Capitalize(muscleGroup.replace('_', ' '))}
                 </TogglePill>
               );

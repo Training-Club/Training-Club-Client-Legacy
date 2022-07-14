@@ -35,6 +35,7 @@ export interface ITrainable {
   exerciseName: string;
   addedAt: Date;
   values: ExerciseValue;
+  performed: boolean;
 }
 
 export interface IExercise extends ITrainable {

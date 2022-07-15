@@ -6,7 +6,10 @@ import {MuscleGroup} from '../src/models/Training';
 import {Capitalize} from '../src/utils/StringUtil';
 import TogglePillRow from '../src/components/molecules/design/TogglePillRow';
 import TogglePill from '../src/components/atoms/design/TogglePill';
+import {Text} from 'native-base';
 import theme from '../src/Theme';
+import ExerciseSearchResult from '../src/components/molecules/training/ExerciseSearchResult';
+import ExerciseSearchResultList from '../src/components/organisms/training/ExerciseSearchResultList';
 
 describe('Exercise Search Screen ->', () => {
   const inset = {
@@ -39,5 +42,42 @@ describe('Exercise Search Screen ->', () => {
 
     expect(rowElem).toBeTruthy();
     expect(pillElem).toBeTruthy();
+  });
+
+  it('should render create new exercise in search result list', () => {
+    const {getByText} = render(
+      <NativeBaseProvider initialWindowMetrics={inset} theme={theme()}>
+        <NavigationContainer>
+          <ExerciseSearchResultList data={[]} />
+        </NavigationContainer>
+      </NativeBaseProvider>,
+    );
+
+    const createElem = getByText('Create New Exercise');
+
+    expect(createElem).toBeTruthy();
+  });
+
+  it('should render search result', () => {
+    const LeftContent = (): JSX.Element => {
+      return <Text>Subtitle</Text>;
+    };
+
+    const {getByText} = render(
+      <NativeBaseProvider initialWindowMetrics={inset} theme={theme()}>
+        <NavigationContainer>
+          <ExerciseSearchResult
+            title={'Benchpress'}
+            leftContent={LeftContent()}
+          />
+        </NavigationContainer>
+      </NativeBaseProvider>,
+    );
+
+    const textElem = getByText('Benchpress');
+    const subtitleElem = getByText('Subtitle');
+
+    expect(textElem).toBeTruthy();
+    expect(subtitleElem).toBeTruthy();
   });
 });

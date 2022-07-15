@@ -54,7 +54,7 @@ export type ExerciseInfo = {
   type: ExerciseType;
   verified?: boolean;
   muscleGroups?: MuscleGroup[];
-  exerciseEquipment?: ExerciseEquipment[];
+  exerciseEquipment?: ExerciseEquipment;
 };
 
 export type GroupedExercise = {

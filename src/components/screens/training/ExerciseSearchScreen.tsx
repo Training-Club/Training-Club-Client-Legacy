@@ -2,7 +2,6 @@ import React, {useCallback} from 'react';
 import CloseableHeader from '../../molecules/design/CloseableHeader';
 import TogglePillRow from '../../molecules/design/TogglePillRow';
 import TogglePill from '../../atoms/design/TogglePill';
-import {ExerciseInfo, MuscleGroup} from '../../../models/Training';
 import {Capitalize} from '../../../utils/StringUtil';
 import {getExerciseSearchResults} from '../../../requests/Training';
 import InputField from '../../atoms/design/InputField';
@@ -12,6 +11,7 @@ import ExerciseSearchResultList from '../../organisms/training/ExerciseSearchRes
 import {Box, Icon, View, VStack} from 'native-base';
 import {usePushdownContext} from '../../../context/pushdown/PushdownContext';
 import {AxiosError} from 'axios';
+import {ExerciseInfo, MuscleGroup} from '../../../models/Training';
 
 const ExerciseSearchScreen = (): JSX.Element => {
   const {setPushdownConfig} = usePushdownContext();
@@ -69,6 +69,10 @@ const ExerciseSearchScreen = (): JSX.Element => {
       })
       .catch(err => {
         const axiosError = err as AxiosError;
+
+        if (axiosError.code === '404') {
+          return;
+        }
 
         if (axiosError.response && axiosError.response?.status === 404) {
           return;
@@ -129,7 +133,7 @@ const ExerciseSearchScreen = (): JSX.Element => {
         </TogglePillRow>
       </Box>
 
-      <Box mt={1}>
+      <Box mt={1} px={spacing}>
         <ExerciseSearchResultList data={searchResults} />
       </Box>
     </View>

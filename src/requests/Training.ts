@@ -1,6 +1,6 @@
 import {ExerciseInfo} from '../models/Training';
 import {getToken} from '../data/Account';
-import axios from 'axios';
+import axios, {AxiosError} from 'axios';
 
 // TODO: Replace with api.trainingclubapp.com
 const url: string = 'http://144.126.218.29:8080/v1';
@@ -29,7 +29,7 @@ export async function getExerciseSearchResults(
       );
 
       if (!result.data) {
-        return reject('no results found');
+        return reject(new AxiosError('No results found', '404'));
       }
 
       resolve(result.data);

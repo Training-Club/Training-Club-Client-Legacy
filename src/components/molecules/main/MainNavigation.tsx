@@ -1,11 +1,11 @@
 import React from 'react';
-import {Box, Center, HStack, useColorModeValue} from 'native-base';
-import MainNavigationItem from '../../atoms/main/MainNavigationItem';
 import {useNavigation} from '@react-navigation/native';
 import {Dimensions} from 'react-native';
 import {useActionsheetContext} from '../../../context/actionsheet/ActionsheetContext';
+import MainNavigationItem from '../../atoms/main/MainNavigationItem';
 import StartNewActionsheet from './StartNewActionsheet';
 import DarkActionsheetTheme from '../../organisms/design/themes/DarkActionsheetTheme';
+import {Box, Center, HStack, useColorModeValue} from 'native-base';
 
 enum MainNavigationScreen {
   FEED = 'Feed',
@@ -15,16 +15,19 @@ enum MainNavigationScreen {
 }
 
 const MainNavigation = (): JSX.Element => {
-  const {actionSheetRef, actionSheetConfig, setActionSheetConfig} =
-    useActionsheetContext();
-
   const navigation = useNavigation();
+  const {actionSheetRef, setActionSheetConfig} = useActionsheetContext();
   const {width} = Dimensions.get('screen');
 
   const smallDevice = width <= 375;
 
   const [selectedScreen, setSelectedScreen] =
     React.useState<MainNavigationScreen>(MainNavigationScreen.FEED);
+
+  const snapPoints = React.useMemo(
+    () => [smallDevice ? '60%' : '50%'],
+    [smallDevice],
+  );
 
   const backgroundColor = useColorModeValue('white', 'black');
   const borderTopColor = useColorModeValue('apple.gray.50', 'apple.gray.900');
@@ -56,7 +59,7 @@ const MainNavigation = (): JSX.Element => {
       children: <StartNewActionsheet />,
       index: -1,
       backgroundComponent: DarkActionsheetTheme,
-      snapPoints: actionSheetConfig.snapPoints,
+      snapPoints: snapPoints,
     });
 
     actionSheetRef.current.snapToIndex(0);

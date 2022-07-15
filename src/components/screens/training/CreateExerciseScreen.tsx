@@ -1,0 +1,203 @@
+import React from 'react';
+import CloseableHeader from '../../molecules/design/CloseableHeader';
+import InputField from '../../atoms/design/InputField';
+import {usePushdownContext} from '../../../context/pushdown/PushdownContext';
+import CreateExerciseEquipment from '../../organisms/training/CreateExerciseEquipment';
+import CreateExerciseType from '../../organisms/training/CreateExerciseType';
+import CreateExerciseMuscleGroup from '../../organisms/training/CreateExerciseMuscleGroup';
+import {createExerciseInfo} from '../../../requests/ExerciseInfo';
+import {useNavigation} from '@react-navigation/core';
+import {Box, Button, ScrollView, useColorModeValue, View} from 'native-base';
+
+import {
+  ExerciseEquipment,
+  ExerciseType,
+  MuscleGroup,
+} from '../../../models/Training';
+
+const CreateExerciseScreen = (): JSX.Element => {
+  const navigation = useNavigation();
+  const {setPushdownConfig} = usePushdownContext();
+
+  const [exerciseName, setExerciseName] = React.useState<string>('');
+
+  const [exerciseType, setExerciseType] = React.useState<ExerciseType>(
+    ExerciseType.WEIGHTED_REPS,
+  );
+
+  const [muscleGroups, setMuscleGroups] = React.useState<MuscleGroup[]>([]);
+
+  const [exerciseEquipment, setExerciseEquipment] = React.useState<
+    ExerciseEquipment | undefined
+  >(undefined);
+
+  const textColor = useColorModeValue('black', 'white');
+  const contentBgColor = useColorModeValue('apple.gray.50', 'apple.gray.900');
+  const contentBorderColor = useColorModeValue('apple.gray.100', 'black');
+
+  const spacing = 4;
+
+  const pillTextStyling = {
+    fontWeight: 'semibold',
+    color: textColor,
+  };
+
+  const handleToggleExerciseType = React.useCallback((type: ExerciseType) => {
+    requestAnimationFrame(() => {
+      setExerciseType(type);
+    });
+  }, []);
+
+  const handleToggleExerciseEquipment = React.useCallback(
+    (equipment: ExerciseEquipment) => {
+      requestAnimationFrame(() => {
+        setExerciseEquipment(equipment);
+      });
+    },
+    [],
+  );
+
+  const handleToggleMuscleGroup = React.useCallback(
+    (group: MuscleGroup) => {
+      const isSelected = muscleGroups.find(mgs => mgs === group) !== undefined;
+
+      requestAnimationFrame(() => {
+        if (isSelected) {
+          setMuscleGroups(muscleGroups.filter(mgs => mgs !== group));
+          return;
+        }
+
+        if (muscleGroups.length >= 3) {
+          setPushdownConfig({
+            title: 'Max muscle groups',
+            body: 'You have too many muscle groups selected. Remove some of your current selections to make changes.',
+            status: 'error',
+            duration: 5000,
+            show: true,
+          });
+
+          return;
+        }
+
+        setMuscleGroups([group, ...muscleGroups]);
+      });
+    },
+    [muscleGroups, setPushdownConfig],
+  );
+
+  const handleCreateExercise = React.useCallback(() => {
+    createExerciseInfo({
+      exerciseName: exerciseName,
+      exerciseType: exerciseType,
+      exerciseMuscleGroups: muscleGroups,
+      exerciseEquipment: exerciseEquipment,
+    })
+      .then(result => {
+        navigation.navigate(
+          'Training' as never,
+          {screen: 'CurrentSession'} as never,
+        );
+
+        setPushdownConfig({
+          title: 'Exercise Created',
+          body: `${exerciseName} has been added to your current training session`,
+          status: 'success',
+          duration: 3000,
+          show: true,
+        });
+
+        console.log(result);
+      })
+      .catch(() => {
+        setPushdownConfig({
+          title: 'Something went wrong.',
+          body: 'We encounted an error while trying to create your exercise. Please wait a moment and try again.',
+          status: 'error',
+          duration: 5000,
+          show: true,
+        });
+      });
+  }, [
+    exerciseEquipment,
+    exerciseName,
+    exerciseType,
+    muscleGroups,
+    navigation,
+    setPushdownConfig,
+  ]);
+
+  return (
+    <View px={spacing}>
+      <CloseableHeader
+        pageTitle={'Create Exercise'}
+        closeButton={{
+          stackName: 'Training',
+          screenName: 'ExerciseSearch',
+        }}
+      />
+
+      <Box w={'100%'} mt={2} pb={4}>
+        <InputField
+          value={exerciseName}
+          setValue={setExerciseName}
+          options={{placeholder: 'Name'}}
+        />
+      </Box>
+
+      <ScrollView mb={24} showsVerticalScrollIndicator={false}>
+        <CreateExerciseType
+          selected={exerciseType}
+          setSelectedExerciseType={handleToggleExerciseType}
+          styling={{
+            textStyling: pillTextStyling,
+            pillStyling: {
+              backgroundColor: contentBgColor,
+              borderColor: contentBorderColor,
+              textColor: textColor,
+            },
+          }}
+        />
+
+        <CreateExerciseMuscleGroup
+          selected={muscleGroups}
+          toggleMuscleGroup={handleToggleMuscleGroup}
+          styling={{
+            textStyling: pillTextStyling,
+            pillStyling: {
+              backgroundColor: contentBgColor,
+              borderColor: contentBorderColor,
+              textColor: textColor,
+            },
+          }}
+        />
+
+        <CreateExerciseEquipment
+          selected={exerciseEquipment}
+          setSelectedEquipment={handleToggleExerciseEquipment}
+          styling={{
+            textStyling: pillTextStyling,
+            pillStyling: {
+              backgroundColor: contentBgColor,
+              borderColor: contentBorderColor,
+              textColor: textColor,
+            },
+          }}
+        />
+      </ScrollView>
+
+      <Box position={'absolute'} bottom={8} left={4} w={'100%'}>
+        <Button
+          size={'lg'}
+          variant={'info'}
+          _text={{
+            color: 'white',
+          }}
+          onPressIn={() => handleCreateExercise()}>
+          Create
+        </Button>
+      </Box>
+    </View>
+  );
+};
+
+export default CreateExerciseScreen;

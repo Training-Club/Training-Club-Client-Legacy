@@ -81,7 +81,7 @@ const PressablePill = ({
           />
         )}
 
-        <Box mt={0.5}>{children}</Box>
+        <Box mt={0.5} w={'100%'}>{children}</Box>
       </HStack>
     </Pressable>
   );

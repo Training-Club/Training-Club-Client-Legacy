@@ -41,10 +41,10 @@ export interface ITrainable {
 export interface IExercise extends ITrainable {
   id: string;
   type: ExerciseType;
-  additionalExercises?: AdditionalExercise[];
+  additionalExercises?: IAdditionalExercise[];
 }
 
-export interface AdditionalExercise extends ITrainable {
+export interface IAdditionalExercise extends ITrainable {
   type: AdditionalExerciseType;
 }
 

@@ -1,4 +1,4 @@
-import {MeasurementSystem} from './Measurement';
+import {DistanceMeasurement, MeasurementSystem} from './Measurement';
 
 export interface ISession {
   sessionName?: string;
@@ -24,10 +24,17 @@ export interface IExerciseValueWeight extends IExerciseValue {
 }
 
 export interface IExerciseValueDistance extends IExerciseValue {
-  measurement?: MeasurementSystem;
+  measurement?: DistanceMeasurement;
 }
 
-export interface IExerciseValueTime extends IExerciseValue {
+export interface IExerciseValueTime extends Omit<IExerciseValue, 'value'> {
+  value?: {
+    hours: number;
+    minutes: number;
+    seconds: number;
+    milliseconds: number;
+  };
+
   timeRenderMillis?: boolean;
 }
 

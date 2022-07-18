@@ -18,7 +18,6 @@ const MainNavigation = (): JSX.Element => {
   const navigation = useNavigation();
   const {actionSheetRef, setActionSheetConfig} = useActionsheetContext();
   const {width} = Dimensions.get('screen');
-
   const smallDevice = width <= 375;
 
   const [selectedScreen, setSelectedScreen] =

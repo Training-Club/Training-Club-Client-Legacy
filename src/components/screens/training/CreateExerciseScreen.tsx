@@ -2,12 +2,14 @@ import React from 'react';
 import CloseableHeader from '../../molecules/design/CloseableHeader';
 import InputField from '../../atoms/design/InputField';
 import {usePushdownContext} from '../../../context/pushdown/PushdownContext';
+import {useExerciseContext} from '../../../context/exercise/ExerciseContext';
 import CreateExerciseEquipment from '../../organisms/training/CreateExerciseEquipment';
 import CreateExerciseType from '../../organisms/training/CreateExerciseType';
 import CreateExerciseMuscleGroup from '../../organisms/training/CreateExerciseMuscleGroup';
 import {createExerciseInfo} from '../../../requests/ExerciseInfo';
 import {useNavigation} from '@react-navigation/core';
-import {Box, Button, ScrollView, useColorModeValue, View} from 'native-base';
+import {nanoid} from 'nanoid/non-secure';
+import {MeasurementSystem} from '../../../models/Measurement';
 
 import {
   ExerciseEquipment,
@@ -15,8 +17,11 @@ import {
   MuscleGroup,
 } from '../../../models/Training';
 
+import {Box, Button, ScrollView, useColorModeValue, View} from 'native-base';
+
 const CreateExerciseScreen = (): JSX.Element => {
   const navigation = useNavigation();
+  const {addExercise} = useExerciseContext();
   const {setPushdownConfig} = usePushdownContext();
 
   const [exerciseName, setExerciseName] = React.useState<string>('');
@@ -93,6 +98,21 @@ const CreateExerciseScreen = (): JSX.Element => {
       exerciseEquipment: exerciseEquipment,
     })
       .then(result => {
+        addExercise({
+          id: nanoid(5),
+          exerciseName: exerciseName,
+          addedAt: new Date(),
+          performed: false,
+          type: exerciseType,
+          values: {
+            reps: 5,
+            weight: {
+              value: 135,
+              measurement: MeasurementSystem.IMPERIAL,
+            },
+          },
+        });
+
         navigation.navigate(
           'Training' as never,
           {screen: 'CurrentSession'} as never,
@@ -105,8 +125,6 @@ const CreateExerciseScreen = (): JSX.Element => {
           duration: 3000,
           show: true,
         });
-
-        console.log(result);
       })
       .catch(() => {
         setPushdownConfig({
@@ -118,6 +136,7 @@ const CreateExerciseScreen = (): JSX.Element => {
         });
       });
   }, [
+    addExercise,
     exerciseEquipment,
     exerciseName,
     exerciseType,

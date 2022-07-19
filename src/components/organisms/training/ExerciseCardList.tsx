@@ -1,7 +1,6 @@
 import React from 'react';
 import {GroupedExercise} from '../../../models/Training';
 import ExerciseCard from '../../molecules/training/ExerciseCard';
-import {ScrollView, VStack} from 'native-base';
 import Animated, {FadeIn, FadeOut, Layout} from 'react-native-reanimated';
 
 interface IExerciseCardListProps {
@@ -11,22 +10,31 @@ interface IExerciseCardListProps {
 const ExerciseCardList = ({
   groupedExercises,
 }: IExerciseCardListProps): JSX.Element => {
+  const renderItem = (result: {item: GroupedExercise; index: number}) => {
+    return (
+      <Animated.View
+        entering={FadeIn}
+        exiting={FadeOut}
+        layout={Layout.springify()}>
+        <ExerciseCard
+          groupedExercise={result.item}
+          style={{
+            topSpacing: result.index > 0,
+            bottomSpacing: result.index === groupedExercises.length - 1,
+          }}
+        />
+      </Animated.View>
+    );
+  };
+
   return (
-    <ScrollView showsHorizontalScrollIndicator={false}>
-      <VStack space={8}>
-        {groupedExercises.map(groupedExercise => {
-          return (
-            <Animated.View
-              key={groupedExercise.name}
-              entering={FadeIn}
-              exiting={FadeOut}
-              layout={Layout.springify()}>
-              <ExerciseCard groupedExercise={groupedExercise} />
-            </Animated.View>
-          );
-        })}
-      </VStack>
-    </ScrollView>
+    <Animated.FlatList
+      data={groupedExercises}
+      renderItem={renderItem}
+      initialNumToRender={2}
+      showsVerticalScrollIndicator={false}
+      layout={Layout.springify()}
+    />
   );
 };
 

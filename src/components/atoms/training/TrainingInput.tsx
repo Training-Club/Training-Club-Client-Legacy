@@ -217,5 +217,48 @@ const AdditionalExerciseInput = ({
   );
 };
 
-export const ParentTrainingInput = React.memo(ParentExerciseInput);
-export const AdditionalTrainingInput = React.memo(AdditionalExerciseInput);
+/**
+ * Custom memoization comparator to prevent excessive re-rendering of input fields
+ *
+ * @param {Readonly<IParentExerciseInputProps>} prevProps Current props
+ * @param {Readonly<IParentExerciseInputProps>} nextProps Props about to be set
+ */
+const parentPropsAreEqual = (
+  prevProps: Readonly<IParentExerciseInputProps>,
+  nextProps: Readonly<IParentExerciseInputProps>,
+) => {
+  if (prevProps.performed !== nextProps.performed) {
+    return false;
+  }
+
+  return prevProps.exercise.values === nextProps.exercise.values;
+};
+
+/**
+ * Custom memoization comparator to prevent excessive re-rendering of input fields
+ *
+ * @param {Readonly<IAdditionalExerciseInputProps>} prevProps Current props
+ * @param {Readonly<IAdditionalExerciseInputProps>} nextProps Props about to be set
+ */
+const additionalPropsAreEqual = (
+  prevProps: Readonly<IAdditionalExerciseInputProps>,
+  nextProps: Readonly<IAdditionalExerciseInputProps>,
+) => {
+  if (prevProps.performed !== nextProps.performed) {
+    return false;
+  }
+
+  return (
+    prevProps.additionalExercise.values === nextProps.additionalExercise.values
+  );
+};
+
+export const ParentTrainingInput = React.memo(
+  ParentExerciseInput,
+  parentPropsAreEqual,
+);
+
+export const AdditionalTrainingInput = React.memo(
+  AdditionalExerciseInput,
+  additionalPropsAreEqual,
+);

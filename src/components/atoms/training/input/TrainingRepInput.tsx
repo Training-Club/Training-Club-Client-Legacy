@@ -1,4 +1,4 @@
-import React, {startTransition} from 'react';
+import React from 'react';
 import {Factory, HStack, Text, useColorModeValue} from 'native-base';
 import {ITrainingInputProps} from '../TrainingInput';
 import {TextInput} from 'react-native';
@@ -18,12 +18,12 @@ const TrainingRepInput = ({
 
   const handleSetValue = React.useCallback(
     (input: string) => {
-      startTransition(() => {
-        setValue(Number(input));
-      });
+      setValue(Number(input));
     },
     [setValue],
   );
+
+  console.log('re-render');
 
   return (
     <HStack w={'100%'}>
@@ -56,4 +56,4 @@ const TrainingRepInput = ({
   );
 };
 
-export default TrainingRepInput;
+export default React.memo(TrainingRepInput);

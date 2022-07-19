@@ -1,4 +1,4 @@
-import React, {startTransition} from 'react';
+import React from 'react';
 import {IExerciseValueDistance} from '../../../../models/Training';
 import {ITrainingInputProps} from '../TrainingInput';
 import {Dimensions, TextInput} from 'react-native';
@@ -47,22 +47,20 @@ const TrainingDistanceInput = ({
    */
   const handleSetValue = React.useCallback(
     (e: string) => {
-      startTransition(() => {
-        const asNumber = Number(e);
+      const asNumber = Number(e);
 
-        if (!value) {
-          setValue({
-            value: asNumber,
-            measurement: DistanceMeasurement.METER,
-          });
-
-          return;
-        }
-
+      if (!value) {
         setValue({
           value: asNumber,
-          measurement: value.measurement,
+          measurement: DistanceMeasurement.METER,
         });
+
+        return;
+      }
+
+      setValue({
+        value: asNumber,
+        measurement: value.measurement,
       });
     },
     [setValue, value],
@@ -114,15 +112,15 @@ const TrainingDistanceInput = ({
     }
 
     setActionSheetConfig({
+      index: -1,
+      backgroundComponent: DarkActionsheetTheme,
+      snapPoints: snapPoints,
       children: (
         <DistanceSelectActionsheet
           value={value?.measurement}
           setValue={handleSetMeasurementSystem}
         />
       ),
-      index: -1,
-      backgroundComponent: DarkActionsheetTheme,
-      snapPoints: snapPoints,
     });
 
     actionSheetRef.current.snapToIndex(0);
@@ -165,4 +163,4 @@ const TrainingDistanceInput = ({
   );
 };
 
-export default TrainingDistanceInput;
+export default React.memo(TrainingDistanceInput);

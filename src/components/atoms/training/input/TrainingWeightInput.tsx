@@ -46,22 +46,20 @@ const TrainingWeightInput = ({
    */
   const handleSetValue = React.useCallback(
     (input: string) => {
-      startTransition(() => {
-        const asNumber = Number(input);
+      const asNumber = Number(input);
 
-        if (!value) {
-          setValue({
-            value: asNumber,
-            measurement: MeasurementSystem.IMPERIAL,
-          });
-
-          return;
-        }
-
+      if (!value) {
         setValue({
           value: asNumber,
-          measurement: value.measurement,
+          measurement: MeasurementSystem.IMPERIAL,
         });
+
+        return;
+      }
+
+      setValue({
+        value: asNumber,
+        measurement: value.measurement,
       });
     },
     [setValue, value],
@@ -73,33 +71,32 @@ const TrainingWeightInput = ({
    */
   const handleSetMeasurementSystem = React.useCallback(
     (measurementName: 'imperial' | 'metric') => {
-      startTransition(() => {
-        const asMeasurement =
-          measurementName === 'imperial'
-            ? MeasurementSystem.IMPERIAL
-            : MeasurementSystem.METRIC;
-        let convertedWeight = value?.value ?? 0.0;
+      const asMeasurement =
+        measurementName === 'imperial'
+          ? MeasurementSystem.IMPERIAL
+          : MeasurementSystem.METRIC;
 
-        if (!asMeasurement) {
-          setPushdownConfig({
-            title: 'Something went wrong',
-            body: 'We encountered an error while trying to update your measurement',
-            status: 'error',
-            duration: 3000,
-            show: true,
-          });
+      let convertedWeight = value?.value ?? 0.0;
 
-          return;
-        }
-
-        if (value) {
-          convertedWeight = getConvertedWeight(value.value, asMeasurement);
-        }
-
-        setValue({
-          value: convertedWeight ?? 0,
-          measurement: asMeasurement,
+      if (!asMeasurement) {
+        setPushdownConfig({
+          title: 'Something went wrong',
+          body: 'We encountered an error while trying to update your measurement',
+          status: 'error',
+          duration: 3000,
+          show: true,
         });
+
+        return;
+      }
+
+      if (value) {
+        convertedWeight = getConvertedWeight(value.value, asMeasurement);
+      }
+
+      setValue({
+        value: convertedWeight ?? 0,
+        measurement: asMeasurement,
       });
     },
     [setPushdownConfig, setValue, value],
@@ -165,4 +162,4 @@ const TrainingWeightInput = ({
   );
 };
 
-export default TrainingWeightInput;
+export default React.memo(TrainingWeightInput);

@@ -125,6 +125,7 @@ const ExerciseCard = ({
         {groupedExercise.exercises.map((exercise, i) => {
           return (
             <Box
+              key={exercise.id}
               w={'100%'}
               borderBottomWidth={
                 i < groupedExercise.exercises.length - 1 ? 1 : 0
@@ -199,10 +200,7 @@ const ExerciseCard = ({
                     {exercise.additionalExercises.map(
                       (additionalExercise, j) => {
                         return (
-                          <HStack
-                            key={`additional-exercise-entry-${j}`}
-                            w={'100%'}
-                            py={1}>
+                          <HStack key={`ae-${j}`} w={'100%'} py={1}>
                             <Square w={'20%'}>
                               <Icon
                                 as={MaterialIcons}

@@ -186,4 +186,4 @@ const TrainingTimeInput = ({
   );
 };
 
-export default TrainingTimeInput;
+export default React.memo(TrainingTimeInput);

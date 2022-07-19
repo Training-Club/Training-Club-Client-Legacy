@@ -14,13 +14,14 @@ const ExerciseCardList = ({
   return (
     <ScrollView showsHorizontalScrollIndicator={false}>
       <VStack space={8}>
-        {groupedExercises.map((groupedExercise, i) => {
+        {groupedExercises.map(groupedExercise => {
           return (
             <Animated.View
+              key={groupedExercise.name}
               entering={FadeIn}
               exiting={FadeOut}
-              layout={Layout.springify().delay(200)}>
-              <ExerciseCard key={`ec-${i}`} groupedExercise={groupedExercise} />
+              layout={Layout.springify()}>
+              <ExerciseCard groupedExercise={groupedExercise} />
             </Animated.View>
           );
         })}

@@ -69,11 +69,11 @@ const TrainingInputController = ({
   };
 
   return (
-    <Square w={'30%'}>
+    <Square w={'35%'}>
       {fieldType === ExerciseInputType.REPS && (
         <TrainingRepInput
           value={value.reps ?? 0}
-          defaultValue={0}
+          defaultValue={value.reps ?? 0}
           setValue={setValue}
           performed={performed}
           style={style}
@@ -83,7 +83,7 @@ const TrainingInputController = ({
       {fieldType === ExerciseInputType.WEIGHT && (
         <TrainingWeightInput
           value={value.weight}
-          defaultValue={0.0}
+          defaultValue={value.weight?.value ?? 0.0}
           setValue={setValue}
           performed={performed}
           style={style}
@@ -93,7 +93,7 @@ const TrainingInputController = ({
       {fieldType === ExerciseInputType.DISTANCE && (
         <TrainingDistanceInput
           value={value.distance}
-          defaultValue={0}
+          defaultValue={value.distance?.value ?? 0.0}
           setValue={setValue}
           performed={performed}
           style={style}

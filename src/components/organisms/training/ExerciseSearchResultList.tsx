@@ -1,9 +1,13 @@
-import React from 'react';
-import {ExerciseInfo} from '../../../models/Training';
+import React, {startTransition} from 'react';
+import {AdditionalExerciseType, ExerciseInfo} from '../../../models/Training';
 import ExerciseSearchResult from '../../molecules/training/ExerciseSearchResult';
 import {default as MaterialIcons} from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation} from '@react-navigation/core';
 import {Capitalize} from '../../../utils/StringUtil';
+import {useExerciseContext} from '../../../context/exercise/ExerciseContext';
+import {nanoid} from 'nanoid/non-secure';
+import {MeasurementSystem} from '../../../models/Measurement';
+
 import {
   Avatar,
   Box,
@@ -21,6 +25,7 @@ const ExerciseSearchResultList = ({
   data,
 }: IExerciseSearchResultListProps): JSX.Element => {
   const navigation = useNavigation();
+  const {addExercise} = useExerciseContext();
   const avatarColor = useColorModeValue('apple.blue.light', 'apple.red.dark');
   const textColor = useColorModeValue('black', 'white');
 
@@ -53,6 +58,44 @@ const ExerciseSearchResultList = ({
     );
   }, [navigation]);
 
+  // TODO: Experimental exercise content, remove this
+  const handlePress = React.useCallback(
+    (exerciseInfo: ExerciseInfo) => {
+      startTransition(() => {
+        addExercise({
+          addedAt: new Date(),
+          exerciseName: exerciseInfo.name,
+          id: nanoid(5),
+          performed: false,
+          type: exerciseInfo.type,
+          values: {
+            reps: 8,
+            weight: {value: 135, measurement: MeasurementSystem.IMPERIAL},
+          },
+          additionalExercises: [
+            {
+              addedAt: new Date(),
+              exerciseName: exerciseInfo.name,
+              performed: false,
+              type: exerciseInfo.type,
+              values: {
+                reps: 8,
+                weight: {value: 135, measurement: MeasurementSystem.IMPERIAL},
+              },
+              variant: AdditionalExerciseType.SUPERSET,
+            },
+          ],
+        });
+
+        navigation.navigate(
+          'Training' as never,
+          {screen: 'CurrentSession'} as never,
+        );
+      });
+    },
+    [addExercise, navigation],
+  );
+
   return (
     <Box w={'100%'} py={2}>
       <ScrollView w={'100%'}>
@@ -72,7 +115,7 @@ const ExerciseSearchResultList = ({
                   ? Capitalize(exercise.exerciseEquipment)
                   : undefined
               }
-              onPress={() => console.log(exercise.name)}
+              onPress={() => handlePress(exercise)}
               leftContent={LeftContent(exercise)}
             />
           );

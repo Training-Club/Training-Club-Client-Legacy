@@ -29,6 +29,8 @@ interface IExerciseCardProps {
     bgColor?: ColorType | string;
     textColor?: ColorType | string;
     borderColor?: ColorType | string;
+    topSpacing?: boolean;
+    bottomSpacing?: boolean;
 
     addSetButton?: {
       backgroundColor?: ColorType | string;
@@ -88,9 +90,11 @@ const ExerciseCard = ({
   return (
     <Box
       w={'100%'}
-      p={2}
+      p={4}
       rounded={'12px'}
-      bgColor={style?.bgColor ?? defaultBgColor}>
+      bgColor={style?.bgColor ?? defaultBgColor}
+      mt={style?.topSpacing ? 8 : 0}
+      mb={style?.bottomSpacing ? 32 : 0}>
       <HStack w={'100%'} justifyContent={'space-between'}>
         <Heading size={'md'}>{groupedExercise.name}</Heading>
 

@@ -43,16 +43,16 @@ export interface ITrainable {
   addedAt: Date;
   values: ExerciseValue;
   performed: boolean;
+  type: ExerciseType;
 }
 
 export interface IExercise extends ITrainable {
   id: string;
-  type: ExerciseType;
   additionalExercises?: IAdditionalExercise[];
 }
 
 export interface IAdditionalExercise extends ITrainable {
-  type: AdditionalExerciseType;
+  variant: AdditionalExerciseType;
 }
 
 export type ExerciseInfo = {
@@ -78,12 +78,12 @@ export type ExerciseValue = {
 };
 
 export enum ExerciseType {
-  WEIGHTED_REPS = 'weighted_reps',
-  WEIGHTED_TIME = 'weighted_time',
-  DISTANCE_TIME = 'distance_time',
-  REPS = 'reps',
-  TIME = 'time',
-  DISTANCE = 'distance',
+  WEIGHTED_REPS = 'WEIGHTED_REPS',
+  WEIGHTED_TIME = 'WEIGHTED_TIME',
+  DISTANCE_TIME = 'DISTANCE_TIME',
+  REPS = 'REPS',
+  TIME = 'TIME',
+  DISTANCE = 'DISTANCE',
 }
 
 export enum AdditionalExerciseType {

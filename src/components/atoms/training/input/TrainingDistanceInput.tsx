@@ -1,12 +1,11 @@
 import React from 'react';
-import {IExerciseValueDistance} from '../../../../models/Training';
 import {ITrainingInputProps} from '../TrainingInput';
 import {Dimensions, TextInput} from 'react-native';
 import DistanceSelectActionsheet from '../../../molecules/training/DistanceSelectActionsheet';
 import DarkActionsheetTheme from '../../../organisms/design/themes/DarkActionsheetTheme';
 import {useActionsheetContext} from '../../../../context/actionsheet/ActionsheetContext';
 import {usePushdownContext} from '../../../../context/pushdown/PushdownContext';
-import {HStack, Text, useColorModeValue, Factory} from 'native-base';
+import {IExerciseValueDistance} from '../../../../models/Training';
 
 import {
   DistanceMeasurement,
@@ -14,6 +13,8 @@ import {
   getDistanceMeasurement,
   getDistanceMeasurementSuffix,
 } from '../../../../models/Measurement';
+
+import {HStack, Text, useColorModeValue, Factory} from 'native-base';
 
 const TrainingDistanceInput = ({
   value,
@@ -163,4 +164,19 @@ const TrainingDistanceInput = ({
   );
 };
 
-export default React.memo(TrainingDistanceInput);
+const propsAreEqual = (
+  prevProps: Readonly<ITrainingInputProps<IExerciseValueDistance | undefined>>,
+  nextProps: Readonly<ITrainingInputProps<IExerciseValueDistance | undefined>>,
+): boolean => {
+  if (prevProps.value !== nextProps.value) {
+    return false;
+  }
+
+  if (prevProps.performed !== nextProps.performed) {
+    return false;
+  }
+
+  return prevProps.defaultValue === nextProps.defaultValue;
+};
+
+export default React.memo(TrainingDistanceInput, propsAreEqual);

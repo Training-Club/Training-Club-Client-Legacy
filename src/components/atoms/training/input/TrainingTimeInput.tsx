@@ -186,4 +186,19 @@ const TrainingTimeInput = ({
   );
 };
 
-export default React.memo(TrainingTimeInput);
+const propsAreEqual = (
+  prevProps: Readonly<ITrainingInputProps<IExerciseValueTime | undefined>>,
+  nextProps: Readonly<ITrainingInputProps<IExerciseValueTime | undefined>>,
+): boolean => {
+  if (prevProps.value !== nextProps.value) {
+    return false;
+  }
+
+  if (prevProps.performed !== nextProps.performed) {
+    return false;
+  }
+
+  return prevProps.defaultValue === nextProps.defaultValue;
+};
+
+export default React.memo(TrainingTimeInput, propsAreEqual);

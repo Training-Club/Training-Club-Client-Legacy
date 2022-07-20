@@ -1,4 +1,4 @@
-import React, {startTransition} from 'react';
+import React from 'react';
 import {Dimensions, TextInput} from 'react-native';
 import {ITrainingInputProps} from '../TrainingInput';
 import {IExerciseValueWeight} from '../../../../models/Training';
@@ -162,4 +162,19 @@ const TrainingWeightInput = ({
   );
 };
 
-export default React.memo(TrainingWeightInput);
+const propsAreEqual = (
+  prevProps: Readonly<ITrainingInputProps<IExerciseValueWeight | undefined>>,
+  nextProps: Readonly<ITrainingInputProps<IExerciseValueWeight | undefined>>,
+): boolean => {
+  if (prevProps.value !== nextProps.value) {
+    return false;
+  }
+
+  if (prevProps.performed !== nextProps.performed) {
+    return false;
+  }
+
+  return prevProps.defaultValue === nextProps.defaultValue;
+};
+
+export default React.memo(TrainingWeightInput, propsAreEqual);

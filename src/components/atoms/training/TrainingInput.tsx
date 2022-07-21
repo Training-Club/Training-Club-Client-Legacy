@@ -119,26 +119,11 @@ const ParentExerciseInput = ({
   fieldType,
   performed,
 }: IParentExerciseInputProps): JSX.Element => {
-  const {exercises, setExercises} = useExerciseContext();
+  const {setParentField} = useExerciseContext();
 
-  const setValue = React.useCallback(
-    (data: any) => {
-      const copy: IExercise[] = exercises.map(item =>
-        exercise.id !== item.id
-          ? item
-          : {
-              ...item,
-              values: {
-                ...item.values,
-                [fieldName]: data,
-              },
-            },
-      );
-
-      setExercises(copy);
-    },
-    [exercise.id, exercises, fieldName, setExercises],
-  );
+  const setValue = (data: any) => {
+    setParentField(fieldName, exercise, data);
+  };
 
   return (
     <TrainingInputController
@@ -160,50 +145,11 @@ const AdditionalExerciseInput = ({
   fieldType,
   performed,
 }: IAdditionalExerciseInputProps): JSX.Element => {
-  const {exercises, setExercises} = useExerciseContext();
+  const {setAdditionalField} = useExerciseContext();
 
-  const setValue = React.useCallback(
-    (data: any) => {
-      const parentSearch: IExercise | undefined = exercises.find(
-        e => e.id === parentExerciseId,
-      );
-
-      if (!parentSearch || !parentSearch.additionalExercises) {
-        return;
-      }
-
-      const childCopy: IAdditionalExercise[] =
-        parentSearch.additionalExercises.map(item =>
-          item.exerciseName !== additionalExercise.exerciseName
-            ? item
-            : {
-                ...item,
-                values: {
-                  ...item.values,
-                  [fieldName]: data,
-                },
-              },
-        );
-
-      const parentCopy: IExercise[] = exercises.map(item =>
-        parentExerciseId !== item.id
-          ? item
-          : {
-              ...item,
-              additional: childCopy,
-            },
-      );
-
-      setExercises(parentCopy);
-    },
-    [
-      additionalExercise.exerciseName,
-      exercises,
-      fieldName,
-      parentExerciseId,
-      setExercises,
-    ],
-  );
+  const setValue = (data: any) => {
+    setAdditionalField(fieldName, additionalExercise, parentExerciseId, data);
+  };
 
   return (
     <TrainingInputController

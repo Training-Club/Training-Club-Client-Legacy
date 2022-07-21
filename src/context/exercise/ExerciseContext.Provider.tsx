@@ -1,7 +1,11 @@
 import React from 'react';
-import {GroupedExercise, IExercise} from '../../models/Training';
 import {ExerciseContext} from './ExerciseContext';
 import {nanoid} from 'nanoid/non-secure';
+import {
+  GroupedExercise,
+  IAdditionalExercise,
+  IExercise,
+} from '../../models/Training';
 
 interface IExerciseContextProviderProps {
   children: any;
@@ -11,6 +15,75 @@ export function ExerciseContextProvider({
   children,
 }: IExerciseContextProviderProps) {
   const [exercises, setExercises] = React.useState<IExercise[]>([]);
+
+  /**
+   * Sets parent exercise fields in the exercise context
+   */
+  const setParentField = React.useCallback(
+    (fieldName: string, exercise: IExercise, data: any) => {
+      setExercises(prevState => {
+        return prevState.map(item =>
+          exercise.id !== item.id
+            ? item
+            : {
+                ...item,
+                values: {
+                  ...item.values,
+                  [fieldName]: data,
+                },
+              },
+        );
+      });
+    },
+    [],
+  );
+
+  /**
+   * Sets additional exercise fields in the exercise context
+   */
+  const setAdditionalField = React.useCallback(
+    (
+      fieldName: string,
+      additionalExercise: IAdditionalExercise,
+      parentExerciseId: string,
+      data: any,
+    ) => {
+      setExercises(prevState => {
+        const parentSearch: IExercise | undefined = prevState.find(
+          e => e.id === parentExerciseId,
+        );
+
+        if (!parentSearch || !parentSearch.additionalExercises) {
+          return prevState;
+        }
+
+        const childCopy: IAdditionalExercise[] =
+          parentSearch.additionalExercises.map(item =>
+            item.exerciseName !== additionalExercise.exerciseName
+              ? item
+              : {
+                  ...item,
+                  values: {
+                    ...item.values,
+                    [fieldName]: data,
+                  },
+                },
+          );
+
+        const parentCopy: IExercise[] = prevState.map(item =>
+          parentExerciseId !== item.id
+            ? item
+            : {
+                ...item,
+                additional: childCopy,
+              },
+        );
+
+        return parentCopy;
+      });
+    },
+    [],
+  );
 
   /**
    * Duplicates the provided exercise and adds it to state
@@ -103,6 +176,20 @@ export function ExerciseContextProvider({
         toggleComplete: (e: IExercise) => toggleComplete(e),
         addExercise: (e: IExercise) => addExercise(e),
         removeExercise: (e: GroupedExercise) => removeExercise(e),
+        setAdditionalField: (
+          fieldName: string,
+          additionalExercise: IAdditionalExercise,
+          parentExerciseId: string,
+          data: any,
+        ) =>
+          setAdditionalField(
+            fieldName,
+            additionalExercise,
+            parentExerciseId,
+            data,
+          ),
+        setParentField: (fieldName: string, exercise: IExercise, data: any) =>
+          setParentField(fieldName, exercise, data),
       }}>
       {children}
     </ExerciseContext.Provider>

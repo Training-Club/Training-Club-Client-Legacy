@@ -55,6 +55,15 @@ export interface IAdditionalExercise extends ITrainable {
   variant: AdditionalExerciseType;
 }
 
+/**
+ * Returns true if the provided trainable is an additional exercise
+ *
+ * @param {any} obj to check against
+ */
+export function isAdditionalExercise(obj: any): obj is IAdditionalExercise {
+  return 'variant' in obj;
+}
+
 export type ExerciseInfo = {
   id: string;
   name: string;

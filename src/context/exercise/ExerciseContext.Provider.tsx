@@ -70,16 +70,14 @@ export function ExerciseContextProvider({
                 },
           );
 
-        const parentCopy: IExercise[] = prevState.map(item =>
+        return prevState.map(item =>
           parentExerciseId !== item.id
             ? item
             : {
                 ...item,
-                additional: childCopy,
+                additionalExercises: childCopy,
               },
         );
-
-        return parentCopy;
       });
     },
     [],

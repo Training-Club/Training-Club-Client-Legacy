@@ -5,6 +5,8 @@ import {
   GroupedExercise,
   IAdditionalExercise,
   IExercise,
+  isAdditionalExercise,
+  ITrainable,
 } from '../../models/Training';
 
 interface IExerciseContextProviderProps {
@@ -124,16 +126,45 @@ export function ExerciseContextProvider({
    * @param exercise
    */
   const toggleComplete = React.useCallback(
-    (exercise: IExercise) => {
-      const copy = exercises.map(e =>
-        exercise.id !== e.id ? e : {...e, performed: !e.performed},
-      );
-
+    (exercise: ITrainable, parentExerciseId?: string) => {
       requestAnimationFrame(() => {
-        setExercises(copy);
+        setExercises(prevState => {
+          if (!isAdditionalExercise(exercise)) {
+            const asExercise = exercise as IExercise;
+
+            return prevState.map(e =>
+              asExercise.id !== e.id ? e : {...e, performed: !e.performed},
+            );
+          }
+
+          const asAdditional = exercise as IAdditionalExercise;
+          const parentSearch: IExercise | undefined = prevState.find(
+            e => e.id === parentExerciseId,
+          );
+
+          if (!parentSearch || !parentSearch.additionalExercises) {
+            return prevState;
+          }
+
+          const childCopy: IAdditionalExercise[] =
+            parentSearch.additionalExercises.map(item =>
+              item.exerciseName !== asAdditional.exerciseName
+                ? item
+                : {
+                    ...item,
+                    performed: !item.performed,
+                  },
+            );
+
+          return prevState.map(item =>
+            parentExerciseId !== item.id
+              ? item
+              : {...item, additionalExercises: childCopy},
+          );
+        });
       });
     },
-    [exercises],
+    [],
   );
 
   /**
@@ -171,7 +202,7 @@ export function ExerciseContextProvider({
         setExercises: (e: IExercise[]) => setExercises(e),
         duplicateSet: (e: IExercise) => duplicateSet(e),
         removeSet: (e: IExercise) => removeSet(e),
-        toggleComplete: (e: IExercise) => toggleComplete(e),
+        toggleComplete: (e: ITrainable, p?: string) => toggleComplete(e, p),
         addExercise: (e: IExercise) => addExercise(e),
         removeExercise: (e: GroupedExercise) => removeExercise(e),
         setAdditionalField: (

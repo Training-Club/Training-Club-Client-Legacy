@@ -3,6 +3,7 @@ import {
   GroupedExercise,
   IAdditionalExercise,
   IExercise,
+  ITrainable,
 } from '../../models/Training';
 
 export interface IExerciseContext {
@@ -10,7 +11,7 @@ export interface IExerciseContext {
   setExercises: (exercises: IExercise[]) => void;
   duplicateSet: (exercise: IExercise) => void;
   removeSet: (exercise: IExercise) => void;
-  toggleComplete: (exercise: IExercise) => void;
+  toggleComplete: (exercise: ITrainable, parentExerciseId?: string) => void;
   addExercise: (exercise: IExercise) => void;
   removeExercise: (groupedExercise: GroupedExercise) => void;
   setParentField: (fieldName: string, exercise: IExercise, data: any) => void;

@@ -1,8 +1,14 @@
 import React from 'react';
-import {ExerciseType, GroupedExercise} from '../../../models/Training';
 import {ColorType} from 'native-base/lib/typescript/components/types';
 import {useExerciseContext} from '../../../context/exercise/ExerciseContext';
+import TrainingCheckbox from '../../atoms/training/TrainingCheckbox';
 import {default as MaterialIcons} from 'react-native-vector-icons/MaterialIcons';
+
+import {
+  ExerciseType,
+  GroupedExercise,
+  ITrainable,
+} from '../../../models/Training';
 
 import {
   AdditionalTrainingInput,
@@ -50,7 +56,7 @@ const ExerciseCard = ({
   groupedExercise,
   style,
 }: IExerciseCardProps): JSX.Element => {
-  const {duplicateSet, removeExercise} = useExerciseContext();
+  const {duplicateSet, removeExercise, toggleComplete} = useExerciseContext();
 
   const defaultTextColor = useColorModeValue('black', 'white');
   const defaultBgColor = useColorModeValue('apple.gray.50', 'apple.gray.900');
@@ -87,6 +93,13 @@ const ExerciseCard = ({
     'apple.gray.100',
   );
 
+  const handleToggleComplete = React.useCallback(
+    (exercise: ITrainable, parentExerciseId?: string) => {
+      toggleComplete(exercise, parentExerciseId);
+    },
+    [toggleComplete],
+  );
+
   return (
     <Box
       w={'100%'}
@@ -96,7 +109,9 @@ const ExerciseCard = ({
       mt={style?.topSpacing ? 8 : 0}
       mb={style?.bottomSpacing ? 32 : 0}>
       <HStack w={'100%'} justifyContent={'space-between'}>
-        <Heading size={'md'}>{groupedExercise.name}</Heading>
+        <Heading size={'md'} isTruncated={true} maxW={'100%'}>
+          {groupedExercise.name}
+        </Heading>
 
         <IconButton
           testID={'exercise-card-close-btn'}
@@ -131,11 +146,12 @@ const ExerciseCard = ({
             <Box
               key={exercise.id}
               w={'100%'}
+              pb={i < groupedExercise.exercises.length - 1 ? 4 : 0}
               borderBottomWidth={
                 i < groupedExercise.exercises.length - 1 ? 1 : 0
               }
               borderBottomColor={style?.borderColor ?? defaultBorderColor}>
-              <HStack key={`exercise-entry-${i}`} w={'100%'} py={1}>
+              <HStack key={`exercise-entry-${i}`} w={'100%'} py={2}>
                 <Box w={'20%'}>
                   <Text fontWeight={'semibold'} fontSize={16}>
                     Set {i + 1}
@@ -194,7 +210,11 @@ const ExerciseCard = ({
                 )}
 
                 <Box w={'10%'}>
-                  <Text>4</Text>
+                  <TrainingCheckbox
+                    exercise={exercise}
+                    performed={exercise.performed}
+                    setPerformed={handleToggleComplete}
+                  />
                 </Box>
               </HStack>
 
@@ -229,7 +249,7 @@ const ExerciseCard = ({
                                 exerciseType={exercise.type}
                                 fieldName={'reps'}
                                 fieldType={ExerciseInputType.REPS}
-                                performed={exercise.performed}
+                                performed={additionalExercise.performed}
                               />
                             )}
 
@@ -243,7 +263,7 @@ const ExerciseCard = ({
                                 exerciseType={exercise.type}
                                 fieldName={'weight'}
                                 fieldType={ExerciseInputType.WEIGHT}
-                                performed={exercise.performed}
+                                performed={additionalExercise.performed}
                               />
                             )}
 
@@ -257,7 +277,7 @@ const ExerciseCard = ({
                                 exerciseType={exercise.type}
                                 fieldName={'distance'}
                                 fieldType={ExerciseInputType.DISTANCE}
-                                performed={exercise.performed}
+                                performed={additionalExercise.performed}
                               />
                             )}
 
@@ -272,12 +292,17 @@ const ExerciseCard = ({
                                 exerciseType={exercise.type}
                                 fieldName={'time'}
                                 fieldType={ExerciseInputType.TIME}
-                                performed={exercise.performed}
+                                performed={additionalExercise.performed}
                               />
                             )}
 
                             <Box w={'10%'}>
-                              <Text>4</Text>
+                              <TrainingCheckbox
+                                exercise={additionalExercise}
+                                performed={additionalExercise.performed}
+                                parentExerciseId={exercise.id}
+                                setPerformed={handleToggleComplete}
+                              />
                             </Box>
                           </HStack>
                         );

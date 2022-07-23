@@ -3,6 +3,8 @@ import {GroupedExercise, IExercise} from '../models/Training';
 /**
  * Returns the next exercise not marked 'complete' in the stack
  *
+ * TODO: This will only parse the parent, add additional exercise support
+ *
  * @param {IExercise[]} exercises Exercises to parse
  */
 export function getNextIncompleteExercise(
@@ -17,12 +19,12 @@ export function getNextIncompleteExercise(
       break;
     }
 
-    const incomplete: IExercise[] = grouped.exercises
+    const incompleteParent: IExercise[] = grouped.exercises
       .filter(e => !e.performed)
       .sort((a, b) => a.addedAt.getDate() - b.addedAt.getDate());
 
-    if (incomplete.length > 0) {
-      return incomplete[0];
+    if (incompleteParent.length > 0) {
+      return incompleteParent[0];
     }
   }
 

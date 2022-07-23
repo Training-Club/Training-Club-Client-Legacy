@@ -4,6 +4,8 @@ import {useExerciseContext} from '../../../context/exercise/ExerciseContext';
 import TrainingCheckbox from '../../atoms/training/TrainingCheckbox';
 import {default as MaterialIcons} from 'react-native-vector-icons/MaterialIcons';
 import {getNextIncompleteExercise} from '../../../data/Training';
+import {getPlateCount} from '../../../utils/PlateCounter';
+import TrainingPlateCounter from '../../atoms/training/TrainingPlateCounter';
 
 import Animated, {
   Layout,
@@ -69,6 +71,17 @@ const ExerciseCard = ({
     () => getNextIncompleteExercise(groupedExercise.exercises),
     [groupedExercise],
   );
+
+  const plateCounterData =
+    nextIncompleteExercise &&
+    (nextIncompleteExercise.type === ExerciseType.WEIGHTED_TIME ||
+      nextIncompleteExercise.type === ExerciseType.WEIGHTED_REPS) &&
+    nextIncompleteExercise.values.weight
+      ? getPlateCount(nextIncompleteExercise.values.weight.value)
+      : undefined;
+
+  console.log(nextIncompleteExercise);
+  console.log(plateCounterData);
 
   const defaultTextColor = useColorModeValue('black', 'white');
   const defaultBgColor = useColorModeValue('apple.gray.50', 'apple.gray.900');
@@ -334,38 +347,47 @@ const ExerciseCard = ({
         })}
       </VStack>
 
-      <Button
-        variant={'basic'}
-        w={'100px'}
+      <HStack
+        w={'100%'}
+        justifyContent={'space-between'}
+        space={4}
         mt={4}
-        rounded={'full'}
-        size={'sm'}
-        bgColor={
-          style?.addSetButton?.backgroundColor ??
-          defaultAddSetButtonBackgroundColor
-        }
-        _pressed={{
-          bgColor:
-            style?.addSetButton?.pressedBackgroundColor ??
-            defaultAddSetButtonPressedBackgroundColor,
-        }}
-        leftIcon={
-          <Icon
-            as={MaterialIcons}
-            name={'add'}
-            size={4}
-            color={
-              style?.addSetButton?.iconColor ?? defaultAddSetButtonIconColor
-            }
-          />
-        }
-        onPress={() =>
-          duplicateSet(
-            groupedExercise.exercises[groupedExercise.exercises.length - 1],
-          )
-        }>
-        Add Set
-      </Button>
+        alignItems={'center'}>
+        <Button
+          variant={'basic'}
+          h={'36px'}
+          w={'30%'}
+          rounded={'full'}
+          size={'sm'}
+          bgColor={
+            style?.addSetButton?.backgroundColor ??
+            defaultAddSetButtonBackgroundColor
+          }
+          _pressed={{
+            bgColor:
+              style?.addSetButton?.pressedBackgroundColor ??
+              defaultAddSetButtonPressedBackgroundColor,
+          }}
+          leftIcon={
+            <Icon
+              as={MaterialIcons}
+              name={'add'}
+              size={4}
+              color={
+                style?.addSetButton?.iconColor ?? defaultAddSetButtonIconColor
+              }
+            />
+          }
+          onPress={() =>
+            duplicateSet(
+              groupedExercise.exercises[groupedExercise.exercises.length - 1],
+            )
+          }>
+          Add Set
+        </Button>
+
+        {plateCounterData && <TrainingPlateCounter data={plateCounterData} />}
+      </HStack>
     </Box>
   );
 };

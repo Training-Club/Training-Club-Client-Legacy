@@ -3,6 +3,13 @@ import {ColorType} from 'native-base/lib/typescript/components/types';
 import {useExerciseContext} from '../../../context/exercise/ExerciseContext';
 import TrainingCheckbox from '../../atoms/training/TrainingCheckbox';
 import {default as MaterialIcons} from 'react-native-vector-icons/MaterialIcons';
+import {getNextIncompleteExercise} from '../../../data/Training';
+
+import Animated, {
+  Layout,
+  SlideInRight,
+  SlideOutRight,
+} from 'react-native-reanimated';
 
 import {
   ExerciseType,
@@ -18,15 +25,15 @@ import {
 
 import {
   Box,
+  Button,
   Heading,
   HStack,
-  IconButton,
-  VStack,
-  Text,
-  Square,
-  Button,
   Icon,
+  IconButton,
+  Square,
+  Text,
   useColorModeValue,
+  VStack,
 } from 'native-base';
 
 interface IExerciseCardProps {
@@ -57,6 +64,11 @@ const ExerciseCard = ({
   style,
 }: IExerciseCardProps): JSX.Element => {
   const {duplicateSet, removeExercise, toggleComplete} = useExerciseContext();
+
+  const nextIncompleteExercise = React.useMemo(
+    () => getNextIncompleteExercise(groupedExercise.exercises),
+    [groupedExercise],
+  );
 
   const defaultTextColor = useColorModeValue('black', 'white');
   const defaultBgColor = useColorModeValue('apple.gray.50', 'apple.gray.900');
@@ -143,174 +155,181 @@ const ExerciseCard = ({
       <VStack w={'100%'} mt={4} space={2}>
         {groupedExercise.exercises.map((exercise, i) => {
           return (
-            <Box
-              key={exercise.id}
-              w={'100%'}
-              pb={i < groupedExercise.exercises.length - 1 ? 4 : 0}
-              borderBottomWidth={
-                i < groupedExercise.exercises.length - 1 ? 1 : 0
-              }
-              borderBottomColor={style?.borderColor ?? defaultBorderColor}>
-              <HStack key={`exercise-entry-${i}`} w={'100%'} py={2}>
-                <Box w={'20%'}>
-                  <Text fontWeight={'semibold'} fontSize={16}>
-                    Set {i + 1}
-                  </Text>
-                </Box>
+            <Animated.View
+              entering={SlideInRight.delay(100)}
+              exiting={SlideOutRight}
+              layout={Layout.springify()}>
+              <Box
+                key={exercise.id}
+                w={'100%'}
+                pb={i < groupedExercise.exercises.length - 1 ? 2 : 0}
+                borderBottomWidth={
+                  i < groupedExercise.exercises.length - 1 ? 1 : 0
+                }
+                borderBottomColor={style?.borderColor ?? defaultBorderColor}>
+                <HStack key={`exercise-entry-${i}`} w={'100%'} py={2}>
+                  <Box w={'20%'}>
+                    <Text fontWeight={'semibold'} fontSize={16}>
+                      Set {i + 1}
+                    </Text>
+                  </Box>
 
-                {(exercise.type === ExerciseType.REPS ||
-                  exercise.type === ExerciseType.TIME ||
-                  exercise.type === ExerciseType.DISTANCE) && (
-                  <Square w={'35%'} />
-                )}
+                  {(exercise.type === ExerciseType.REPS ||
+                    exercise.type === ExerciseType.TIME ||
+                    exercise.type === ExerciseType.DISTANCE) && (
+                    <Square w={'35%'} />
+                  )}
 
-                {(exercise.type === ExerciseType.WEIGHTED_REPS ||
-                  exercise.type === ExerciseType.REPS) && (
-                  <ParentTrainingInput
-                    exercise={exercise}
-                    exerciseType={exercise.type}
-                    fieldName={'reps'}
-                    fieldType={ExerciseInputType.REPS}
-                    performed={exercise.performed}
-                  />
-                )}
+                  {(exercise.type === ExerciseType.WEIGHTED_REPS ||
+                    exercise.type === ExerciseType.REPS) && (
+                    <ParentTrainingInput
+                      exercise={exercise}
+                      exerciseType={exercise.type}
+                      fieldName={'reps'}
+                      fieldType={ExerciseInputType.REPS}
+                      performed={exercise.performed}
+                    />
+                  )}
 
-                {(exercise.type === ExerciseType.WEIGHTED_TIME ||
-                  exercise.type === ExerciseType.WEIGHTED_REPS) && (
-                  <ParentTrainingInput
-                    exercise={exercise}
-                    exerciseType={exercise.type}
-                    fieldName={'weight'}
-                    fieldType={ExerciseInputType.WEIGHT}
-                    performed={exercise.performed}
-                  />
-                )}
+                  {(exercise.type === ExerciseType.WEIGHTED_TIME ||
+                    exercise.type === ExerciseType.WEIGHTED_REPS) && (
+                    <ParentTrainingInput
+                      exercise={exercise}
+                      exerciseType={exercise.type}
+                      fieldName={'weight'}
+                      fieldType={ExerciseInputType.WEIGHT}
+                      performed={exercise.performed}
+                    />
+                  )}
 
-                {(exercise.type === ExerciseType.DISTANCE ||
-                  exercise.type === ExerciseType.DISTANCE_TIME) && (
-                  <ParentTrainingInput
-                    exercise={exercise}
-                    exerciseType={exercise.type}
-                    fieldName={'distance'}
-                    fieldType={ExerciseInputType.DISTANCE}
-                    performed={exercise.performed}
-                  />
-                )}
+                  {(exercise.type === ExerciseType.DISTANCE ||
+                    exercise.type === ExerciseType.DISTANCE_TIME) && (
+                    <ParentTrainingInput
+                      exercise={exercise}
+                      exerciseType={exercise.type}
+                      fieldName={'distance'}
+                      fieldType={ExerciseInputType.DISTANCE}
+                      performed={exercise.performed}
+                    />
+                  )}
 
-                {(exercise.type === ExerciseType.TIME ||
-                  exercise.type === ExerciseType.WEIGHTED_TIME ||
-                  exercise.type === ExerciseType.DISTANCE_TIME) && (
-                  <ParentTrainingInput
-                    exercise={exercise}
-                    exerciseType={exercise.type}
-                    fieldName={'time'}
-                    fieldType={ExerciseInputType.TIME}
-                    performed={exercise.performed}
-                  />
-                )}
+                  {(exercise.type === ExerciseType.TIME ||
+                    exercise.type === ExerciseType.WEIGHTED_TIME ||
+                    exercise.type === ExerciseType.DISTANCE_TIME) && (
+                    <ParentTrainingInput
+                      exercise={exercise}
+                      exerciseType={exercise.type}
+                      fieldName={'time'}
+                      fieldType={ExerciseInputType.TIME}
+                      performed={exercise.performed}
+                    />
+                  )}
 
-                <Box w={'10%'}>
-                  <TrainingCheckbox
-                    exercise={exercise}
-                    performed={exercise.performed}
-                    setPerformed={handleToggleComplete}
-                  />
-                </Box>
-              </HStack>
+                  <Box w={'10%'}>
+                    <TrainingCheckbox
+                      exercise={exercise}
+                      performed={exercise.performed}
+                      setPerformed={handleToggleComplete}
+                    />
+                  </Box>
+                </HStack>
 
-              {exercise.additionalExercises &&
-                exercise.additionalExercises.length && (
-                  <VStack w={'100%'} space={2}>
-                    {exercise.additionalExercises.map(
-                      (additionalExercise, j) => {
-                        return (
-                          <HStack key={`ae-${j}`} w={'100%'} py={1}>
-                            <Square w={'20%'}>
-                              <Icon
-                                as={MaterialIcons}
-                                name={'subdirectory-arrow-right'}
-                                size={6}
-                                color={style?.textColor ?? defaultTextColor}
-                              />
-                            </Square>
+                {exercise.additionalExercises &&
+                  exercise.additionalExercises.length && (
+                    <VStack w={'100%'} space={2}>
+                      {exercise.additionalExercises.map(
+                        (additionalExercise, j) => {
+                          return (
+                            <HStack key={`ae-${j}`} w={'100%'} py={1}>
+                              <Square w={'20%'}>
+                                <Icon
+                                  as={MaterialIcons}
+                                  name={'subdirectory-arrow-right'}
+                                  size={6}
+                                  color={style?.textColor ?? defaultTextColor}
+                                />
+                              </Square>
 
-                            {(additionalExercise.type === ExerciseType.REPS ||
-                              additionalExercise.type === ExerciseType.TIME ||
-                              additionalExercise.type ===
-                                ExerciseType.DISTANCE) && <Square w={'35%'} />}
+                              {(additionalExercise.type === ExerciseType.REPS ||
+                                additionalExercise.type === ExerciseType.TIME ||
+                                additionalExercise.type ===
+                                  ExerciseType.DISTANCE) && (
+                                <Square w={'35%'} />
+                              )}
 
-                            {(additionalExercise.type ===
-                              ExerciseType.WEIGHTED_REPS ||
-                              additionalExercise.type ===
-                                ExerciseType.REPS) && (
-                              <AdditionalTrainingInput
-                                additionalExercise={additionalExercise}
-                                parentExerciseId={exercise.id}
-                                exerciseType={exercise.type}
-                                fieldName={'reps'}
-                                fieldType={ExerciseInputType.REPS}
-                                performed={additionalExercise.performed}
-                              />
-                            )}
+                              {(additionalExercise.type ===
+                                ExerciseType.WEIGHTED_REPS ||
+                                additionalExercise.type ===
+                                  ExerciseType.REPS) && (
+                                <AdditionalTrainingInput
+                                  additionalExercise={additionalExercise}
+                                  parentExerciseId={exercise.id}
+                                  exerciseType={exercise.type}
+                                  fieldName={'reps'}
+                                  fieldType={ExerciseInputType.REPS}
+                                  performed={additionalExercise.performed}
+                                />
+                              )}
 
-                            {(additionalExercise.type ===
-                              ExerciseType.WEIGHTED_TIME ||
-                              additionalExercise.type ===
-                                ExerciseType.WEIGHTED_REPS) && (
-                              <AdditionalTrainingInput
-                                additionalExercise={additionalExercise}
-                                parentExerciseId={exercise.id}
-                                exerciseType={exercise.type}
-                                fieldName={'weight'}
-                                fieldType={ExerciseInputType.WEIGHT}
-                                performed={additionalExercise.performed}
-                              />
-                            )}
-
-                            {(additionalExercise.type ===
-                              ExerciseType.DISTANCE ||
-                              additionalExercise.type ===
-                                ExerciseType.DISTANCE_TIME) && (
-                              <AdditionalTrainingInput
-                                additionalExercise={additionalExercise}
-                                parentExerciseId={exercise.id}
-                                exerciseType={exercise.type}
-                                fieldName={'distance'}
-                                fieldType={ExerciseInputType.DISTANCE}
-                                performed={additionalExercise.performed}
-                              />
-                            )}
-
-                            {(additionalExercise.type === ExerciseType.TIME ||
-                              additionalExercise.type ===
+                              {(additionalExercise.type ===
                                 ExerciseType.WEIGHTED_TIME ||
-                              additionalExercise.type ===
-                                ExerciseType.DISTANCE_TIME) && (
-                              <AdditionalTrainingInput
-                                additionalExercise={additionalExercise}
-                                parentExerciseId={exercise.id}
-                                exerciseType={exercise.type}
-                                fieldName={'time'}
-                                fieldType={ExerciseInputType.TIME}
-                                performed={additionalExercise.performed}
-                              />
-                            )}
+                                additionalExercise.type ===
+                                  ExerciseType.WEIGHTED_REPS) && (
+                                <AdditionalTrainingInput
+                                  additionalExercise={additionalExercise}
+                                  parentExerciseId={exercise.id}
+                                  exerciseType={exercise.type}
+                                  fieldName={'weight'}
+                                  fieldType={ExerciseInputType.WEIGHT}
+                                  performed={additionalExercise.performed}
+                                />
+                              )}
 
-                            <Box w={'10%'}>
-                              <TrainingCheckbox
-                                exercise={additionalExercise}
-                                performed={additionalExercise.performed}
-                                parentExerciseId={exercise.id}
-                                setPerformed={handleToggleComplete}
-                              />
-                            </Box>
-                          </HStack>
-                        );
-                      },
-                    )}
-                  </VStack>
-                )}
-            </Box>
+                              {(additionalExercise.type ===
+                                ExerciseType.DISTANCE ||
+                                additionalExercise.type ===
+                                  ExerciseType.DISTANCE_TIME) && (
+                                <AdditionalTrainingInput
+                                  additionalExercise={additionalExercise}
+                                  parentExerciseId={exercise.id}
+                                  exerciseType={exercise.type}
+                                  fieldName={'distance'}
+                                  fieldType={ExerciseInputType.DISTANCE}
+                                  performed={additionalExercise.performed}
+                                />
+                              )}
+
+                              {(additionalExercise.type === ExerciseType.TIME ||
+                                additionalExercise.type ===
+                                  ExerciseType.WEIGHTED_TIME ||
+                                additionalExercise.type ===
+                                  ExerciseType.DISTANCE_TIME) && (
+                                <AdditionalTrainingInput
+                                  additionalExercise={additionalExercise}
+                                  parentExerciseId={exercise.id}
+                                  exerciseType={exercise.type}
+                                  fieldName={'time'}
+                                  fieldType={ExerciseInputType.TIME}
+                                  performed={additionalExercise.performed}
+                                />
+                              )}
+
+                              <Box w={'10%'}>
+                                <TrainingCheckbox
+                                  exercise={additionalExercise}
+                                  performed={additionalExercise.performed}
+                                  parentExerciseId={exercise.id}
+                                  setPerformed={handleToggleComplete}
+                                />
+                              </Box>
+                            </HStack>
+                          );
+                        },
+                      )}
+                    </VStack>
+                  )}
+              </Box>
+            </Animated.View>
           );
         })}
       </VStack>

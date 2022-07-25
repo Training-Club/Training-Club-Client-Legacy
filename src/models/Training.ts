@@ -28,14 +28,14 @@ export interface IExerciseValueDistance extends IExerciseValue {
 }
 
 export interface IExerciseValueTime extends Omit<IExerciseValue, 'value'> {
-  value?: {
+  value: {
     hours: number;
     minutes: number;
     seconds: number;
     milliseconds: number;
   };
 
-  timeRenderMillis?: boolean;
+  timeRenderMillis: boolean;
 }
 
 export interface ITrainable {

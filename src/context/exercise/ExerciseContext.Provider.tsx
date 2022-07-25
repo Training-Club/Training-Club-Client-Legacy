@@ -2,6 +2,12 @@ import React from 'react';
 import {ExerciseContext} from './ExerciseContext';
 import {nanoid} from 'nanoid/non-secure';
 import {
+  DistanceMeasurement,
+  getConvertedWeight,
+  MeasurementSystem,
+} from '../../models/Measurement';
+
+import {
   GroupedExercise,
   IAdditionalExercise,
   IExercise,
@@ -23,18 +29,20 @@ export function ExerciseContextProvider({
    */
   const setParentField = React.useCallback(
     (fieldName: string, exercise: IExercise, data: any) => {
-      setExercises(prevState => {
-        return prevState.map(item =>
-          exercise.id !== item.id
-            ? item
-            : {
-                ...item,
-                values: {
-                  ...item.values,
-                  [fieldName]: data,
+      requestAnimationFrame(() => {
+        setExercises(prevState => {
+          return prevState.map(item =>
+            exercise.id !== item.id
+              ? item
+              : {
+                  ...item,
+                  values: {
+                    ...item.values,
+                    [fieldName]: data,
+                  },
                 },
-              },
-        );
+          );
+        });
       });
     },
     [],
@@ -50,36 +58,38 @@ export function ExerciseContextProvider({
       parentExerciseId: string,
       data: any,
     ) => {
-      setExercises(prevState => {
-        const parentSearch: IExercise | undefined = prevState.find(
-          e => e.id === parentExerciseId,
-        );
+      requestAnimationFrame(() => {
+        setExercises(prevState => {
+          const parentSearch: IExercise | undefined = prevState.find(
+            e => e.id === parentExerciseId,
+          );
 
-        if (!parentSearch || !parentSearch.additionalExercises) {
-          return prevState;
-        }
+          if (!parentSearch || !parentSearch.additionalExercises) {
+            return prevState;
+          }
 
-        const childCopy: IAdditionalExercise[] =
-          parentSearch.additionalExercises.map(item =>
-            item.exerciseName !== additionalExercise.exerciseName
+          const childCopy: IAdditionalExercise[] =
+            parentSearch.additionalExercises.map(item =>
+              item.exerciseName !== additionalExercise.exerciseName
+                ? item
+                : {
+                    ...item,
+                    values: {
+                      ...item.values,
+                      [fieldName]: data,
+                    },
+                  },
+            );
+
+          return prevState.map(item =>
+            parentExerciseId !== item.id
               ? item
               : {
                   ...item,
-                  values: {
-                    ...item.values,
-                    [fieldName]: data,
-                  },
+                  additionalExercises: childCopy,
                 },
           );
-
-        return prevState.map(item =>
-          parentExerciseId !== item.id
-            ? item
-            : {
-                ...item,
-                additionalExercises: childCopy,
-              },
-        );
+        });
       });
     },
     [],
@@ -89,36 +99,144 @@ export function ExerciseContextProvider({
    * Duplicates the provided exercise and adds it to state
    * @param {IExercise} exercise Exercise to duplicate
    */
-  const duplicateSet = React.useCallback(
-    (exercise: IExercise) => {
-      const copiedExercises: IExercise[] = [...exercises];
-      const copy: IExercise = {
-        ...exercise,
-        id: nanoid(5),
-        addedAt: new Date(),
-        performed: false,
-      };
+  const duplicateSet = React.useCallback((exercise: IExercise) => {
+    requestAnimationFrame(() => {
+      setExercises(prevState => {
+        const copy: IExercise = {
+          ...exercise,
+          id: nanoid(5),
+          addedAt: new Date(),
+          performed: false,
+        };
 
-      copiedExercises.push(copy);
-
-      requestAnimationFrame(() => {
-        setExercises(copiedExercises);
+        return [...prevState, copy];
       });
-    },
-    [exercises],
-  );
+    });
+  }, []);
 
   /**
    * Removes the provided exercise set from state
    * @param {IExercise} exercise Exercise to remove
    */
-  const removeSet = React.useCallback(
-    (exercise: IExercise) => {
+  const removeSet = React.useCallback((exercise: IExercise) => {
+    requestAnimationFrame(() => {
+      setExercises(prevState => {
+        return prevState.filter(e => e.id !== exercise.id);
+      });
+    });
+  }, []);
+
+  /**
+   * Toggles time in milliseconds for an entire grouped exercise
+   *
+   * This function will iterate and update every exercise in the
+   * Grouped Exercise instance
+   *
+   * @param {GroupedExercise} groupedExercise Grouped Exercise to iterate over
+   * @param {boolean} value Value to set timeRenderMillis field to
+   */
+  const toggleMilliseconds = React.useCallback(
+    (groupedExercise: GroupedExercise, value: boolean) => {
       requestAnimationFrame(() => {
-        setExercises(exercises.filter(e => e.id !== exercise.id));
+        setExercises(prevState => {
+          return prevState.map(prevExercise =>
+            groupedExercise.exercises.find(ge => ge.id !== prevExercise.id)
+              ? prevExercise
+              : {
+                  ...prevExercise,
+                  values: {
+                    ...prevExercise.values,
+                    time: {
+                      value: {
+                        hours: prevExercise.values.time?.value.hours ?? 0,
+                        minutes: prevExercise.values.time?.value.minutes ?? 0,
+                        seconds: prevExercise.values.time?.value.seconds ?? 0,
+                        milliseconds:
+                          prevExercise.values.time?.value.milliseconds ?? 0,
+                      },
+                      timeRenderMillis: value,
+                    },
+                  },
+                },
+          );
+        });
       });
     },
-    [exercises],
+    [],
+  );
+
+  /**
+   * Toggles weight measurement system for whole grouped exercise
+   *
+   * This function will iterate and update every exercise in the
+   * Grouped Exercise instance
+   *
+   * @param {GroupedExercise} groupedExercise Grouped Exercise to iterate over
+   * @param {MeasurementSystem} value Value to set measurement to
+   */
+  const toggleMeasurementSystem = React.useCallback(
+    (groupedExercise: GroupedExercise, measurement: MeasurementSystem) => {
+      requestAnimationFrame(() => {
+        setExercises(prevState => {
+          return prevState.map(prevExercise =>
+            groupedExercise.exercises.find(ge => ge.id !== prevExercise.id)
+              ? prevExercise
+              : {
+                  ...prevExercise,
+                  values: {
+                    ...prevExercise.values,
+                    weight: {
+                      measurement: measurement,
+                      value:
+                        prevExercise.values.weight &&
+                        prevExercise.values.weight.value &&
+                        prevExercise.values.weight.measurement
+                          ? getConvertedWeight(
+                              prevExercise.values.weight.value,
+                              prevExercise.values.weight.measurement,
+                            )
+                          : 0,
+                    },
+                  },
+                },
+          );
+        });
+      });
+    },
+    [],
+  );
+
+  /**
+   * Toggles time in milliseconds for an entire grouped exercise
+   *
+   * This function will iterate and update every exercise in the
+   * Grouped Exercise instance
+   *
+   * @param {GroupedExercise} groupedExercise Grouped Exercise to iterate over
+   * @param {DistanceMeasurement} value Value to set measurement to
+   */
+  const toggleDistanceMeasurement = React.useCallback(
+    (groupedExercise: GroupedExercise, measurement: DistanceMeasurement) => {
+      requestAnimationFrame(() => {
+        setExercises(prevState => {
+          return prevState.map(prevExercise =>
+            groupedExercise.exercises.find(ge => ge.id !== prevExercise.id)
+              ? prevExercise
+              : {
+                  ...prevExercise,
+                  values: {
+                    ...prevExercise.values,
+                    distance: {
+                      measurement: measurement,
+                      value: prevExercise.values.distance?.value ?? 0,
+                    },
+                  },
+                },
+          );
+        });
+      });
+    },
+    [],
   );
 
   /**
@@ -171,14 +289,13 @@ export function ExerciseContextProvider({
    * Adds the provided exercise to state
    * @param {IExercise} exercise Exercise to add
    */
-  const addExercise = React.useCallback(
-    (exercise: IExercise) => {
-      requestAnimationFrame(() => {
-        setExercises([...exercises, exercise]);
+  const addExercise = React.useCallback((exercise: IExercise) => {
+    requestAnimationFrame(() => {
+      setExercises(prevState => {
+        return [...prevState, exercise];
       });
-    },
-    [exercises],
-  );
+    });
+  }, []);
 
   /**
    * Removes the provided grouped exercise (and all exercises under it) from the state
@@ -187,12 +304,14 @@ export function ExerciseContextProvider({
   const removeExercise = React.useCallback(
     (groupedExercise: GroupedExercise) => {
       requestAnimationFrame(() => {
-        setExercises([
-          ...exercises.filter(e => e.exerciseName !== groupedExercise.name),
-        ]);
+        setExercises(prevState => {
+          return [
+            ...prevState.filter(e => e.exerciseName !== groupedExercise.name),
+          ];
+        });
       });
     },
-    [exercises],
+    [],
   );
 
   return (
@@ -203,6 +322,14 @@ export function ExerciseContextProvider({
         duplicateSet: (e: IExercise) => duplicateSet(e),
         removeSet: (e: IExercise) => removeSet(e),
         toggleComplete: (e: ITrainable, p?: string) => toggleComplete(e, p),
+        toggleMilliseconds: (e: GroupedExercise, v: boolean) =>
+          toggleMilliseconds(e, v),
+        toggleMeasurement: (e: GroupedExercise, m: MeasurementSystem) =>
+          toggleMeasurementSystem(e, m),
+        toggleDistanceMeasurement: (
+          e: GroupedExercise,
+          m: DistanceMeasurement,
+        ) => toggleDistanceMeasurement(e, m),
         addExercise: (e: IExercise) => addExercise(e),
         removeExercise: (e: GroupedExercise) => removeExercise(e),
         setAdditionalField: (

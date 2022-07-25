@@ -1,4 +1,6 @@
 import React from 'react';
+import {DistanceMeasurement, MeasurementSystem} from '../../models/Measurement';
+
 import {
   GroupedExercise,
   IAdditionalExercise,
@@ -12,9 +14,20 @@ export interface IExerciseContext {
   duplicateSet: (exercise: IExercise) => void;
   removeSet: (exercise: IExercise) => void;
   toggleComplete: (exercise: ITrainable, parentExerciseId?: string) => void;
+  toggleMilliseconds: (exercise: GroupedExercise, value: boolean) => void;
   addExercise: (exercise: IExercise) => void;
   removeExercise: (groupedExercise: GroupedExercise) => void;
   setParentField: (fieldName: string, exercise: IExercise, data: any) => void;
+  toggleMeasurement: (
+    exercise: GroupedExercise,
+    measurement: MeasurementSystem,
+  ) => void;
+
+  toggleDistanceMeasurement: (
+    exercise: GroupedExercise,
+    value: DistanceMeasurement,
+  ) => void;
+
   setAdditionalField: (
     fieldName: string,
     additionalExercise: IAdditionalExercise,
@@ -31,6 +44,9 @@ export const ExerciseContext = React.createContext<IExerciseContext>({
   duplicateSet: () => {},
   removeSet: () => {},
   toggleComplete: () => {},
+  toggleMilliseconds: () => {},
+  toggleDistanceMeasurement: () => {},
+  toggleMeasurement: () => {},
   addExercise: () => {},
   removeExercise: () => {},
 });

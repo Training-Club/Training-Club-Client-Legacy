@@ -16,11 +16,12 @@ const ExerciseCardList = ({
       {groupedExercises.map((groupedExercise, i) => {
         return (
           <Animated.View
+            key={groupedExercise.name}
             entering={FadeIn.delay(100 * i)}
             exiting={FadeOut}
             layout={Layout.springify().delay(100)}>
             <ExerciseCard
-              key={groupedExercise.name}
+              key={`${groupedExercise.name}-${i}`}
               groupedExercise={groupedExercise}
               style={{
                 topSpacing: i > 0,

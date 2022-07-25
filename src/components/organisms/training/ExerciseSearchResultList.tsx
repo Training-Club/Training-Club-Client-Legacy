@@ -1,12 +1,16 @@
-import React, {startTransition} from 'react';
-import {AdditionalExerciseType, ExerciseInfo} from '../../../models/Training';
+import React from 'react';
+import {ExerciseInfo} from '../../../models/Training';
 import ExerciseSearchResult from '../../molecules/training/ExerciseSearchResult';
 import {default as MaterialIcons} from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation} from '@react-navigation/core';
 import {Capitalize} from '../../../utils/StringUtil';
 import {useExerciseContext} from '../../../context/exercise/ExerciseContext';
 import {nanoid} from 'nanoid/non-secure';
-import {MeasurementSystem} from '../../../models/Measurement';
+
+import {
+  DistanceMeasurement,
+  MeasurementSystem,
+} from '../../../models/Measurement';
 
 import {
   Avatar,
@@ -61,37 +65,30 @@ const ExerciseSearchResultList = ({
   // TODO: Experimental exercise content, remove this
   const handlePress = React.useCallback(
     (exerciseInfo: ExerciseInfo) => {
-      startTransition(() => {
-        addExercise({
-          addedAt: new Date(),
-          exerciseName: exerciseInfo.name,
-          id: nanoid(5),
-          performed: false,
-          type: exerciseInfo.type,
-          values: {
-            reps: 8,
-            weight: {value: 135, measurement: MeasurementSystem.IMPERIAL},
+      addExercise({
+        addedAt: new Date(),
+        exerciseName: exerciseInfo.name,
+        id: nanoid(5),
+        performed: false,
+        type: exerciseInfo.type,
+        values: {
+          reps: 8,
+          weight: {value: 135, measurement: MeasurementSystem.IMPERIAL},
+          time: {
+            value: {hours: 0, minutes: 0, seconds: 0, milliseconds: 0},
+            timeRenderMillis: false,
           },
-          additionalExercises: [
-            {
-              addedAt: new Date(),
-              exerciseName: exerciseInfo.name,
-              performed: false,
-              type: exerciseInfo.type,
-              values: {
-                reps: 8,
-                weight: {value: 135, measurement: MeasurementSystem.IMPERIAL},
-              },
-              variant: AdditionalExerciseType.SUPERSET,
-            },
-          ],
-        });
-
-        navigation.navigate(
-          'Training' as never,
-          {screen: 'CurrentSession'} as never,
-        );
+          distance: {
+            value: 0,
+            measurement: DistanceMeasurement.METER,
+          },
+        },
       });
+
+      navigation.navigate(
+        'Training' as never,
+        {screen: 'CurrentSession'} as never,
+      );
     },
     [addExercise, navigation],
   );

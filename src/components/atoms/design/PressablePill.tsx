@@ -62,7 +62,7 @@ const PressablePill = ({
 
   return (
     <Pressable
-      onPressIn={onPress}
+      onPress={onPress}
       borderTopRadius={borderRadiusTop}
       borderTopWidth={style && style.roundedTop ? 0 : 1}
       borderBottomRadius={borderRadiusBottom}
@@ -81,7 +81,9 @@ const PressablePill = ({
           />
         )}
 
-        <Box mt={0.5} w={'100%'}>{children}</Box>
+        <Box mt={0.5} w={'100%'}>
+          {children}
+        </Box>
       </HStack>
     </Pressable>
   );

@@ -67,7 +67,10 @@ const TrainingTimeInput = ({
 
       setValue({
         ...value,
-        [`${fieldType}`]: asNumber,
+        value: {
+          ...value.value,
+          [`${fieldType}`]: asNumber ?? 0,
+        },
       });
     },
     [setValue, value],

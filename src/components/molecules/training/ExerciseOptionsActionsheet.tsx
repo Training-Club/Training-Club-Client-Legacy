@@ -178,7 +178,9 @@ const ExerciseOptionsActionsheet = ({
                           i === Object.keys(DistanceMeasurement).length - 1,
                       }}>
                       <HStack justifyContent={'space-between'}>
-                        <Text>{Capitalize(measurement)}</Text>
+                        <Text color={textColor} fontWeight={'semibold'}>
+                          {Capitalize(measurement)}
+                        </Text>
 
                         {exercise.values.distance?.measurement ===
                           getDistanceMeasurement(measurement) && (
@@ -235,7 +237,9 @@ const ExerciseOptionsActionsheet = ({
                   }
                   style={{roundedTop: true}}>
                   <HStack space={iconSpacing}>
-                    <Text>Imperial (lbs)</Text>
+                    <Text color={textColor} fontWeight={'semibold'}>
+                      Imperial (lbs)
+                    </Text>
 
                     {exercise.values.weight?.measurement ===
                       MeasurementSystem.IMPERIAL && (
@@ -248,7 +252,9 @@ const ExerciseOptionsActionsheet = ({
                   onPress={() => onUpdateMeasurement(MeasurementSystem.METRIC)}
                   style={{roundedBottom: true}}>
                   <HStack space={iconSpacing}>
-                    <Text>Metric (kgs)</Text>
+                    <Text color={textColor} fontWeight={'semibold'}>
+                      Metric (kgs)
+                    </Text>
 
                     {exercise.values.weight?.measurement ===
                       MeasurementSystem.METRIC && (

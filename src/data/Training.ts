@@ -1,6 +1,26 @@
 import {GroupedExercise, IExercise} from '../models/Training';
 
 /**
+ * Iterates over an exercises additional exercises and collects
+ * all exercise names and applies them to a string array
+ *
+ * @param {IExercise} exercise Exercise to parse
+ */
+export function getAdditionalExerciseNames(exercise: IExercise): string[] {
+  const result: string[] = [];
+
+  if (!exercise.additionalExercises) {
+    return result;
+  }
+
+  exercise.additionalExercises.map(additionalExercise => {
+    result.push(additionalExercise.exerciseName);
+  });
+
+  return result;
+}
+
+/**
  * Returns the next exercise not marked 'complete' in the stack
  *
  * TODO: This will only parse the parent, add additional exercise support

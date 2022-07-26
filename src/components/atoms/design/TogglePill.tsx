@@ -70,7 +70,7 @@ const TogglePill = ({
       py={2}
       _text={{color: getTextColor()}}
       _pressed={style?.bgColor?.pressed ?? defaultBgColorPressed}
-      onPressIn={onToggle}>
+      onPress={onToggle}>
       {children}
     </Button>
   );

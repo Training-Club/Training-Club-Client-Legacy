@@ -1,22 +1,35 @@
 import React, {useCallback} from 'react';
-import {Capitalize} from '../../../utils/StringUtil';
-import {getExerciseSearchResults} from '../../../requests/Training';
-import {useDebounce} from 'use-debounce';
+import {useExerciseContext} from '../../../context/exercise/ExerciseContext';
 import {usePushdownContext} from '../../../context/pushdown/PushdownContext';
+import {useDebounce} from 'use-debounce';
+import {getExerciseSearchResults} from '../../../requests/Training';
 import {AxiosError} from 'axios';
 import {ExerciseInfo, MuscleGroup} from '../../../models/Training';
-import {useNavigation} from '@react-navigation/core';
-import {useExerciseContext} from '../../../context/exercise/ExerciseContext';
-import {getMockExerciseData} from '../../../data/Training';
 import CloseableHeader from '../../molecules/design/CloseableHeader';
+import {Box, Icon, View, VStack} from 'native-base';
+import {Capitalize} from '../../../utils/StringUtil';
+import {default as MaterialIcons} from 'react-native-vector-icons/MaterialIcons';
+import InputField from '../../atoms/design/InputField';
 import TogglePillRow from '../../molecules/design/TogglePillRow';
 import TogglePill from '../../atoms/design/TogglePill';
-import InputField from '../../atoms/design/InputField';
 import ExerciseSearchResultList from '../../organisms/training/ExerciseSearchResultList';
-import {default as MaterialIcons} from 'react-native-vector-icons/MaterialIcons';
-import {Box, Icon, View, VStack} from 'native-base';
+import AdditionalExerciseSelection from '../../molecules/training/AdditionalExerciseSelection';
 
-const ExerciseSearchScreen = (): JSX.Element => {
+import Animated, {
+  Layout,
+  SlideInDown,
+  SlideOutDown,
+} from 'react-native-reanimated';
+import {getMockExerciseData} from '../../../data/Training';
+import {useNavigation} from '@react-navigation/core';
+
+interface IExerciseAdditionalSearchScreenProps {
+  route: any;
+}
+
+const ExerciseAdditionalSearchScreen = ({
+  route,
+}: IExerciseAdditionalSearchScreenProps): JSX.Element => {
   const navigation = useNavigation();
   const {addExercise} = useExerciseContext();
   const {setPushdownConfig} = usePushdownContext();
@@ -24,13 +37,16 @@ const ExerciseSearchScreen = (): JSX.Element => {
   const [nameQuery, setNameQuery] = React.useState<string>('');
   const [nameQueryDebounced] = useDebounce(nameQuery, 500);
   const [searchResults, setSearchResults] = React.useState<ExerciseInfo[]>([]);
+  const [selectedExercises, setSelectedExercises] = React.useState<
+    ExerciseInfo[]
+  >([]);
 
   const spacing = 4;
 
   /**
    * Returns true if the provided muscle group is currently selected
    */
-  const isSelected = useCallback(
+  const isSelectedFilter = useCallback(
     (muscleGroup: MuscleGroup) => {
       return (
         filters.find(e => e.toString() === muscleGroup.toString()) !== undefined
@@ -40,11 +56,23 @@ const ExerciseSearchScreen = (): JSX.Element => {
   );
 
   /**
+   * Returns true if the provided exercise info is currently selected
+   */
+  const isSelectedExercise = useCallback(
+    (exerciseInfo: ExerciseInfo) => {
+      return (
+        selectedExercises.find(e => e.id === exerciseInfo.id) !== undefined
+      );
+    },
+    [selectedExercises],
+  );
+
+  /**
    * Toggles selected value for the provided muscle group
    */
-  const toggleFilter = useCallback(
+  const handleToggleFilter = useCallback(
     (muscleGroup: MuscleGroup) => {
-      if (isSelected(muscleGroup)) {
+      if (isSelectedFilter(muscleGroup)) {
         requestAnimationFrame(() => {
           setFilters(filters.filter(e => e.toString() !== muscleGroup));
         });
@@ -56,25 +84,40 @@ const ExerciseSearchScreen = (): JSX.Element => {
         setFilters([...filters, muscleGroup]);
       });
     },
-    [filters, isSelected],
+    [filters, isSelectedFilter],
+  );
+
+  const handleExerciseToggle = useCallback(
+    (exerciseInfo: ExerciseInfo) => {
+      if (isSelectedExercise(exerciseInfo)) {
+        setSelectedExercises(
+          selectedExercises.filter(e => e.id !== exerciseInfo.id),
+        );
+
+        return;
+      }
+
+      requestAnimationFrame(() => {
+        setSelectedExercises([...selectedExercises, exerciseInfo]);
+      });
+    },
+    [isSelectedExercise, selectedExercises],
   );
 
   /**
-   * Handles the exercise selection and navigation back to the current session screen
+   * Adds all exercises to the current session
    *
-   * TODO: Remove getMockExerciseData
+   * TODO: Remove getMockExerciseData call
    */
-  const handleExerciseSelect = useCallback(
-    (exerciseInfo: ExerciseInfo) => {
-      addExercise(getMockExerciseData([exerciseInfo]));
+  const handleAddExercises = useCallback(() => {
+    console.log('handleAddExercises');
+    addExercise(getMockExerciseData(selectedExercises));
 
-      navigation.navigate(
-        'Training' as never,
-        {screen: 'CurrentSession'} as never,
-      );
-    },
-    [addExercise, navigation],
-  );
+    navigation.navigate(
+      'Training' as never,
+      {screen: 'CurrentSession'} as never,
+    );
+  }, [addExercise, navigation, selectedExercises]);
 
   /**
    * Performs an Exercise Info lookup on
@@ -114,7 +157,7 @@ const ExerciseSearchScreen = (): JSX.Element => {
     <View>
       <VStack px={spacing} space={spacing}>
         <CloseableHeader
-          pageTitle={'Add Exercise'}
+          pageTitle={`Create ${Capitalize(route.params.variant)}`}
           closeButton={{
             stackName: 'Training',
             screenName: 'CurrentSession',
@@ -146,8 +189,8 @@ const ExerciseSearchScreen = (): JSX.Element => {
             return (
               <TogglePill
                 key={`tp-${i}`}
-                selected={isSelected(muscleGroup as MuscleGroup)}
-                onToggle={() => toggleFilter(muscleGroup as MuscleGroup)}>
+                selected={isSelectedFilter(muscleGroup as MuscleGroup)}
+                onToggle={() => handleToggleFilter(muscleGroup as MuscleGroup)}>
                 {Capitalize(muscleGroup.replace('_', ' '))}
               </TogglePill>
             );
@@ -158,12 +201,30 @@ const ExerciseSearchScreen = (): JSX.Element => {
       <Box mt={1} px={spacing}>
         <ExerciseSearchResultList
           data={searchResults}
-          onPress={e => handleExerciseSelect(e)}
-          options={{showCreateExercise: true}}
+          onPress={handleExerciseToggle}
         />
       </Box>
+
+      {selectedExercises && selectedExercises.length > 0 && (
+        <Animated.View
+          entering={SlideInDown.springify().mass(0.1)}
+          exiting={SlideOutDown.duration(500)}
+          layout={Layout.springify()}
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            width: '100%',
+          }}>
+          <AdditionalExerciseSelection
+            data={selectedExercises}
+            onToggle={handleExerciseToggle}
+            onComplete={handleAddExercises}
+          />
+        </Animated.View>
+      )}
     </View>
   );
 };
 
-export default ExerciseSearchScreen;
+export default ExerciseAdditionalSearchScreen;

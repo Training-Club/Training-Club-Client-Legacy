@@ -48,7 +48,7 @@ describe('Exercise Search Screen ->', () => {
     const {getByText} = render(
       <NativeBaseProvider initialWindowMetrics={inset} theme={theme()}>
         <NavigationContainer>
-          <ExerciseSearchResultList data={[]} />
+          <ExerciseSearchResultList onPress={jest.fn} data={[]} />
         </NavigationContainer>
       </NativeBaseProvider>,
     );

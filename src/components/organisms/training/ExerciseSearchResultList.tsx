@@ -4,13 +4,6 @@ import ExerciseSearchResult from '../../molecules/training/ExerciseSearchResult'
 import {default as MaterialIcons} from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation} from '@react-navigation/core';
 import {Capitalize} from '../../../utils/StringUtil';
-import {useExerciseContext} from '../../../context/exercise/ExerciseContext';
-import {nanoid} from 'nanoid/non-secure';
-
-import {
-  DistanceMeasurement,
-  MeasurementSystem,
-} from '../../../models/Measurement';
 
 import {
   Avatar,
@@ -23,13 +16,18 @@ import {
 
 interface IExerciseSearchResultListProps {
   data: ExerciseInfo[];
+  onPress: (e: ExerciseInfo) => void;
+  options?: {
+    showCreateExercise?: boolean;
+  };
 }
 
 const ExerciseSearchResultList = ({
   data,
+  onPress,
+  options,
 }: IExerciseSearchResultListProps): JSX.Element => {
   const navigation = useNavigation();
-  const {addExercise} = useExerciseContext();
   const avatarColor = useColorModeValue('apple.blue.light', 'apple.red.dark');
   const textColor = useColorModeValue('black', 'white');
 
@@ -62,45 +60,16 @@ const ExerciseSearchResultList = ({
     );
   }, [navigation]);
 
-  // TODO: Experimental exercise content, remove this
-  const handlePress = React.useCallback(
-    (exerciseInfo: ExerciseInfo) => {
-      addExercise({
-        addedAt: new Date(),
-        exerciseName: exerciseInfo.name,
-        id: nanoid(5),
-        performed: false,
-        type: exerciseInfo.type,
-        values: {
-          reps: 8,
-          weight: {value: 135, measurement: MeasurementSystem.IMPERIAL},
-          time: {
-            value: {hours: 0, minutes: 0, seconds: 0, milliseconds: 0},
-            timeRenderMillis: false,
-          },
-          distance: {
-            value: 0,
-            measurement: DistanceMeasurement.METER,
-          },
-        },
-      });
-
-      navigation.navigate(
-        'Training' as never,
-        {screen: 'CurrentSession'} as never,
-      );
-    },
-    [addExercise, navigation],
-  );
-
   return (
     <Box w={'100%'} py={2}>
       <ScrollView w={'100%'}>
-        <ExerciseSearchResult
-          title={'Create New Exercise'}
-          onPress={() => handleCreateNewContent()}
-          leftContent={CreateNewContent()}
-        />
+        {options && options.showCreateExercise && (
+          <ExerciseSearchResult
+            title={'Create New Exercise'}
+            onPress={() => handleCreateNewContent()}
+            leftContent={CreateNewContent()}
+          />
+        )}
 
         {data.map((exercise, i) => {
           return (
@@ -112,7 +81,7 @@ const ExerciseSearchResultList = ({
                   ? Capitalize(exercise.exerciseEquipment)
                   : undefined
               }
-              onPress={() => handlePress(exercise)}
+              onPress={() => onPress(exercise)}
               leftContent={LeftContent(exercise)}
             />
           );

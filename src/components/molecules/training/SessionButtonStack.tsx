@@ -3,6 +3,7 @@ import {default as MaterialIcons} from 'react-native-vector-icons/MaterialIcons'
 import {useNavigation} from '@react-navigation/core';
 import {Button, HStack, IconButton, useColorModeValue} from 'native-base';
 import {usePushdownContext} from '../../../context/pushdown/PushdownContext';
+import {AdditionalExerciseType} from '../../../models/Training';
 
 interface ISessionButtonStackProps {
   hasIncompleteExercises: boolean;
@@ -40,6 +41,16 @@ const SessionButtonStack = ({
     );
   }, [navigation]);
 
+  const handleAdditionalExercise = useCallback(() => {
+    navigation.navigate(
+      'Training' as never,
+      {
+        screen: 'AdditionalExerciseSearch',
+        params: {variant: AdditionalExerciseType.SUPERSET},
+      } as never,
+    );
+  }, [navigation]);
+
   const handleCompleteSession = useCallback(() => {
     if (hasIncompleteExercises) {
       setPushdownConfig({
@@ -58,8 +69,6 @@ const SessionButtonStack = ({
       {screen: 'TrainingSummary'} as never,
     );
   }, [hasIncompleteExercises, navigation, setPushdownConfig]);
-
-  const handleAdditionalExercise = useCallback(() => {}, []);
 
   const SideButton = ({text, onPress}: ISideButtonProps): JSX.Element => {
     return (

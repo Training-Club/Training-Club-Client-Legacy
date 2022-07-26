@@ -1,4 +1,13 @@
-import {GroupedExercise, IExercise} from '../models/Training';
+import {nanoid} from 'nanoid/non-secure';
+import {DistanceMeasurement, MeasurementSystem} from '../models/Measurement';
+
+import {
+  AdditionalExerciseType,
+  ExerciseInfo,
+  GroupedExercise,
+  IAdditionalExercise,
+  IExercise,
+} from '../models/Training';
 
 /**
  * Iterates over an exercises additional exercises and collects
@@ -54,6 +63,9 @@ export function getNextIncompleteExercise(
 /**
  * Groups all similar exercises together and sorts them in proper display order
  *
+ * TODO: Add support for checking difference on Additional Exercises
+ * TODO: e.g, Benchpress + Incline and Benchpress + Run get added to the same card
+ *
  * @param {IExercise[]} exercises Exercises to sort and group
  */
 export function getAsGroupedExercises(
@@ -92,4 +104,109 @@ export function getAsGroupedExercises(
   });
 
   return grouped;
+}
+
+/**
+ * Accepts an array of Exercise Info, if more than one element is
+ * present in the array all other exercises will be created as
+ * additional exercises under the first element in the array
+ *
+ * @param {ExerciseInfo} data Array of Exercise Info
+ */
+export function getMockExerciseData(data: ExerciseInfo[]): IExercise {
+  if (data.length === 1) {
+    const elem = data[0];
+
+    return {
+      id: nanoid(6),
+      exerciseName: elem.name,
+      addedAt: new Date(),
+      performed: false,
+      type: elem.type,
+      values: {
+        reps: 5,
+        weight: {
+          value: 135,
+          measurement: MeasurementSystem.IMPERIAL,
+        },
+        distance: {
+          value: 1,
+          measurement: DistanceMeasurement.KILOMETER,
+        },
+        time: {
+          value: {
+            hours: 1,
+            minutes: 1,
+            seconds: 1,
+            milliseconds: 100,
+          },
+          timeRenderMillis: false,
+        },
+      },
+    };
+  }
+
+  const elem = data[0];
+  const children: IAdditionalExercise[] = [];
+
+  for (let i = 1; i < data.length; i++) {
+    const childElem: ExerciseInfo = data[i];
+
+    children.push({
+      exerciseName: childElem.name,
+      addedAt: new Date(),
+      performed: false,
+      type: childElem.type,
+      variant: AdditionalExerciseType.SUPERSET,
+      values: {
+        reps: 5,
+        weight: {
+          value: 135,
+          measurement: MeasurementSystem.IMPERIAL,
+        },
+        distance: {
+          value: 1,
+          measurement: DistanceMeasurement.KILOMETER,
+        },
+        time: {
+          value: {
+            hours: 1,
+            minutes: 1,
+            seconds: 1,
+            milliseconds: 100,
+          },
+          timeRenderMillis: false,
+        },
+      },
+    });
+  }
+
+  return {
+    id: nanoid(6),
+    exerciseName: elem.name,
+    addedAt: new Date(),
+    performed: false,
+    type: elem.type,
+    additionalExercises: children,
+    values: {
+      reps: 5,
+      weight: {
+        value: 135,
+        measurement: MeasurementSystem.IMPERIAL,
+      },
+      distance: {
+        value: 1,
+        measurement: DistanceMeasurement.KILOMETER,
+      },
+      time: {
+        value: {
+          hours: 1,
+          minutes: 1,
+          seconds: 1,
+          milliseconds: 100,
+        },
+        timeRenderMillis: false,
+      },
+    },
+  };
 }

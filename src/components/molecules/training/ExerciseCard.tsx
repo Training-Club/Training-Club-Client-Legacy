@@ -99,8 +99,20 @@ const ExerciseCard = ({
   }, [nextIncompleteExercise]);
 
   const additionalExerciseName = React.useMemo(() => {
+    const exerciseNames: string[] = [];
+
     if (nextIncompleteExercise && nextIncompleteExercise.additionalExercises) {
-      return nextIncompleteExercise.additionalExercises[0].exerciseName;
+      nextIncompleteExercise.additionalExercises.forEach(additionalExercise => {
+        if (
+          !exerciseNames.find(
+            existingName => additionalExercise.exerciseName === existingName,
+          )
+        ) {
+          exerciseNames.push(additionalExercise.exerciseName);
+        }
+      });
+
+      return exerciseNames.join(' + ');
     }
 
     return undefined;
@@ -408,12 +420,14 @@ const ExerciseCard = ({
                           return (
                             <HStack key={`ae-${j}`} w={'100%'} py={1}>
                               <Square w={'20%'}>
-                                <Icon
-                                  as={MaterialIcons}
-                                  name={'subdirectory-arrow-right'}
-                                  size={6}
-                                  color={style?.textColor ?? defaultTextColor}
-                                />
+                                {j === 0 && (
+                                  <Icon
+                                    as={MaterialIcons}
+                                    name={'subdirectory-arrow-right'}
+                                    size={6}
+                                    color={style?.textColor ?? defaultTextColor}
+                                  />
+                                )}
                               </Square>
 
                               {(additionalExercise.type === ExerciseType.REPS ||

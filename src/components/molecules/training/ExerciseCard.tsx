@@ -9,16 +9,14 @@ import {default as MaterialIcons} from 'react-native-vector-icons/MaterialIcons'
 import {useActionsheetContext} from '../../../context/actionsheet/ActionsheetContext';
 import DarkActionsheetTheme from '../../organisms/design/themes/DarkActionsheetTheme';
 import ExerciseOptionsActionsheet from './ExerciseOptionsActionsheet';
-
-import Animated, {
-  Layout,
-  SlideInRight,
-  SlideOutRight,
-} from 'react-native-reanimated';
+import {ListRenderItemInfo} from 'react-native';
+import {RowMap, SwipeListView} from 'react-native-swipe-list-view';
+import Animated, {SlideInLeft, SlideOutLeft} from 'react-native-reanimated';
 
 import {
   ExerciseType,
   GroupedExercise,
+  IExercise,
   ITrainable,
 } from '../../../models/Training';
 
@@ -40,10 +38,11 @@ import {
   HStack,
   Icon,
   IconButton,
+  Pressable,
   Square,
   Text,
-  VStack,
   useColorModeValue,
+  VStack,
 } from 'native-base';
 
 interface IExerciseCardProps {
@@ -66,6 +65,16 @@ interface IExerciseCardProps {
       pressedBackgroundColor?: ColorType | string;
       iconColor?: ColorType | string;
     };
+
+    exerciseSettingsButton?: {
+      backgroundColor?: ColorType | string;
+      textColor?: ColorType | string;
+    };
+
+    deleteButton?: {
+      backgroundColor?: ColorType | string;
+      textColor?: ColorType | string;
+    };
   };
 }
 
@@ -81,7 +90,8 @@ const ExerciseCard = ({
     toggleDistanceMeasurement,
     toggleMeasurement,
     toggleMilliseconds,
-    removeExercise,
+    removeSet,
+    removeGroupedExercise,
   } = useExerciseContext();
 
   const nextIncompleteExercise = React.useMemo(
@@ -154,6 +164,16 @@ const ExerciseCard = ({
     'apple.gray.100',
   );
 
+  const defaultDeleteButtonColor = useColorModeValue(
+    'apple.red.light',
+    'apple.red.dark',
+  );
+
+  const defaultSettingsButtonColor = useColorModeValue(
+    'apple.gray.100',
+    'apple.gray.800',
+  );
+
   const handleToggleComplete = React.useCallback(
     (exercise: ITrainable, parentExerciseId?: string) => {
       toggleComplete(exercise, parentExerciseId);
@@ -177,13 +197,13 @@ const ExerciseCard = ({
   /**
    * Sends remove exercise request for entire grouped exercise
    */
-  const handleRemoveExercise = React.useCallback(() => {
-    removeExercise(groupedExercise);
+  const handleRemoveGroupedExercise = React.useCallback(() => {
+    removeGroupedExercise(groupedExercise);
 
     if (actionSheetRef && actionSheetRef.current) {
       actionSheetRef.current.close();
     }
-  }, [actionSheetRef, groupedExercise, removeExercise]);
+  }, [actionSheetRef, groupedExercise, removeGroupedExercise]);
 
   /**
    * Sends millisecond toggle request for the entire grouped exercise array
@@ -248,6 +268,16 @@ const ExerciseCard = ({
     [actionSheetRef, groupedExercise, toggleMeasurement],
   );
 
+  /**
+   * Sends delete request for a specific exercise
+   */
+  const handleDeleteSet = React.useCallback(
+    (exercise: IExercise) => {
+      removeSet(exercise);
+    },
+    [removeSet],
+  );
+
   const handleExerciseOptionsActionsheet = React.useCallback(() => {
     if (!actionSheetRef || !actionSheetRef.current) {
       return;
@@ -261,7 +291,7 @@ const ExerciseCard = ({
         <ExerciseOptionsActionsheet
           groupedExercise={groupedExercise}
           onDuplicateSet={handleDuplicateSet}
-          onRemoveExercise={handleRemoveExercise}
+          onRemoveExercise={handleRemoveGroupedExercise}
           onUpdateDistance={handleToggleDistance}
           onUpdateMeasurement={handleToggleMeasurement}
           onMillisecondToggle={handleToggleMilliseconds}
@@ -274,13 +304,267 @@ const ExerciseCard = ({
     actionSheetRef,
     groupedExercise,
     handleDuplicateSet,
-    handleRemoveExercise,
+    handleRemoveGroupedExercise,
     handleToggleDistance,
     handleToggleMeasurement,
     handleToggleMilliseconds,
     setActionSheetConfig,
     snapPoints,
   ]);
+
+  const closeRow = (rowMap: RowMap<IExercise>, rowKey: any) => {
+    if (rowMap[rowKey]) {
+      rowMap[rowKey].closeRow();
+    }
+  };
+
+  const deleteRow = (rowMap: RowMap<IExercise>, rowKey: any) => {
+    closeRow(rowMap, rowKey);
+
+    const exercise: IExercise | undefined = groupedExercise.exercises.find(
+      e => e.id === rowKey,
+    );
+
+    if (exercise) {
+      handleDeleteSet(exercise);
+    }
+  };
+
+  const renderItem = (exercise: ListRenderItemInfo<IExercise>) => {
+    return (
+      <Animated.View entering={SlideInLeft} exiting={SlideOutLeft}>
+        <Box
+          key={exercise.item.id}
+          w={'100%'}
+          bgColor={style?.bgColor ?? defaultBgColor}
+          py={1}
+          borderBottomColor={style?.borderColor ?? defaultBorderColor}
+          borderBottomWidth={
+            exercise.index < groupedExercise.exercises.length - 1 ? 1 : 0
+          }>
+          <HStack key={`exercise-entry-${exercise.index}`} w={'100%'} py={2}>
+            <Box w={'20%'}>
+              <Text fontWeight={'semibold'} fontSize={16}>
+                Set {exercise.index + 1}
+              </Text>
+            </Box>
+
+            {(exercise.item.type === ExerciseType.REPS ||
+              exercise.item.type === ExerciseType.TIME ||
+              exercise.item.type === ExerciseType.DISTANCE) && (
+              <Square w={'35%'} />
+            )}
+
+            {(exercise.item.type === ExerciseType.WEIGHTED_REPS ||
+              exercise.item.type === ExerciseType.REPS) && (
+              <ParentTrainingInput
+                exercise={exercise.item}
+                exerciseType={exercise.item.type}
+                fieldName={'reps'}
+                fieldType={ExerciseInputType.REPS}
+                performed={exercise.item.performed}
+              />
+            )}
+
+            {(exercise.item.type === ExerciseType.WEIGHTED_TIME ||
+              exercise.item.type === ExerciseType.WEIGHTED_REPS) && (
+              <ParentTrainingInput
+                exercise={exercise.item}
+                exerciseType={exercise.item.type}
+                fieldName={'weight'}
+                fieldType={ExerciseInputType.WEIGHT}
+                performed={exercise.item.performed}
+              />
+            )}
+
+            {(exercise.item.type === ExerciseType.DISTANCE ||
+              exercise.item.type === ExerciseType.DISTANCE_TIME) && (
+              <ParentTrainingInput
+                exercise={exercise.item}
+                exerciseType={exercise.item.type}
+                fieldName={'distance'}
+                fieldType={ExerciseInputType.DISTANCE}
+                performed={exercise.item.performed}
+              />
+            )}
+
+            {(exercise.item.type === ExerciseType.TIME ||
+              exercise.item.type === ExerciseType.WEIGHTED_TIME ||
+              exercise.item.type === ExerciseType.DISTANCE_TIME) && (
+              <ParentTrainingInput
+                exercise={exercise.item}
+                exerciseType={exercise.item.type}
+                fieldName={'time'}
+                fieldType={ExerciseInputType.TIME}
+                performed={exercise.item.performed}
+              />
+            )}
+
+            <Box w={'10%'}>
+              <TrainingCheckbox
+                exercise={exercise.item}
+                performed={exercise.item.performed}
+                setPerformed={handleToggleComplete}
+              />
+            </Box>
+          </HStack>
+
+          {exercise.item.additionalExercises &&
+            exercise.item.additionalExercises.length && (
+              <VStack w={'100%'} space={2}>
+                {exercise.item.additionalExercises.map(
+                  (additionalExercise, j) => {
+                    return (
+                      <HStack key={`ae-${j}`} w={'100%'} py={1}>
+                        <Square w={'20%'}>
+                          {j === 0 && (
+                            <Icon
+                              as={MaterialIcons}
+                              name={'subdirectory-arrow-right'}
+                              size={6}
+                              color={style?.textColor ?? defaultTextColor}
+                            />
+                          )}
+                        </Square>
+
+                        {(additionalExercise.type === ExerciseType.REPS ||
+                          additionalExercise.type === ExerciseType.TIME ||
+                          additionalExercise.type ===
+                            ExerciseType.DISTANCE) && <Square w={'35%'} />}
+
+                        {(additionalExercise.type ===
+                          ExerciseType.WEIGHTED_REPS ||
+                          additionalExercise.type === ExerciseType.REPS) && (
+                          <AdditionalTrainingInput
+                            additionalExercise={additionalExercise}
+                            parentExerciseId={exercise.item.id}
+                            exerciseType={exercise.item.type}
+                            fieldName={'reps'}
+                            fieldType={ExerciseInputType.REPS}
+                            performed={additionalExercise.performed}
+                          />
+                        )}
+
+                        {(additionalExercise.type ===
+                          ExerciseType.WEIGHTED_TIME ||
+                          additionalExercise.type ===
+                            ExerciseType.WEIGHTED_REPS) && (
+                          <AdditionalTrainingInput
+                            additionalExercise={additionalExercise}
+                            parentExerciseId={exercise.item.id}
+                            exerciseType={exercise.item.type}
+                            fieldName={'weight'}
+                            fieldType={ExerciseInputType.WEIGHT}
+                            performed={additionalExercise.performed}
+                          />
+                        )}
+
+                        {(additionalExercise.type === ExerciseType.DISTANCE ||
+                          additionalExercise.type ===
+                            ExerciseType.DISTANCE_TIME) && (
+                          <AdditionalTrainingInput
+                            additionalExercise={additionalExercise}
+                            parentExerciseId={exercise.item.id}
+                            exerciseType={exercise.item.type}
+                            fieldName={'distance'}
+                            fieldType={ExerciseInputType.DISTANCE}
+                            performed={additionalExercise.performed}
+                          />
+                        )}
+
+                        {(additionalExercise.type === ExerciseType.TIME ||
+                          additionalExercise.type ===
+                            ExerciseType.WEIGHTED_TIME ||
+                          additionalExercise.type ===
+                            ExerciseType.DISTANCE_TIME) && (
+                          <AdditionalTrainingInput
+                            additionalExercise={additionalExercise}
+                            parentExerciseId={exercise.item.id}
+                            exerciseType={exercise.item.type}
+                            fieldName={'time'}
+                            fieldType={ExerciseInputType.TIME}
+                            performed={additionalExercise.performed}
+                          />
+                        )}
+
+                        <Box w={'10%'}>
+                          <TrainingCheckbox
+                            exercise={additionalExercise}
+                            performed={additionalExercise.performed}
+                            parentExerciseId={exercise.item.id}
+                            setPerformed={handleToggleComplete}
+                          />
+                        </Box>
+                      </HStack>
+                    );
+                  },
+                )}
+              </VStack>
+            )}
+        </Box>
+      </Animated.View>
+    );
+  };
+
+  const renderHiddenItem = (
+    exercise: ListRenderItemInfo<IExercise>,
+    rowMap: RowMap<IExercise>,
+  ) => {
+    return (
+      <HStack position={'absolute'} right={0} top={0} height={'100%'}>
+        <Pressable onPress={() => console.log('settings')}>
+          <Square
+            w={16}
+            h={'100%'}
+            bgColor={
+              style?.exerciseSettingsButton?.backgroundColor ??
+              defaultSettingsButtonColor
+            }>
+            <VStack alignItems={'center'}>
+              <Icon
+                as={MaterialIcons}
+                name={'more-horiz'}
+                size={4}
+                color={
+                  style?.exerciseSettingsButton?.textColor ?? defaultTextColor
+                }
+              />
+              <Text
+                fontWeight={'semibold'}
+                fontSize={'xs'}
+                color={style?.deleteButton?.textColor ?? defaultTextColor}>
+                More
+              </Text>
+            </VStack>
+          </Square>
+        </Pressable>
+
+        <Pressable onPress={() => deleteRow(rowMap, exercise.item.id)}>
+          <Square
+            w={16}
+            h={'100%'}
+            bgColor={
+              style?.deleteButton?.backgroundColor ?? defaultDeleteButtonColor
+            }>
+            <VStack alignItems={'center'}>
+              <Icon
+                as={MaterialIcons}
+                name={'delete'}
+                size={4}
+                color={'white'}
+              />
+              <Text
+                fontWeight={'semibold'}
+                fontSize={'xs'}
+                color={style?.deleteButton?.textColor ?? 'white'}>
+                Delete
+              </Text>
+            </VStack>
+          </Square>
+        </Pressable>
+      </HStack>
+    );
+  };
 
   return (
     <Box
@@ -302,6 +586,7 @@ const ExerciseCard = ({
           size={'sm'}
           rounded={'full'}
           variant={'solid'}
+          zIndex={999}
           bgColor={
             style?.closeButton?.backgroundColor ??
             defaultCloseButtonBackgroundColor
@@ -330,189 +615,14 @@ const ExerciseCard = ({
         </Box>
       )}
 
-      <VStack w={'100%'} mt={4} space={2}>
-        {groupedExercise.exercises.map((exercise, i) => {
-          return (
-            <Animated.View
-              entering={SlideInRight.delay(100)}
-              exiting={SlideOutRight}
-              layout={Layout.springify()}>
-              <Box
-                key={exercise.id}
-                w={'100%'}
-                pb={i < groupedExercise.exercises.length - 1 ? 4 : 0}
-                borderBottomWidth={
-                  i < groupedExercise.exercises.length - 1 ? 1 : 0
-                }
-                borderBottomColor={style?.borderColor ?? defaultBorderColor}>
-                <HStack key={`exercise-entry-${i}`} w={'100%'} py={2}>
-                  <Box w={'20%'}>
-                    <Text fontWeight={'semibold'} fontSize={16}>
-                      Set {i + 1}
-                    </Text>
-                  </Box>
-
-                  {(exercise.type === ExerciseType.REPS ||
-                    exercise.type === ExerciseType.TIME ||
-                    exercise.type === ExerciseType.DISTANCE) && (
-                    <Square w={'35%'} />
-                  )}
-
-                  {(exercise.type === ExerciseType.WEIGHTED_REPS ||
-                    exercise.type === ExerciseType.REPS) && (
-                    <ParentTrainingInput
-                      exercise={exercise}
-                      exerciseType={exercise.type}
-                      fieldName={'reps'}
-                      fieldType={ExerciseInputType.REPS}
-                      performed={exercise.performed}
-                    />
-                  )}
-
-                  {(exercise.type === ExerciseType.WEIGHTED_TIME ||
-                    exercise.type === ExerciseType.WEIGHTED_REPS) && (
-                    <ParentTrainingInput
-                      exercise={exercise}
-                      exerciseType={exercise.type}
-                      fieldName={'weight'}
-                      fieldType={ExerciseInputType.WEIGHT}
-                      performed={exercise.performed}
-                    />
-                  )}
-
-                  {(exercise.type === ExerciseType.DISTANCE ||
-                    exercise.type === ExerciseType.DISTANCE_TIME) && (
-                    <ParentTrainingInput
-                      exercise={exercise}
-                      exerciseType={exercise.type}
-                      fieldName={'distance'}
-                      fieldType={ExerciseInputType.DISTANCE}
-                      performed={exercise.performed}
-                    />
-                  )}
-
-                  {(exercise.type === ExerciseType.TIME ||
-                    exercise.type === ExerciseType.WEIGHTED_TIME ||
-                    exercise.type === ExerciseType.DISTANCE_TIME) && (
-                    <ParentTrainingInput
-                      exercise={exercise}
-                      exerciseType={exercise.type}
-                      fieldName={'time'}
-                      fieldType={ExerciseInputType.TIME}
-                      performed={exercise.performed}
-                    />
-                  )}
-
-                  <Box w={'10%'}>
-                    <TrainingCheckbox
-                      exercise={exercise}
-                      performed={exercise.performed}
-                      setPerformed={handleToggleComplete}
-                    />
-                  </Box>
-                </HStack>
-
-                {exercise.additionalExercises &&
-                  exercise.additionalExercises.length && (
-                    <VStack w={'100%'} space={2}>
-                      {exercise.additionalExercises.map(
-                        (additionalExercise, j) => {
-                          return (
-                            <HStack key={`ae-${j}`} w={'100%'} py={1}>
-                              <Square w={'20%'}>
-                                {j === 0 && (
-                                  <Icon
-                                    as={MaterialIcons}
-                                    name={'subdirectory-arrow-right'}
-                                    size={6}
-                                    color={style?.textColor ?? defaultTextColor}
-                                  />
-                                )}
-                              </Square>
-
-                              {(additionalExercise.type === ExerciseType.REPS ||
-                                additionalExercise.type === ExerciseType.TIME ||
-                                additionalExercise.type ===
-                                  ExerciseType.DISTANCE) && (
-                                <Square w={'35%'} />
-                              )}
-
-                              {(additionalExercise.type ===
-                                ExerciseType.WEIGHTED_REPS ||
-                                additionalExercise.type ===
-                                  ExerciseType.REPS) && (
-                                <AdditionalTrainingInput
-                                  additionalExercise={additionalExercise}
-                                  parentExerciseId={exercise.id}
-                                  exerciseType={exercise.type}
-                                  fieldName={'reps'}
-                                  fieldType={ExerciseInputType.REPS}
-                                  performed={additionalExercise.performed}
-                                />
-                              )}
-
-                              {(additionalExercise.type ===
-                                ExerciseType.WEIGHTED_TIME ||
-                                additionalExercise.type ===
-                                  ExerciseType.WEIGHTED_REPS) && (
-                                <AdditionalTrainingInput
-                                  additionalExercise={additionalExercise}
-                                  parentExerciseId={exercise.id}
-                                  exerciseType={exercise.type}
-                                  fieldName={'weight'}
-                                  fieldType={ExerciseInputType.WEIGHT}
-                                  performed={additionalExercise.performed}
-                                />
-                              )}
-
-                              {(additionalExercise.type ===
-                                ExerciseType.DISTANCE ||
-                                additionalExercise.type ===
-                                  ExerciseType.DISTANCE_TIME) && (
-                                <AdditionalTrainingInput
-                                  additionalExercise={additionalExercise}
-                                  parentExerciseId={exercise.id}
-                                  exerciseType={exercise.type}
-                                  fieldName={'distance'}
-                                  fieldType={ExerciseInputType.DISTANCE}
-                                  performed={additionalExercise.performed}
-                                />
-                              )}
-
-                              {(additionalExercise.type === ExerciseType.TIME ||
-                                additionalExercise.type ===
-                                  ExerciseType.WEIGHTED_TIME ||
-                                additionalExercise.type ===
-                                  ExerciseType.DISTANCE_TIME) && (
-                                <AdditionalTrainingInput
-                                  additionalExercise={additionalExercise}
-                                  parentExerciseId={exercise.id}
-                                  exerciseType={exercise.type}
-                                  fieldName={'time'}
-                                  fieldType={ExerciseInputType.TIME}
-                                  performed={additionalExercise.performed}
-                                />
-                              )}
-
-                              <Box w={'10%'}>
-                                <TrainingCheckbox
-                                  exercise={additionalExercise}
-                                  performed={additionalExercise.performed}
-                                  parentExerciseId={exercise.id}
-                                  setPerformed={handleToggleComplete}
-                                />
-                              </Box>
-                            </HStack>
-                          );
-                        },
-                      )}
-                    </VStack>
-                  )}
-              </Box>
-            </Animated.View>
-          );
-        })}
-      </VStack>
+      <SwipeListView
+        keyExtractor={item => item.id}
+        data={groupedExercise.exercises}
+        renderItem={renderItem}
+        renderHiddenItem={renderHiddenItem}
+        rightOpenValue={-125}
+        style={{marginTop: 8}}
+      />
 
       <HStack
         w={'100%'}

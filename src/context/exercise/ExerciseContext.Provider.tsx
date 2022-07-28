@@ -301,7 +301,7 @@ export function ExerciseContextProvider({
    * Removes the provided grouped exercise (and all exercises under it) from the state
    * @param {GroupedExercise} groupedExercise Exercise (by name) to remove
    */
-  const removeExercise = React.useCallback(
+  const removeGroupedExercise = React.useCallback(
     (groupedExercise: GroupedExercise) => {
       requestAnimationFrame(() => {
         setExercises(prevState => {
@@ -331,7 +331,7 @@ export function ExerciseContextProvider({
           m: DistanceMeasurement,
         ) => toggleDistanceMeasurement(e, m),
         addExercise: (e: IExercise) => addExercise(e),
-        removeExercise: (e: GroupedExercise) => removeExercise(e),
+        removeGroupedExercise: (e: GroupedExercise) => removeGroupedExercise(e),
         setAdditionalField: (
           fieldName: string,
           additionalExercise: IAdditionalExercise,

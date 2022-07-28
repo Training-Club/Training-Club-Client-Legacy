@@ -16,7 +16,7 @@ export interface IExerciseContext {
   toggleComplete: (exercise: ITrainable, parentExerciseId?: string) => void;
   toggleMilliseconds: (exercise: GroupedExercise, value: boolean) => void;
   addExercise: (exercise: IExercise) => void;
-  removeExercise: (groupedExercise: GroupedExercise) => void;
+  removeGroupedExercise: (groupedExercise: GroupedExercise) => void;
   setParentField: (fieldName: string, exercise: IExercise, data: any) => void;
   toggleMeasurement: (
     exercise: GroupedExercise,
@@ -48,7 +48,7 @@ export const ExerciseContext = React.createContext<IExerciseContext>({
   toggleDistanceMeasurement: () => {},
   toggleMeasurement: () => {},
   addExercise: () => {},
-  removeExercise: () => {},
+  removeGroupedExercise: () => {},
 });
 
 export const useExerciseContext = () => React.useContext(ExerciseContext);

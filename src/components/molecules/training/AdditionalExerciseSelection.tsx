@@ -84,9 +84,8 @@ const AdditionalExerciseSelection = ({
 
                       <Square
                         bgColor={pillBgColor}
-                        py={3}
-                        px={2}
-                        rounded={'12px'}
+                        p={3}
+                        rounded={'full'}
                         minW={20}>
                         <Text fontSize={'10px'} fontWeight={'semibold'}>
                           {exerciseInfo.name}

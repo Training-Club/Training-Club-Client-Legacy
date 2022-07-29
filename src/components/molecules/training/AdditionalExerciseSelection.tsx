@@ -61,6 +61,7 @@ const AdditionalExerciseSelection = ({
             {data.map(exerciseInfo => {
               return (
                 <Animated.View
+                  key={exerciseInfo.id}
                   entering={LightSpeedInRight}
                   exiting={FadeOutDown}>
                   <Pressable key={exerciseInfo.id}>

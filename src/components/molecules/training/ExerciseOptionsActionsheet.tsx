@@ -262,6 +262,21 @@ const ExerciseOptionsActionsheet = ({
                     )}
                   </HStack>
                 </PressablePill>
+
+                <PressablePill
+                  onPress={() => onUpdateMeasurement(MeasurementSystem.OTHER)}
+                  style={{roundedBottom: true}}>
+                  <HStack space={iconSpacing}>
+                    <Text color={textColor} fontWeight={'semibold'}>
+                      Other (bn)
+                    </Text>
+
+                    {exercise.values.weight?.measurement ===
+                      MeasurementSystem.OTHER && (
+                      <Icon as={MaterialIcons} name={'check'} size={5} />
+                    )}
+                  </HStack>
+                </PressablePill>
               </VStack>
             )}
         </ScrollView>

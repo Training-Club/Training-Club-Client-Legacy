@@ -1,24 +1,27 @@
 import React from 'react';
+import {useColorModeValue, View} from 'native-base';
+import ExerciseCardHeader from '../../atoms/training/ExerciseCardHeader';
+import {useExerciseContext} from '../../../context/exercise/ExerciseContext';
+import DarkActionsheetTheme from '../../organisms/design/themes/DarkActionsheetTheme';
+import ExerciseOptionsActionsheet from './ExerciseOptionsActionsheet';
+import {getPlateCount} from '../../../utils/PlateCounter';
+import {getNextIncompleteExercise} from '../../../data/Training';
+import ExerciseCardInput from '../../atoms/training/ExerciseCardInput';
+import ExerciseCardFooter from '../../atoms/training/ExerciseCardFooter';
+import {useActionsheetContext} from '../../../context/actionsheet/ActionsheetContext';
+import Animated, {Layout} from 'react-native-reanimated';
+
+import {
+  DistanceMeasurement,
+  MeasurementSystem,
+} from '../../../models/Measurement';
+
 import {
   ExerciseType,
   GroupedExercise,
   IExercise,
   ITrainable,
 } from '../../../models/Training';
-import {useColorModeValue, View} from 'native-base';
-import ExerciseCardHeader from '../../atoms/training/ExerciseCardHeader';
-import {useExerciseContext} from '../../../context/exercise/ExerciseContext';
-import DarkActionsheetTheme from '../../organisms/design/themes/DarkActionsheetTheme';
-import ExerciseOptionsActionsheet from './ExerciseOptionsActionsheet';
-import {
-  DistanceMeasurement,
-  MeasurementSystem,
-} from '../../../models/Measurement';
-import {getPlateCount} from '../../../utils/PlateCounter';
-import {getNextIncompleteExercise} from '../../../data/Training';
-import ExerciseCardInput from '../../atoms/training/ExerciseCardInput';
-import ExerciseCardFooter from '../../atoms/training/ExerciseCardFooter';
-import {useActionsheetContext} from '../../../context/actionsheet/ActionsheetContext';
 
 interface IExerciseCardProps {
   groupedExercise: GroupedExercise;
@@ -223,20 +226,22 @@ const ExerciseCard = ({groupedExercise}: IExerciseCardProps): JSX.Element => {
         }
       />
 
-      {groupedExercise.exercises.map((exercise, i) => {
-        return (
-          <ExerciseCardInput
-            index={i}
-            exercise={exercise}
-            onToggleComplete={handleToggleComplete}
-            onDeleteSet={handleDeleteSet}
-            options={{
-              renderBorder: i < groupedExercise.exercises.length - 1,
-              swipeListThreshold: -80.0,
-            }}
-          />
-        );
-      })}
+      <Animated.View layout={Layout.springify()}>
+        {groupedExercise.exercises.map((exercise, i) => {
+          return (
+            <ExerciseCardInput
+              index={i}
+              exercise={exercise}
+              onToggleComplete={handleToggleComplete}
+              onDeleteSet={handleDeleteSet}
+              options={{
+                renderBorder: i < groupedExercise.exercises.length - 1,
+                swipeListThreshold: -80.0,
+              }}
+            />
+          );
+        })}
+      </Animated.View>
 
       <ExerciseCardFooter
         plateCounterData={plateCounterData}

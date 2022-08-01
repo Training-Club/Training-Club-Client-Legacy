@@ -11,11 +11,14 @@ const ExerciseCardList = ({
   groupedExercises,
 }: IExerciseCardListProps): JSX.Element => {
   const renderItem = (result: {item: GroupedExercise; index: number}) => {
-    return <ExerciseCard groupedExercise={result.item} />;
+    return (
+      <ExerciseCard key={result.item.name} groupedExercise={result.item} />
+    );
   };
 
   return (
     <Animated.FlatList
+      keyExtractor={item => item.name}
       data={groupedExercises}
       renderItem={renderItem}
       initialNumToRender={2}

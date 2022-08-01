@@ -60,6 +60,18 @@ const MeasurementSelectActionsheet = ({
             )}
           </HStack>
         </PressablePill>
+
+        <PressablePill
+          style={{roundedBottom: true}}
+          onPress={() => handleSetValue(MeasurementSystem.OTHER)}>
+          <HStack w={'100%'} justifyContent={'space-between'}>
+            <Text fontWeight={'semibold'}>Other</Text>
+
+            {value === MeasurementSystem.OTHER && (
+              <Icon as={MaterialIcons} name={'check'} size={5} />
+            )}
+          </HStack>
+        </PressablePill>
       </VStack>
     </BottomSheetView>
   );

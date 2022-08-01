@@ -1,6 +1,7 @@
 export enum MeasurementSystem {
   METRIC = 'metric',
   IMPERIAL = 'imperial',
+  OTHER = 'other'
 }
 
 export enum DistanceMeasurement {
@@ -8,6 +9,7 @@ export enum DistanceMeasurement {
   MILE = 'mi',
   KILOMETER = 'km',
   FEET = 'ft',
+  BANANA = 'bn',
 }
 
 /**
@@ -27,6 +29,8 @@ export const getDistanceMeasurementSuffix = (
       return 'km';
     case DistanceMeasurement.METER:
       return 'm';
+    case DistanceMeasurement.BANANA:
+      return 'bn';
   }
 };
 
@@ -41,6 +45,8 @@ export function getMeasurement(name: string): MeasurementSystem | undefined {
     return MeasurementSystem.IMPERIAL;
   } else if (name === 'metric') {
     return MeasurementSystem.METRIC;
+  } else if (name === 'other') {
+    return MeasurementSystem.OTHER;
   }
 
   return undefined;
@@ -68,6 +74,9 @@ export function getDistanceMeasurement(
     case 'METER':
     case 'm':
       return DistanceMeasurement.METER;
+    case 'BANANA':
+    case 'bn':
+      return DistanceMeasurement.BANANA;
   }
 
   return undefined;
@@ -116,6 +125,10 @@ export function getConvertedDistance(
     if (outputMeasurement === DistanceMeasurement.METER) {
       return Math.round(inputValue * 1609.34);
     }
+
+    if (outputMeasurement === DistanceMeasurement.BANANA) {
+      return Math.round(inputValue * 9090.909091);
+    }
   }
 
   if (inputMeasurement === DistanceMeasurement.FEET) {
@@ -129,6 +142,10 @@ export function getConvertedDistance(
 
     if (outputMeasurement === DistanceMeasurement.METER) {
       return Math.round(inputValue * 0.3048);
+    }
+
+    if (outputMeasurement === DistanceMeasurement.BANANA) {
+      return Math.round(inputValue * 1.715);
     }
   }
 
@@ -144,6 +161,10 @@ export function getConvertedDistance(
     if (outputMeasurement === DistanceMeasurement.METER) {
       return Math.round(inputValue * 3280.84);
     }
+
+    if (outputMeasurement === DistanceMeasurement.BANANA) {
+      return Math.round(inputValue * 5617.977528);
+    }
   }
 
   if (inputMeasurement === DistanceMeasurement.METER) {
@@ -157,6 +178,28 @@ export function getConvertedDistance(
 
     if (outputMeasurement === DistanceMeasurement.FEET) {
       return Math.round(inputValue * 3.28084);
+    }
+
+    if (outputMeasurement === DistanceMeasurement.BANANA) {
+      return Math.round(inputValue * 5.618);
+    }
+  }
+
+  if (inputMeasurement === DistanceMeasurement.BANANA) {
+    if (outputMeasurement === DistanceMeasurement.MILE) {
+      return Math.round(inputValue * 0.000110);
+    }
+
+    if (outputMeasurement === DistanceMeasurement.KILOMETER) {
+      return Math.round(inputValue * 0.000178);
+    }
+
+    if (outputMeasurement === DistanceMeasurement.METER) {
+      return Math.round(inputValue * 0.178)
+    }
+
+    if (outputMeasurement === DistanceMeasurement.FEET) {
+      return Math.round(inputValue * 0.583);
     }
   }
 

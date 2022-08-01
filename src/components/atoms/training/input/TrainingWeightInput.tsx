@@ -70,11 +70,14 @@ const TrainingWeightInput = ({
    * if the measurement system differs the currently set one
    */
   const handleSetMeasurementSystem = React.useCallback(
-    (measurementName: 'imperial' | 'metric') => {
-      const asMeasurement =
-        measurementName === 'imperial'
-          ? MeasurementSystem.IMPERIAL
-          : MeasurementSystem.METRIC;
+    (measurementName: 'imperial' | 'metric' | 'other') => {
+      let asMeasurement = MeasurementSystem.IMPERIAL;
+
+      if (measurementName === 'metric') {
+        asMeasurement = MeasurementSystem.METRIC;
+      } else if (measurementName === 'other') {
+        asMeasurement = MeasurementSystem.OTHER;
+      }
 
       let convertedWeight = value?.value ?? 0.0;
 

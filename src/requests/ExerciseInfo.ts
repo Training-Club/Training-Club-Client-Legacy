@@ -1,6 +1,5 @@
 import axios from 'axios';
 import {ExerciseEquipment, ExerciseType, MuscleGroup} from '../models/Training';
-import {CreateExerciseInfoResult} from './responses/ExerciseInfo';
 import {getToken} from '../data/Account';
 
 // TODO: Replace with api.trainingclubapp.com

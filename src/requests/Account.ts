@@ -1,9 +1,11 @@
-import axios, {AxiosError} from 'axios';
+import axios from 'axios';
 import {IAccount} from '../models/Account';
-import {LoginResponse} from './responses/Account';
+import {AuthenticateStandardCredentialsResponse} from './responses/Auth';
+import {CreateStandardAccountResponse} from './responses/Account';
 
 // TODO: Replace with api.trainingclubapp.com
-const url: string = 'http://144.126.218.29:8080/v1';
+// const url: string = 'http://144.126.218.29:8080/v1';
+const url: string = 'http://localhost:8080/v1';
 
 /**
  * Accepts an auth token as a param and attempts to obtain an account authorized
@@ -44,19 +46,25 @@ export async function attemptLoginWithToken(token: string): Promise<IAccount> {
 export async function attemptStandardLogin(
   email: string,
   password: string,
-): Promise<LoginResponse> {
-  return new Promise<LoginResponse>(async (resolve, reject) => {
-    try {
-      const result = await axios.post<LoginResponse>(`${url}/auth/`, {
-        email: email,
-        password: password,
-      });
+): Promise<AuthenticateStandardCredentialsResponse> {
+  return new Promise<AuthenticateStandardCredentialsResponse>(
+    async (resolve, reject) => {
+      try {
+        const result =
+          await axios.post<AuthenticateStandardCredentialsResponse>(
+            `${url}/auth/`,
+            {
+              email: email,
+              password: password,
+            },
+          );
 
-      resolve(result.data);
-    } catch (err) {
-      reject(err);
-    }
-  });
+        resolve(result.data);
+      } catch (err) {
+        reject(err);
+      }
+    },
+  );
 }
 
 /**
@@ -71,11 +79,11 @@ export async function attemptStandardAccountCreate(
   username: string,
   email: string,
   password: string,
-): Promise<LoginResponse> {
-  return new Promise<LoginResponse>(async (resolve, reject) => {
+): Promise<CreateStandardAccountResponse> {
+  return new Promise<CreateStandardAccountResponse>(async (resolve, reject) => {
     try {
-      const result = await axios.post<LoginResponse>(
-        `${url}/account/recipe/standard/`,
+      const result = await axios.post<CreateStandardAccountResponse>(
+        `${url}/account/recipe/standard`,
         {
           username: username,
           email: email,
@@ -101,28 +109,18 @@ export async function checkAccountAvailability(
   key: string,
   value: string,
 ): Promise<boolean> {
-  interface IResponse {
-    message: boolean;
-  }
-
   return new Promise<boolean>(async (resolve, reject) => {
     try {
-      const result = await axios.get<IResponse>(
+      const result = await axios.get(
         `${url}/account/availability/${key}/${value}`,
       );
 
       if (result.status !== 200) {
-        return reject(result.statusText);
+        return resolve(false);
       }
 
-      return resolve(result.data.message);
+      return resolve(true);
     } catch (err) {
-      const error = err as AxiosError;
-
-      if (error.response!.status === 404) {
-        return resolve(true);
-      }
-
       reject(new Error('Failed to check account availability: ' + err));
     }
   });

@@ -1,6 +1,35 @@
-import {IAccount} from '../../models/Account';
+import {IAccount, IProfile} from '../../models/Account';
 
-export type LoginResponse = {
-  token: string;
+type BasicAccount = {
+  id: string;
+  username: string;
+  profile: IProfile;
+};
+
+export type GetAccountResponse = {
+  id: string;
+  username: string;
+};
+
+export type GetProfileResponse = {
+  id: string;
+  username: string;
+  profile: IProfile;
+};
+
+export type GetSimilarAccountsByUsernameResponse = {
+  result: BasicAccount[];
+};
+
+export type GetSimilarAccountsByProfileNameResponse = {
+  result: BasicAccount[];
+};
+
+export type CreateStandardAccountResponse = {
   account: IAccount;
+  token: string;
+};
+
+export type DeleteAccountResponse = {
+  deletedId: string;
 };

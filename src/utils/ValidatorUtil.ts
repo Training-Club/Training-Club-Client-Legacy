@@ -50,12 +50,9 @@ export async function isValidUsername(
     specialChars = false;
   }
 
-  const usernameAvailable: boolean = await checkAccountAvailability(
-    'username',
-    username,
-  );
-
-  if (!usernameAvailable) {
+  try {
+    available = await checkAccountAvailability('username', username);
+  } catch (err) {
     available = false;
   }
 
@@ -98,12 +95,9 @@ export async function isValidEmail(
     format = false;
   }
 
-  const emailAvailable: boolean = await checkAccountAvailability(
-    'email',
-    email,
-  );
-
-  if (!emailAvailable) {
+  try {
+    available = await checkAccountAvailability('email', email);
+  } catch (err) {
     available = false;
   }
 

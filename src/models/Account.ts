@@ -12,8 +12,10 @@ export interface IAccount {
 }
 
 export interface IProfile {
+  avatar?: string;
   name?: string;
   location?: string;
+  bio?: string;
 }
 
 export interface IPreferences {

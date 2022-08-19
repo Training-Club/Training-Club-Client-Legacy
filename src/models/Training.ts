@@ -115,12 +115,13 @@ export enum ExerciseEquipment {
 }
 
 export enum MuscleGroup {
+  BACK = 'BACK',
+  CALVES = 'CALVES',
+  CHEST = 'CHEST',
+  FOREARMS = 'FOREARMS',
+  GLUTES = 'GLUTES',
   NECK = 'NECK',
   SHOULDERS = 'SHOULDERS',
-  UPPER_ARMS = 'UPPER_ARMS',
-  FOREARMS = 'FOREARMS',
-  BACK = 'BACK',
-  CHEST = 'CHEST',
   THIGHS = 'THIGHS',
-  CALVES = 'CALVES',
+  UPPER_ARMS = 'UPPER_ARMS',
 }

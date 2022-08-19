@@ -36,5 +36,5 @@ export const FormatExerciseInfoQuery = (
     return undefined;
   }
 
-  return query.join('');
+  return `?${query.join('')}`;
 };

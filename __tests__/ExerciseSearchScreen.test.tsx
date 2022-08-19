@@ -38,7 +38,7 @@ describe('Exercise Search Screen ->', () => {
     );
 
     const rowElem = getByTestId('toggle-pill-row');
-    const pillElem = getByText('Abs');
+    const pillElem = getByText('Chest');
 
     expect(rowElem).toBeTruthy();
     expect(pillElem).toBeTruthy();

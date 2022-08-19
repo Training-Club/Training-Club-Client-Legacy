@@ -96,33 +96,31 @@ export enum ExerciseType {
 }
 
 export enum AdditionalExerciseType {
-  SUPERSET = 'superset',
-  DROPSET = 'dropset',
+  SUPERSET = 'SUPERSET',
+  DROPSET = 'DROPSET',
 }
 
 export enum TrainingSessionStatus {
-  DRAFT = 'draft',
-  IN_PROGRESS = 'in_progress',
-  COMPLETED = 'completed',
+  DRAFT = 'DRAFT',
+  IN_PROGRESS = 'IN_PROGRESS',
+  ASSIGNED = 'ASSIGNED',
+  COMPLETED = 'COMPLETED',
 }
 
 export enum ExerciseEquipment {
-  BARBELL = 'barbell',
-  DUMBBELL = 'dumbbell',
-  MACHINE = 'machine',
-  KETTLEBELL = 'kettlebell',
+  BARBELL = 'BARBELL',
+  DUMBBELL = 'DUMBBELL',
+  MACHINE = 'MACHINE',
+  KETTLEBELL = 'KETTLEBELL',
 }
 
 export enum MuscleGroup {
-  ABS = 'abs',
-  BICEPS = 'biceps',
-  CALVES = 'calves',
-  CHEST = 'chest',
-  GLUTES = 'glutes',
-  HAMSTRING = 'hamstring',
-  LOWER_BACK = 'lowerBack',
-  QUADS = 'quads',
-  TRAPS = 'traps',
-  TRICEPS = 'triceps',
-  UPPER_BACK = 'upperBack',
+  NECK = 'NECK',
+  SHOULDERS = 'SHOULDERS',
+  UPPER_ARMS = 'UPPER_ARMS',
+  FOREARMS = 'FOREARMS',
+  BACK = 'BACK',
+  CHEST = 'CHEST',
+  THIGHS = 'THIGHS',
+  CALVES = 'CALVES',
 }

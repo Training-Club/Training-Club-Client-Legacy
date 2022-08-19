@@ -13,3 +13,28 @@ export const Capitalize = (text: string): string => {
 
   return result.join(' ');
 };
+
+/**
+ * Formats a query string for an exercise info search query
+ *
+ * @param exerciseName Exercise name (applies as &name=<exerciseName)
+ * @param filters Array of filters
+ */
+export const FormatExerciseInfoQuery = (
+  exerciseName: string,
+  filters: string[],
+): string | undefined => {
+  let query: string[] = [];
+
+  query.push('&name=' + exerciseName);
+
+  if (filters.length > 0) {
+    filters.forEach(filter => query.push('&muscleGroups=' + filter));
+  }
+
+  if (query.length <= 0) {
+    return undefined;
+  }
+
+  return query.join('');
+};

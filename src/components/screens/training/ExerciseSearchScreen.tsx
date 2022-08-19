@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react';
-import {Capitalize} from '../../../utils/StringUtil';
+import {Capitalize, FormatExerciseInfoQuery} from '../../../utils/StringUtil';
 import {getExerciseSearchResults} from '../../../requests/Training';
 import {useDebounce} from 'use-debounce';
 import {usePushdownContext} from '../../../context/pushdown/PushdownContext';
@@ -61,8 +61,6 @@ const ExerciseSearchScreen = (): JSX.Element => {
 
   /**
    * Handles the exercise selection and navigation back to the current session screen
-   *
-   * TODO: Remove getMockExerciseData
    */
   const handleExerciseSelect = useCallback(
     (exerciseInfo: ExerciseInfo) => {
@@ -85,7 +83,13 @@ const ExerciseSearchScreen = (): JSX.Element => {
       return;
     }
 
-    getExerciseSearchResults(nameQueryDebounced)
+    const queryString = FormatExerciseInfoQuery(nameQueryDebounced, filters);
+
+    if (!queryString) {
+      return;
+    }
+
+    getExerciseSearchResults(queryString)
       .then(result => {
         setSearchResults(result);
       })
@@ -108,7 +112,7 @@ const ExerciseSearchScreen = (): JSX.Element => {
           show: true,
         });
       });
-  }, [nameQueryDebounced, setPushdownConfig]);
+  }, [filters, nameQueryDebounced, setPushdownConfig]);
 
   return (
     <View>

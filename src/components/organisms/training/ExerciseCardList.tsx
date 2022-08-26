@@ -1,7 +1,14 @@
 import React from 'react';
 import {GroupedExercise} from '../../../models/Training';
-import Animated, {FadeIn, FadeOut, Layout} from 'react-native-reanimated';
 import ExerciseCard from '../../molecules/training/ExerciseCard';
+import Animated, {
+  FadeIn,
+  FadeOut,
+  Layout,
+  SequencedTransition,
+  SlideInRight,
+  SlideOutRight,
+} from 'react-native-reanimated';
 
 interface IExerciseCardListProps {
   groupedExercises: GroupedExercise[];
@@ -12,7 +19,12 @@ const ExerciseCardList = ({
 }: IExerciseCardListProps): JSX.Element => {
   const renderItem = (result: {item: GroupedExercise; index: number}) => {
     return (
-      <ExerciseCard key={result.item.name} groupedExercise={result.item} />
+      <Animated.View
+        entering={SlideInRight}
+        exiting={SlideOutRight}
+        layout={SequencedTransition}>
+        <ExerciseCard key={result.item.name} groupedExercise={result.item} />
+      </Animated.View>
     );
   };
 

@@ -52,7 +52,7 @@ describe('Exercise Create Screen ->', () => {
       <NativeBaseProvider initialWindowMetrics={inset} theme={theme()}>
         <NavigationContainer>
           <CreateExerciseMuscleGroup
-            selected={[MuscleGroup.ABS, MuscleGroup.CHEST]}
+            selected={[MuscleGroup.CHEST, MuscleGroup.BACK]}
             toggleMuscleGroup={jest.fn()}
             styling={{
               titleColor: undefined,
@@ -68,7 +68,7 @@ describe('Exercise Create Screen ->', () => {
       </NativeBaseProvider>,
     );
 
-    const pillElem = getByText('Abs');
+    const pillElem = getByText('Chest');
 
     expect(pillElem).toBeTruthy();
   });

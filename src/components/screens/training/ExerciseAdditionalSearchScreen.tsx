@@ -7,7 +7,7 @@ import {AxiosError} from 'axios';
 import {ExerciseInfo, MuscleGroup} from '../../../models/Training';
 import CloseableHeader from '../../molecules/design/CloseableHeader';
 import {Box, Icon, View, VStack} from 'native-base';
-import {Capitalize} from '../../../utils/StringUtil';
+import {Capitalize, FormatExerciseInfoQuery} from '../../../utils/StringUtil';
 import {default as MaterialIcons} from 'react-native-vector-icons/MaterialIcons';
 import InputField from '../../atoms/design/InputField';
 import TogglePillRow from '../../molecules/design/TogglePillRow';
@@ -110,7 +110,6 @@ const ExerciseAdditionalSearchScreen = ({
    * TODO: Remove getMockExerciseData call
    */
   const handleAddExercises = useCallback(() => {
-    console.log('handleAddExercises');
     addExercise(getMockExerciseData(selectedExercises));
 
     navigation.navigate(
@@ -128,7 +127,13 @@ const ExerciseAdditionalSearchScreen = ({
       return;
     }
 
-    getExerciseSearchResults(nameQueryDebounced)
+    const queryString = FormatExerciseInfoQuery(nameQueryDebounced, filters);
+
+    if (!queryString) {
+      return;
+    }
+
+    getExerciseSearchResults(queryString)
       .then(result => {
         setSearchResults(result);
       })
@@ -151,7 +156,7 @@ const ExerciseAdditionalSearchScreen = ({
           show: true,
         });
       });
-  }, [nameQueryDebounced, setPushdownConfig]);
+  }, [filters, nameQueryDebounced, setPushdownConfig]);
 
   return (
     <View>

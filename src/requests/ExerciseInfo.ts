@@ -1,10 +1,9 @@
-import axios from 'axios';
+import axios, {AxiosError} from 'axios';
 import {ExerciseEquipment, ExerciseType, MuscleGroup} from '../models/Training';
-import {CreateExerciseInfoResult} from './responses/ExerciseInfo';
 import {getToken} from '../data/Account';
 
 // TODO: Replace with api.trainingclubapp.com
-const url: string = 'http://144.126.218.29:8080/v1';
+const url: string = 'http://146.190.2.76:80/v1';
 
 interface ICreateExerciseInfoProps {
   exerciseName: string;
@@ -26,8 +25,8 @@ export async function createExerciseInfo({
   exerciseType,
   exerciseMuscleGroups,
   exerciseEquipment,
-}: ICreateExerciseInfoProps): Promise<CreateExerciseInfoResult> {
-  return new Promise<CreateExerciseInfoResult>(async (resolve, reject) => {
+}: ICreateExerciseInfoProps): Promise<any> {
+  return new Promise(async (resolve, reject) => {
     const token: string | null = await getToken();
 
     if (!token) {
@@ -35,8 +34,8 @@ export async function createExerciseInfo({
     }
 
     try {
-      const result = await axios.post<CreateExerciseInfoResult>(
-        `${url}/exerciseinfo/`,
+      const result = await axios.post(
+        `${url}/exercise-info/`,
         {
           name: exerciseName,
           type: exerciseType,
@@ -48,7 +47,7 @@ export async function createExerciseInfo({
 
       return resolve(result.data);
     } catch (err) {
-      return reject(err);
+      return reject(err as AxiosError);
     }
   });
 }

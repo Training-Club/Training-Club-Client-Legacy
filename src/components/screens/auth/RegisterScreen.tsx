@@ -128,7 +128,7 @@ const RegisterScreen = () => {
       setPushdownConfig({
         status: 'error',
         title: 'Whoops, you missed something',
-        body: 'The username you provided is missing some of our email requirements.',
+        body: 'The address you provided is missing some of our email requirements.',
         duration: 5000,
         show: true,
       });

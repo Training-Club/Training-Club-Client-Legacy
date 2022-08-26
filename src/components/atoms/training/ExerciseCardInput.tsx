@@ -2,11 +2,12 @@ import React from 'react';
 import TrainingCheckbox from './TrainingCheckbox';
 import {default as MaterialIcons} from 'react-native-vector-icons/MaterialIcons';
 import {ExerciseType, IExercise, ITrainable} from '../../../models/Training';
+import {useAnimatedGestureHandler} from 'react-native-reanimated';
 
 import Animated, {
   FadeIn,
-  FadeInDown,
-  FadeOut,
+  FadeInUp,
+  FadeOutUp,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
@@ -31,10 +32,9 @@ import {
   Pressable,
   Square,
   Text,
-  useColorModeValue,
   VStack,
+  useColorModeValue,
 } from 'native-base';
-import {useAnimatedGestureHandler} from 'react-native-reanimated';
 
 interface IExerciseCardInputProps
   extends Pick<PanGestureHandlerProps, 'simultaneousHandlers'> {
@@ -124,8 +124,8 @@ const ExerciseCardInput = ({
         onGestureEvent={panGestureHandler}
         activeOffsetX={[-10, 10]}>
         <Animated.View
-          entering={FadeInDown}
-          exiting={FadeOut}
+          entering={FadeInUp}
+          exiting={FadeOutUp}
           style={[swipeListStyle]}>
           <Box
             key={exercise.id}

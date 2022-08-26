@@ -3,8 +3,7 @@ import {ExerciseEquipment, ExerciseType, MuscleGroup} from '../models/Training';
 import {getToken} from '../data/Account';
 
 // TODO: Replace with api.trainingclubapp.com
-// const url: string = 'http://144.126.218.29:8080/v1';
-const url: string = 'http://localhost:8080/v1';
+const url: string = 'http://146.190.2.76:80/v1';
 
 interface ICreateExerciseInfoProps {
   exerciseName: string;
@@ -34,8 +33,6 @@ export async function createExerciseInfo({
       return reject('no token found on this device');
     }
 
-    console.log(`using token: ${token}`);
-
     try {
       const result = await axios.post(
         `${url}/exercise-info/`,
@@ -50,10 +47,7 @@ export async function createExerciseInfo({
 
       return resolve(result.data);
     } catch (err) {
-      const axiosError = err as AxiosError;
-      console.log(axiosError.response?.data);
-
-      return reject(err);
+      return reject(err as AxiosError);
     }
   });
 }

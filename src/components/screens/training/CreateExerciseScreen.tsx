@@ -18,6 +18,7 @@ import {
 } from '../../../models/Training';
 
 import {Box, Button, ScrollView, useColorModeValue, View} from 'native-base';
+import {AxiosError} from "axios";
 
 const CreateExerciseScreen = (): JSX.Element => {
   const navigation = useNavigation();
@@ -97,7 +98,7 @@ const CreateExerciseScreen = (): JSX.Element => {
       exerciseMuscleGroups: muscleGroups,
       exerciseEquipment: exerciseEquipment,
     })
-      .then(result => {
+      .then(() => {
         addExercise({
           id: nanoid(5),
           exerciseName: exerciseName,
@@ -129,7 +130,7 @@ const CreateExerciseScreen = (): JSX.Element => {
       .catch(() => {
         setPushdownConfig({
           title: 'Something went wrong.',
-          body: 'We encounted an error while trying to create your exercise. Please wait a moment and try again.',
+          body: 'We encountered an error while trying to create your exercise. Please wait a moment and try again.',
           status: 'error',
           duration: 5000,
           show: true,

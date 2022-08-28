@@ -38,3 +38,42 @@ export const FormatExerciseInfoQuery = (
 
   return `?${query.join('')}`;
 };
+
+/**
+ * Formats a query string for a post query
+ *
+ * @param author Post Author ID
+ * @param text Post Description Text Regexp
+ * @param tags Post Tags
+ * @param page Page Number
+ */
+export const FormatPostQuery = (
+  author?: string,
+  text?: string,
+  tags?: string[],
+  page?: number,
+): string | undefined => {
+  let query: string[] = [];
+
+  if (author) {
+    query.push('&author=' + author);
+  }
+
+  if (text) {
+    query.push('&text=' + text);
+  }
+
+  if (tags && tags.length > 0) {
+    tags.forEach(tag => query.push('&tags=' + tag));
+  }
+
+  if (page) {
+    query.push('&page=' + page);
+  }
+
+  if (query.length <= 0) {
+    return undefined;
+  }
+
+  return `?${query.join('')}`;
+};

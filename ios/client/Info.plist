@@ -58,5 +58,9 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Training Club requires access to your camera roll to share content</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Training Club requires access to your additions to share content</string>
 </dict>
 </plist>

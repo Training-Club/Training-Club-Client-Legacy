@@ -1,6 +1,6 @@
 import React from 'react';
 import {StatusBar, useColorMode} from 'native-base';
-import {createNativeStackNavigator} from 'react-native-screens/native-stack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useAccountContext} from './context/account/AccountContext';
 
 import FeedScreen from './components/screens/main/FeedScreen';
@@ -57,7 +57,7 @@ const Navigation = () => {
 
         <Stack.Navigator
           initialRouteName={'Feed'}
-          screenOptions={{stackAnimation: 'none'}}>
+          screenOptions={{animation: 'none'}}>
           <Stack.Screen
             name={'Feed'}
             component={FeedScreen}
@@ -91,7 +91,7 @@ const Navigation = () => {
       <>
         <Stack.Navigator
           initialRouteName={'CurrentSession'}
-          screenOptions={{stackAnimation: 'none'}}>
+          screenOptions={{animation: 'none'}}>
           <Stack.Screen
             name={'CurrentSession'}
             component={CurrentSessionScreen}

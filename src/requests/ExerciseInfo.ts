@@ -4,7 +4,7 @@ import {CreateExerciseInfoResult} from './responses/ExerciseInfo';
 import {getToken} from '../data/Account';
 
 // TODO: Replace with api.trainingclubapp.com
-const url: string = 'http://144.126.218.29:8080/v1';
+const url: string = 'http://146.190.2.76:80/v1';
 
 interface ICreateExerciseInfoProps {
   exerciseName: string;

@@ -3,7 +3,7 @@ import {IAccount} from '../models/Account';
 import {LoginResponse} from './responses/Account';
 
 // TODO: Replace with api.trainingclubapp.com
-const url: string = 'http://144.126.218.29:8080/v1';
+const url: string = 'http://146.190.2.76:80/v1';
 
 /**
  * Accepts an auth token as a param and attempts to obtain an account authorized

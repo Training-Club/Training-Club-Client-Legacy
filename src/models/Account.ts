@@ -32,7 +32,7 @@ export interface IPreferences {
 
 export interface IPersonalData {
   birthday?: Date;
-  Sex?: 'm' | 'f';
-  Weight?: number;
-  Height?: number;
+  sex?: 'm' | 'f';
+  weight?: number;
+  height?: number;
 }

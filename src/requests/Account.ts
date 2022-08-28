@@ -98,7 +98,7 @@ export async function attemptStandardAccountCreate(
  * @param {string} value Database value to match the provided key
  */
 export async function checkAccountAvailability(
-  key: string,
+  key: 'username' | 'email',
   value: string,
 ): Promise<boolean> {
   interface IResponse {
@@ -112,18 +112,28 @@ export async function checkAccountAvailability(
       );
 
       if (result.status !== 200) {
-        return reject(result.statusText);
+        return reject(
+          new Error('Failed to check availability: ' + result.statusText),
+        );
       }
 
-      return resolve(result.data.message);
+      return resolve(true);
     } catch (err) {
       const error = err as AxiosError;
 
-      if (error.response!.status === 404) {
-        return resolve(true);
+      if (error.response) {
+        if (error.response.status === 404) {
+          return resolve(true);
+        }
+
+        if (error.response.status === 409) {
+          return resolve(false);
+        }
       }
 
-      reject(new Error('Failed to check account availability: ' + err));
+      reject(
+        new Error('Failed to check availability: ' + error.response?.status),
+      );
     }
   });
 }

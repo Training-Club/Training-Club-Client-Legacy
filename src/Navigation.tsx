@@ -1,8 +1,6 @@
 import React from 'react';
 import {StatusBar, useColorMode} from 'native-base';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useAccountContext} from './context/account/AccountContext';
-
 import FeedScreen from './components/screens/main/FeedScreen';
 import RegisterScreen from './components/screens/auth/RegisterScreen';
 import WelcomeScreen from './components/screens/auth/WelcomeScreen';
@@ -11,13 +9,17 @@ import MainNavigation from './components/molecules/main/MainNavigation';
 import AnalyticsScreen from './components/screens/main/AnalyticsScreen';
 import DiscoveryScreen from './components/screens/main/DiscoveryScreen';
 import ProfileScreen from './components/screens/main/ProfileScreen';
-import AccountDrawer from './components/organisms/main/AccountDrawer';
 import CurrentSessionScreen from './components/screens/training/CurrentSessionScreen';
 import ExerciseSearchScreen from './components/screens/training/ExerciseSearchScreen';
 import CreateExerciseScreen from './components/screens/training/CreateExerciseScreen';
 import ExerciseAdditionalSearchScreen from './components/screens/training/ExerciseAdditionalSearchScreen';
 
-const Stack = createNativeStackNavigator();
+import {
+  createStackNavigator,
+  StackNavigationOptions,
+} from '@react-navigation/stack';
+
+const Stack = createStackNavigator();
 
 const Navigation = () => {
   const {account} = useAccountContext();
@@ -25,25 +27,32 @@ const Navigation = () => {
 
   const initialStack = account ? 'Main' : 'Auth';
 
+  const globalScreenOptions: StackNavigationOptions = {
+    headerShown: false,
+    gestureEnabled: false,
+  };
+
   const AuthStack = () => {
     return (
-      <Stack.Navigator initialRouteName={'Welcome'}>
+      <Stack.Navigator
+        initialRouteName={'Welcome'}
+        screenOptions={globalScreenOptions}>
         <Stack.Screen
           name={'Welcome'}
           component={WelcomeScreen}
-          options={{headerShown: false}}
+          options={globalScreenOptions}
         />
 
         <Stack.Screen
           name={'Login'}
           component={LoginScreen}
-          options={{headerShown: false}}
+          options={globalScreenOptions}
         />
 
         <Stack.Screen
           name={'Register'}
           component={RegisterScreen}
-          options={{headerShown: false}}
+          options={globalScreenOptions}
         />
       </Stack.Navigator>
     );
@@ -52,34 +61,33 @@ const Navigation = () => {
   const MainStack = () => {
     return (
       <>
-        <AccountDrawer />
         <MainNavigation />
 
         <Stack.Navigator
           initialRouteName={'Feed'}
-          screenOptions={{animation: 'none'}}>
+          screenOptions={globalScreenOptions}>
           <Stack.Screen
             name={'Feed'}
             component={FeedScreen}
-            options={{headerShown: false}}
+            options={globalScreenOptions}
           />
 
           <Stack.Screen
             name={'Discovery'}
             component={DiscoveryScreen}
-            options={{headerShown: false}}
+            options={globalScreenOptions}
           />
 
           <Stack.Screen
             name={'Analytics'}
             component={AnalyticsScreen}
-            options={{headerShown: false}}
+            options={globalScreenOptions}
           />
 
           <Stack.Screen
             name={'Profile'}
             component={ProfileScreen}
-            options={{headerShown: false}}
+            options={globalScreenOptions}
           />
         </Stack.Navigator>
       </>
@@ -91,29 +99,29 @@ const Navigation = () => {
       <>
         <Stack.Navigator
           initialRouteName={'CurrentSession'}
-          screenOptions={{animation: 'none'}}>
+          screenOptions={globalScreenOptions}>
           <Stack.Screen
             name={'CurrentSession'}
             component={CurrentSessionScreen}
-            options={{headerShown: false}}
+            options={globalScreenOptions}
           />
 
           <Stack.Screen
             name={'ExerciseSearch'}
             component={ExerciseSearchScreen}
-            options={{headerShown: false}}
+            options={globalScreenOptions}
           />
 
           <Stack.Screen
             name={'AdditionalExerciseSearch'}
             component={ExerciseAdditionalSearchScreen}
-            options={{headerShown: false}}
+            options={globalScreenOptions}
           />
 
           <Stack.Screen
             name={'CreateExercise'}
             component={CreateExerciseScreen}
-            options={{headerShown: false}}
+            options={globalScreenOptions}
           />
         </Stack.Navigator>
       </>
@@ -127,32 +135,25 @@ const Navigation = () => {
         barStyle={colorMode === 'light' ? 'dark-content' : 'light-content'}
       />
 
-      <Stack.Navigator initialRouteName={initialStack}>
+      <Stack.Navigator
+        initialRouteName={initialStack}
+        screenOptions={globalScreenOptions}>
         <Stack.Screen
           name={'Auth'}
           component={AuthStack}
-          options={{
-            headerShown: false,
-            gestureEnabled: false,
-          }}
+          options={globalScreenOptions}
         />
 
         <Stack.Screen
           name={'Main'}
           component={MainStack}
-          options={{
-            headerShown: false,
-            gestureEnabled: false,
-          }}
+          options={globalScreenOptions}
         />
 
         <Stack.Screen
           name={'Training'}
           component={TrainingStack}
-          options={{
-            headerShown: false,
-            gestureEnabled: false,
-          }}
+          options={globalScreenOptions}
         />
       </Stack.Navigator>
     </>

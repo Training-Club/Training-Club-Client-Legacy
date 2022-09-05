@@ -1,69 +1,106 @@
 import React from 'react';
-import AccountDrawerPressable from '../../../atoms/main/account-drawer/AccountDrawerPressable';
-import {Box, useColorModeValue} from 'native-base';
+import {VStack, useColorModeValue, useColorMode} from 'native-base';
+import {ColorType} from 'native-base/lib/typescript/components/types';
+import AccountDrawerButton from '../../../atoms/main/account-drawer/AccountDrawerButton';
 
-const AccountDrawerButtonStack = (): JSX.Element => {
-  const dangerColor = useColorModeValue('apple.red.light', 'apple.red.dark');
+interface IAccountDrawerButtonStackProps {
+  options?: {
+    hasNotifications?: boolean;
+  };
+
+  style?: {
+    bgColor?: ColorType;
+    textColor?: ColorType;
+    borderRadius?: number | string;
+    spacing?: number;
+  };
+}
+
+const AccountDrawerButtonStack = ({
+  options,
+  style,
+}: IAccountDrawerButtonStackProps): JSX.Element => {
+  const {toggleColorMode} = useColorMode(); // TODO: Remove this later
+  const defaultBgColor = useColorModeValue('white', 'black');
+  const defaultTextColor = useColorModeValue('black', 'white');
+  const defaultSpacing = 4;
+  const defaultBorderRadius = 12;
 
   return (
-    <Box w={'100%'} h={'100%'}>
-      <AccountDrawerPressable
-        onPress={() => console.log('Not implemented')}
+    <VStack
+      w={'100%'}
+      bgColor={style?.bgColor ?? defaultBgColor}
+      px={style?.spacing ?? defaultSpacing}
+      py={2}
+      mt={style?.spacing ?? defaultSpacing}
+      borderRadius={style?.borderRadius ?? defaultBorderRadius}>
+      <AccountDrawerButton
+        onPress={() => console.log('My Account')}
         text={'My Account'}
-        styling={{
-          roundedTop: true,
+        style={{
+          button: {renderBottomBorder: true},
+          icon: {
+            iconName: 'account-circle',
+            iconSize: 6,
+            iconColor: style?.textColor ?? defaultTextColor,
+          },
         }}
-        icon={{iconName: 'account-circle', iconSize: 6}}
       />
 
-      <AccountDrawerPressable
-        onPress={() => console.log('Not implemented')}
+      <AccountDrawerButton
+        onPress={() => console.log('Inbox')}
         text={'Inbox'}
-        badge={{
-          color: dangerColor,
-          text: '100',
+        style={{
+          button: {renderBottomBorder: true},
+          badge: options?.hasNotifications
+            ? {color: 'apple.red.light', text: '8', textColor: 'white'}
+            : undefined,
+          icon: {
+            iconName: 'email',
+            iconSize: 6,
+            iconColor: style?.textColor ?? defaultTextColor,
+          },
         }}
-        icon={{iconName: 'email', iconSize: 6}}
       />
 
-      <AccountDrawerPressable
-        onPress={() => console.log('Not implemented')}
-        text={'Settings'}
-        styling={{
-          roundedBottom: true,
+      <AccountDrawerButton
+        onPress={() => console.log('Create Community')}
+        text={'Create Community'}
+        style={{
+          button: {renderBottomBorder: true},
+          icon: {
+            iconName: 'forum',
+            iconSize: 6,
+            iconColor: style?.textColor ?? defaultTextColor,
+          },
         }}
-        icon={{iconName: 'settings', iconSize: 6}}
       />
 
-      <AccountDrawerPressable
-        onPress={() => console.log('Not implemented')}
+      <AccountDrawerButton
+        onPress={() => console.log('Exercise Templates')}
         text={'Exercise Templates'}
-        styling={{
-          roundedTop: true,
+        style={{
+          button: {renderBottomBorder: true},
+          icon: {
+            iconName: 'fitness-center',
+            iconSize: 6,
+            iconColor: style?.textColor ?? defaultTextColor,
+          },
         }}
-        icon={{iconName: 'fitness-center', iconSize: 6}}
       />
 
-      <AccountDrawerPressable
-        onPress={() => console.log('Not implemented')}
-        text={'Your Foods'}
-        styling={{
-          roundedBottom: true,
+      <AccountDrawerButton
+        onPress={() => toggleColorMode()}
+        text={'Settings'}
+        style={{
+          icon: {
+            iconName: 'settings',
+            iconSize: 6,
+            iconColor: style?.textColor ?? defaultTextColor,
+          },
         }}
-        icon={{iconName: 'lunch-dining', iconSize: 6}}
       />
-
-      <AccountDrawerPressable
-        onPress={() => console.log('Not implemented')}
-        text={'Sign out'}
-        styling={{
-          roundedTop: true,
-          roundedBottom: true,
-          color: dangerColor,
-        }}
-        icon={{iconName: 'logout', iconSize: 6}}
-      />
-    </Box>
+    </VStack>
   );
 };
 

@@ -1,72 +1,135 @@
-import React from 'react';
-import {useAccountDrawerContext} from '../../../context/account/AccountDrawerContext';
-import {useAccountContext} from '../../../context/account/AccountContext';
+import React, {useEffect, useState} from 'react';
+import {Dimensions} from 'react-native';
+import {IAccount} from '../../../models/Account';
 import AccountDrawerHeader from '../../molecules/main/account-drawer/AccountDrawerHeader';
 import AccountDrawerButtonStack from '../../molecules/main/account-drawer/AccountDrawerButtonStack';
-import AccountDrawerFooter from '../../molecules/main/account-drawer/AccountDrawerFooter';
-import {Box, HStack, Pressable, useColorModeValue} from 'native-base';
+import {AccountDrawerVersionInfo} from '../../atoms/main/account-drawer/AccountDrawerVersionInfo';
+import {getBothConnectionCounts} from '../../../requests/Follow';
+import {usePushdownContext} from '../../../context/pushdown/PushdownContext';
+import {Box, View, useColorModeValue} from 'native-base';
+
+import {
+  PanGestureHandler,
+  PanGestureHandlerGestureEvent,
+} from 'react-native-gesture-handler';
+
 import Animated, {
-  FadeIn,
-  FadeOut,
-  SlideInRight,
-  SlideOutRight,
+  useAnimatedGestureHandler,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
 } from 'react-native-reanimated';
 
-const AccountDrawer = () => {
-  const {account} = useAccountContext();
-  const {isAccountDrawerOpen, setAccountDrawerOpen} = useAccountDrawerContext();
+interface IAccountDrawerProps {
+  account: IAccount;
+  children: any;
+}
 
-  const backgroundColor = useColorModeValue('apple.gray.50', 'apple.gray.900');
+const AccountDrawer = ({account, children}: IAccountDrawerProps) => {
+  const [followerCount, setFollowerCount] = useState(0);
+  const [followingCount, setFollowingCount] = useState(0);
+  const {setPushdownConfig} = usePushdownContext();
 
-  if (!isAccountDrawerOpen) {
-    return null;
-  }
+  const {width} = Dimensions.get('screen');
+  const translationThreshold = -(width * 0.9);
+  const minTranslationDistance = -(width * 0.4);
+  const minVelocityThreshold = -1000.0;
+  const translateX = useSharedValue(0);
+
+  const bgColor = useColorModeValue('apple.gray.50', 'apple.gray.900');
+
+  const springConfig = React.useMemo(() => {
+    return {overshootClamping: true, mass: 0.8, stiffness: 100};
+  }, []);
+
+  const panGestureHandler =
+    useAnimatedGestureHandler<PanGestureHandlerGestureEvent>({
+      onActive: event => {
+        if (event.translationX > 0.0) {
+          translateX.value = withSpring(0, springConfig);
+          return;
+        }
+
+        translateX.value = withSpring(event.translationX, springConfig);
+      },
+
+      onEnd: event => {
+        if (event.velocityX <= minVelocityThreshold) {
+          translateX.value = withSpring(translationThreshold, springConfig);
+          return;
+        }
+
+        if (translateX.value >= minTranslationDistance) {
+          translateX.value = withSpring(0, springConfig);
+          return;
+        }
+
+        if (
+          translateX.value < translationThreshold ||
+          translateX.value + event.translationX < translationThreshold
+        ) {
+          translateX.value = withSpring(translationThreshold, springConfig);
+          return;
+        }
+      },
+    });
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{translateX: translateX.value}],
+    zIndex: 10,
+    width: '100%',
+    height: '100%',
+  }));
+
+  useEffect(() => {
+    getBothConnectionCounts(account.id)
+      .then(connectionCounts => {
+        setFollowerCount(connectionCounts.followers);
+        setFollowingCount(connectionCounts.following);
+      })
+      .catch(() => {
+        setPushdownConfig({
+          title: 'Something went wrong.',
+          body: 'Failed to load follower/following counts for your profile and may not be displayed accurately.',
+          status: 'error',
+          duration: 3000,
+          show: true,
+        });
+      });
+  }, [account.id, setPushdownConfig]);
 
   return (
-    <Animated.View
-      entering={FadeIn}
-      exiting={FadeOut.delay(200)}
-      style={{
-        position: 'absolute',
-        width: '100%',
-        height: '100%',
-        top: 0,
-        left: 0,
-        zIndex: 2,
-      }}>
-      <HStack w={'100%'} h={'100%'}>
-        <Animated.View
-          entering={FadeIn.delay(200)}
-          exiting={FadeOut.delay(0)}
-          style={{
-            width: '20%',
-            height: '100%',
-          }}>
-          <Pressable
-            onPress={() => setAccountDrawerOpen(false)}
-            w={'100%'}
-            h={'100%'}
-            bgColor={backgroundColor}
-            opacity={0.75}
-          />
-        </Animated.View>
+    <View position={'absolute'} top={0} left={0} w={'100%'} h={'100%'} p={0}>
+      <PanGestureHandler
+        onGestureEvent={panGestureHandler}
+        activeOffsetX={[-10, 10]}>
+        <Animated.View style={[animatedStyle]}>{children}</Animated.View>
+      </PanGestureHandler>
 
-        <Animated.View
-          entering={SlideInRight}
-          exiting={SlideOutRight.delay(150)}
-          style={{
-            width: '80%',
-            height: '100%',
-          }}>
-          <Box bgColor={backgroundColor} w={'100%'} h={'100%'} pt={12} px={4}>
-            {account && <AccountDrawerHeader account={account} />}
+      <Box
+        position={'absolute'}
+        top={0}
+        right={0}
+        px={4}
+        py={16}
+        w={'90%'}
+        h={'100%'}
+        bgColor={bgColor}>
+        <AccountDrawerHeader
+          account={account}
+          data={{followerCount: followerCount, followingCount: followingCount}}
+        />
 
-            <AccountDrawerButtonStack />
-            <AccountDrawerFooter />
-          </Box>
-        </Animated.View>
-      </HStack>
-    </Animated.View>
+        <AccountDrawerButtonStack
+          options={{
+            hasNotifications:
+              true /* TODO: Remove this, for testing purposes */,
+          }}
+        />
+
+        <AccountDrawerVersionInfo />
+      </Box>
+    </View>
   );
 };
 

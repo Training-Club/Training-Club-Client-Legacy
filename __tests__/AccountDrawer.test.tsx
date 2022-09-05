@@ -6,7 +6,6 @@ import {NavigationContainer} from '@react-navigation/native';
 import AccountDrawerButtonStack from '../src/components/molecules/main/account-drawer/AccountDrawerButtonStack';
 import AccountDrawerHeader from '../src/components/molecules/main/account-drawer/AccountDrawerHeader';
 import {IAccount} from '../src/models/Account';
-import AccountDrawerFooter from '../src/components/molecules/main/account-drawer/AccountDrawerFooter';
 
 describe('Account Drawer ->', () => {
   const inset = {
@@ -24,13 +23,25 @@ describe('Account Drawer ->', () => {
     const {getByText} = render(
       <NativeBaseProvider initialWindowMetrics={inset} theme={theme()}>
         <NavigationContainer>
-          <AccountDrawerHeader account={account} />
+          <AccountDrawerHeader
+            account={account}
+            data={{followerCount: 360000, followingCount: 1234}}
+          />
         </NavigationContainer>
       </NativeBaseProvider>,
     );
 
-    const titleElem = getByText('test_user');
+    const titleElem = getByText('@test_user');
+    const followerCountElem = getByText('360K');
+    const followerTextElem = getByText('Followers');
+    const followingCountElem = getByText('1.2K');
+    const followingTextElem = getByText('Following');
+
     expect(titleElem).toBeTruthy();
+    expect(followerCountElem).toBeTruthy();
+    expect(followingCountElem).toBeTruthy();
+    expect(followerTextElem).toBeTruthy();
+    expect(followingTextElem).toBeTruthy();
   });
 
   it('should render account drawer button stack', () => {
@@ -47,18 +58,5 @@ describe('Account Drawer ->', () => {
 
     expect(myAccountElem).toBeTruthy();
     expect(inboxElem).toBeTruthy();
-  });
-
-  it('should render account drawer footer options', () => {
-    const {getByText} = render(
-      <NativeBaseProvider initialWindowMetrics={inset} theme={theme()}>
-        <NavigationContainer>
-          <AccountDrawerFooter />
-        </NavigationContainer>
-      </NativeBaseProvider>,
-    );
-
-    const settingsElem = getByText('Settings');
-    expect(settingsElem).toBeTruthy();
   });
 });

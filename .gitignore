@@ -64,3 +64,6 @@ buck-out/
 
 # Testing
 coverage/
+
+# Version files
+version-info.json

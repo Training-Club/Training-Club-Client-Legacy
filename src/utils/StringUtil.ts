@@ -77,3 +77,17 @@ export const FormatPostQuery = (
 
   return `?${query.join('')}`;
 };
+
+/**
+ * Accepts a large number and formats it in a mucher smaller, easier-on-the-eyes
+ * format such as 1.1m, or 360k, rather than 1,100,000 or 360,000
+ *
+ * @param {number} value Number value to condense
+ */
+export const FormatLargeNumber = (value: number): string => {
+  return new Intl.NumberFormat('en-US', {
+    //@ts-ignore LOL
+    notation: 'compact',
+    maximumFractionDigits: 1,
+  }).format(value);
+};

@@ -4,7 +4,6 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {NavigationContainer} from '@react-navigation/native';
 import {PushdownContextProvider} from './src/context/pushdown/PushdownContext.Provider';
 import {AccountContextProvider} from './src/context/account/AccountContext.Provider';
-import {AccountDrawerContextProvider} from './src/context/account/AccountDrawerContext.Provider';
 import {ActionsheetContextProvider} from './src/context/actionsheet/ActionsheetContext.Provider';
 import {SessionContextProvider} from './src/context/session/SessionContext.Provider';
 import {ExerciseContextProvider} from './src/context/exercise/ExerciseContext.Provider';
@@ -16,19 +15,17 @@ const App = () => {
     <GestureHandlerRootView style={{flex: 1}}>
       <NativeBaseProvider theme={theme()}>
         <AccountContextProvider>
-          <AccountDrawerContextProvider>
-            <NavigationContainer>
-              <ActionsheetContextProvider>
-                <PushdownContextProvider>
-                  <SessionContextProvider>
-                    <ExerciseContextProvider>
-                      <Navigation />
-                    </ExerciseContextProvider>
-                  </SessionContextProvider>
-                </PushdownContextProvider>
-              </ActionsheetContextProvider>
-            </NavigationContainer>
-          </AccountDrawerContextProvider>
+          <NavigationContainer>
+            <ActionsheetContextProvider>
+              <PushdownContextProvider>
+                <SessionContextProvider>
+                  <ExerciseContextProvider>
+                    <Navigation />
+                  </ExerciseContextProvider>
+                </SessionContextProvider>
+              </PushdownContextProvider>
+            </ActionsheetContextProvider>
+          </NavigationContainer>
         </AccountContextProvider>
       </NativeBaseProvider>
     </GestureHandlerRootView>

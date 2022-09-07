@@ -13,6 +13,7 @@ import CurrentSessionScreen from './components/screens/training/CurrentSessionSc
 import ExerciseSearchScreen from './components/screens/training/ExerciseSearchScreen';
 import CreateExerciseScreen from './components/screens/training/CreateExerciseScreen';
 import ExerciseAdditionalSearchScreen from './components/screens/training/ExerciseAdditionalSearchScreen';
+import ContentSelectScreen from './components/screens/content/ContentSelectScreen';
 
 import {
   createStackNavigator,
@@ -96,35 +97,47 @@ const Navigation = () => {
 
   const TrainingStack = () => {
     return (
-      <>
-        <Stack.Navigator
-          initialRouteName={'CurrentSession'}
-          screenOptions={globalScreenOptions}>
-          <Stack.Screen
-            name={'CurrentSession'}
-            component={CurrentSessionScreen}
-            options={globalScreenOptions}
-          />
+      <Stack.Navigator
+        initialRouteName={'CurrentSession'}
+        screenOptions={globalScreenOptions}>
+        <Stack.Screen
+          name={'CurrentSession'}
+          component={CurrentSessionScreen}
+          options={globalScreenOptions}
+        />
 
-          <Stack.Screen
-            name={'ExerciseSearch'}
-            component={ExerciseSearchScreen}
-            options={globalScreenOptions}
-          />
+        <Stack.Screen
+          name={'ExerciseSearch'}
+          component={ExerciseSearchScreen}
+          options={globalScreenOptions}
+        />
 
-          <Stack.Screen
-            name={'AdditionalExerciseSearch'}
-            component={ExerciseAdditionalSearchScreen}
-            options={globalScreenOptions}
-          />
+        <Stack.Screen
+          name={'AdditionalExerciseSearch'}
+          component={ExerciseAdditionalSearchScreen}
+          options={globalScreenOptions}
+        />
 
-          <Stack.Screen
-            name={'CreateExercise'}
-            component={CreateExerciseScreen}
-            options={globalScreenOptions}
-          />
-        </Stack.Navigator>
-      </>
+        <Stack.Screen
+          name={'CreateExercise'}
+          component={CreateExerciseScreen}
+          options={globalScreenOptions}
+        />
+      </Stack.Navigator>
+    );
+  };
+
+  const ContentStack = () => {
+    return (
+      <Stack.Navigator
+        initialRouteName={'ContentSelect'}
+        screenOptions={globalScreenOptions}>
+        <Stack.Screen
+          name={'ContentSelect'}
+          component={ContentSelectScreen}
+          options={globalScreenOptions}
+        />
+      </Stack.Navigator>
     );
   };
 
@@ -153,6 +166,12 @@ const Navigation = () => {
         <Stack.Screen
           name={'Training'}
           component={TrainingStack}
+          options={globalScreenOptions}
+        />
+
+        <Stack.Screen
+          name={'Content'}
+          component={ContentStack}
           options={globalScreenOptions}
         />
       </Stack.Navigator>

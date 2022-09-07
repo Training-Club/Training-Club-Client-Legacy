@@ -20,6 +20,14 @@ const StartNewActionsheet = (): JSX.Element => {
     }
   }, [actionSheetRef, navigation]);
 
+  const handleNewPostTransition = useCallback(() => {
+    navigation.navigate('Content' as never, {screen: 'ContentSelect'} as never);
+
+    if (actionSheetRef && actionSheetRef.current) {
+      actionSheetRef.current.close();
+    }
+  }, [actionSheetRef, navigation]);
+
   return (
     <BottomSheetView>
       <VStack px={4}>
@@ -61,7 +69,7 @@ const StartNewActionsheet = (): JSX.Element => {
         </Heading>
 
         <PressablePill
-          onPress={() => console.log('Create Picture/Video Post')}
+          onPress={() => handleNewPostTransition()}
           style={{roundedTop: true, roundedBottom: true}}
           icon={{name: 'photo-camera', size: 6}}>
           <Text fontWeight={'semibold'}>Create Post</Text>

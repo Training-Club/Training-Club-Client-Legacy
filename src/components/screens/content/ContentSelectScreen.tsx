@@ -50,6 +50,9 @@ const ContentSelectScreen = (): JSX.Element => {
   const {width} = Dimensions.get('screen');
   const rowCount = 3;
 
+  /**
+   * Returns true if the provided selectable is currently selected
+   */
   const isSelected = React.useCallback(
     (selectable: SelectableContent) => {
       return selectedContent.find(s => s.uri === selectable.uri) !== undefined;
@@ -57,6 +60,12 @@ const ContentSelectScreen = (): JSX.Element => {
     [selectedContent],
   );
 
+  /**
+   * Toggles the selected state for the provided selectable
+   *
+   * If the selectable is not selected and the selected amount exceeds 10
+   * this function will trigger an error dropdown on the client
+   */
   const toggleSelected = React.useCallback(
     (selectable: SelectableContent) => {
       const selected =
@@ -95,6 +104,9 @@ const ContentSelectScreen = (): JSX.Element => {
     [multiSelectEnabled, selectedContent, setPushdownConfig],
   );
 
+  /**
+   * Toggles multi-select content capability
+   */
   const toggleMultiSelect = React.useCallback(() => {
     setMultiSelectEnabled(!multiSelectEnabled);
 
@@ -106,6 +118,9 @@ const ContentSelectScreen = (): JSX.Element => {
     }
   }, [multiSelectEnabled, selectedContent.length]);
 
+  /**
+   * Loads all photo data from the device in to memory
+   */
   React.useEffect(() => {
     getPhotos()
       .then(photoData => {
@@ -141,9 +156,15 @@ const ContentSelectScreen = (): JSX.Element => {
         });
       })
       .catch(err => {
-        console.error(err);
+        setPushdownConfig({
+          title: 'Failed to load image editor',
+          body: 'Encountered the following error: ' + err,
+          status: 'error',
+          duration: 5000,
+          show: true,
+        });
       });
-  }, []);
+  }, [setPushdownConfig]);
 
   return (
     <View>
@@ -154,7 +175,17 @@ const ContentSelectScreen = (): JSX.Element => {
         />
       </Box>
 
-      <ContentSelectCroppableView width={width} />
+      {selectedContent && selectedContent.length && (
+        <ContentSelectCroppableView
+          onCrop={data => console.log(data)}
+          size={width}
+          image={{
+            uri: selectedContent[0].uri,
+            width: selectedContent[0].dimensions.width,
+            height: selectedContent[0].dimensions.height,
+          }}
+        />
+      )}
 
       <ContentSelectToolbar
         isMultiselectEnabled={multiSelectEnabled}

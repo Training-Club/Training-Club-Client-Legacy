@@ -45,7 +45,7 @@ const CloseableHeader = ({
   );
 
   return (
-    <Box testID={'closeable-header'} w={'100%'} mt={4}>
+    <Box testID={'closeable-header'} w={'100%'} mt={4} zIndex={10}>
       <Heading size={'xl'} color={textColor ?? defaultTextColor}>
         {title}
       </Heading>

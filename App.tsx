@@ -7,6 +7,7 @@ import {AccountContextProvider} from './src/context/account/AccountContext.Provi
 import {ActionsheetContextProvider} from './src/context/actionsheet/ActionsheetContext.Provider';
 import {SessionContextProvider} from './src/context/session/SessionContext.Provider';
 import {ExerciseContextProvider} from './src/context/exercise/ExerciseContext.Provider';
+import {ContentDraftContextProvider} from './src/context/content/ContentDraftContext.Provider';
 import theme from './src/Theme';
 import Navigation from './src/Navigation';
 
@@ -20,7 +21,9 @@ const App = () => {
               <PushdownContextProvider>
                 <SessionContextProvider>
                   <ExerciseContextProvider>
-                    <Navigation />
+                    <ContentDraftContextProvider>
+                      <Navigation />
+                    </ContentDraftContextProvider>
                   </ExerciseContextProvider>
                 </SessionContextProvider>
               </PushdownContextProvider>

@@ -1,4 +1,20 @@
 import {PrivacyLevel} from './Privacy';
+import {CropRect} from 'react-native-image-crop-picker';
+
+export interface IContentDraft {
+  sortOrder: number;
+
+  original: {
+    uri: string;
+    width: number;
+    height: number;
+  };
+
+  draft: {
+    uri: string;
+    cropRect?: CropRect | null;
+  };
+}
 
 export interface IPost {
   id: string;

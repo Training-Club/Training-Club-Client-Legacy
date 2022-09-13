@@ -33,8 +33,6 @@ const LoadingIndicator = ({
       w={'100%'}
       h={'100%'}
       position={'absolute'}
-      left={4}
-      top={4}
       display={'flex'}
       alignItems={'center'}
       justifyContent={'center'}
@@ -43,6 +41,7 @@ const LoadingIndicator = ({
       <Square
         w={width * 0.5}
         h={width * 0.5}
+        p={2}
         bgColor={backgroundColor ?? defaultBackgroundColor}
         opacity={0.85}
         borderRadius={'12px'}>

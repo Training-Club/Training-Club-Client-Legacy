@@ -9,20 +9,20 @@ import TrainingExerciseOptionsMenuItem from '../../atoms/training/TrainingExerci
 import {ScrollView} from 'react-native-gesture-handler';
 
 import {
+  DistanceMeasurement,
+  getDistanceMeasurement,
+  MeasurementSystem,
+} from '../../../models/Measurement';
+
+import {
   Box,
   Heading,
   HStack,
   Icon,
   Text,
-  useColorModeValue,
   VStack,
+  useColorModeValue,
 } from 'native-base';
-
-import {
-  DistanceMeasurement,
-  getDistanceMeasurement,
-  MeasurementSystem,
-} from '../../../models/Measurement';
 
 interface IExerciseOptionsActionsheetProps {
   groupedExercise: GroupedExercise;

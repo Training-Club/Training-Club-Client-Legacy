@@ -16,6 +16,7 @@ export async function createDraftContent(
     if (item.sourceURL) {
       const draftItem: IContentDraft = {
         sortOrder: index,
+        contentType: item.mime.startsWith('video', 0) ? 'video' : 'image',
 
         original: {
           uri: item.sourceURL,

@@ -3,6 +3,7 @@ import {CropRect} from 'react-native-image-crop-picker';
 
 export interface IContentDraft {
   sortOrder: number;
+  contentType: 'image' | 'video';
 
   original: {
     uri: string;

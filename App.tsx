@@ -1,4 +1,5 @@
 import React from 'react';
+import {LogBox} from 'react-native';
 import {NativeBaseProvider} from 'native-base';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {NavigationContainer} from '@react-navigation/native';
@@ -10,6 +11,10 @@ import {ExerciseContextProvider} from './src/context/exercise/ExerciseContext.Pr
 import {ContentDraftContextProvider} from './src/context/content/ContentDraftContext.Provider';
 import theme from './src/Theme';
 import Navigation from './src/Navigation';
+
+LogBox.ignoreLogs([
+  'Check the render method of `ExerciseCard`. See https://reactjs.org/link/warning-keys for more information.',
+]);
 
 const App = () => {
   return (

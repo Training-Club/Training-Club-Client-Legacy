@@ -6,7 +6,7 @@ const hash = require('child_process')
   .trim();
 
 const appVersion = require('child_process')
-    .execSync(`npm -s run env echo '$npm_package_version'`)
+    .execSync(`node -e "console.log(require('./package.json').version);"`)
     .toString()
     .trim();
 

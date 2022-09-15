@@ -3,8 +3,10 @@
   "version": "alpha-0.0.1",
   "private": true,
   "scripts": {
-    "android": "node src/buildtools/Version.js && react-native start --host 127.0.0.1",
-    "ios": "node src/buildtools/Version.js && react-native run-ios",
+    "android": "react-native start --host 127.0.0.1",
+    "android:version": "node src/buildtools/Version.js && node src/buildtools/Version.js && react-native start --host 127.0.0.1",
+    "ios": "react-native run-ios",
+    "ios:version": "node src/buildtools/Version.js && react-native run-ios",
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",

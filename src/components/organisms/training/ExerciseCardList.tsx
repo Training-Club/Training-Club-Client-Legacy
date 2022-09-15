@@ -20,10 +20,11 @@ const ExerciseCardList = ({
   const renderItem = (result: {item: GroupedExercise; index: number}) => {
     return (
       <Animated.View
+        key={result.item.name}
         entering={SlideInRight}
         exiting={SlideOutRight}
         layout={SequencedTransition}>
-        <ExerciseCard key={result.item.name} groupedExercise={result.item} />
+        <ExerciseCard key={`${result.item.name}-${result.index}`} groupedExercise={result.item} />
       </Animated.View>
     );
   };

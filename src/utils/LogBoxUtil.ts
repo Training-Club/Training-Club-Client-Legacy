@@ -20,6 +20,6 @@ export function registerIgnoredLogs() {
 
   LogBox.ignoreLogs(ignored);
 
-  console.log('ignoring the following log messages:');
+  console.log('ignoring the following log output:');
   console.log(ignored.join('\n'));
 }

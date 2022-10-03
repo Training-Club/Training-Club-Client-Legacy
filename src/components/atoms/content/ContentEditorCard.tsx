@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React from 'react';
 import {IContentDraft} from '../../../models/Content';
 import Video from 'react-native-video';
 import {Box, Image, Pressable} from 'native-base';

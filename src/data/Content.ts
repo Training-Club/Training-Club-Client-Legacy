@@ -1,5 +1,6 @@
 import {ImageOrVideo} from 'react-native-image-crop-picker';
 import {IContentDraft} from '../models/Content';
+import {Platform} from 'react-native';
 
 /**
  * Accepts ImageOrVideo[] array and converts each object in the array
@@ -13,19 +14,21 @@ export async function createDraftContent(
   const result: IContentDraft[] = [];
 
   data.forEach((item, index) => {
-    if (item.sourceURL) {
+    const uri = Platform.OS === 'android' ? item.path : item.sourceURL;
+
+    if (uri) {
       const draftItem: IContentDraft = {
         sortOrder: index,
         contentType: item.mime.startsWith('video', 0) ? 'video' : 'image',
 
         original: {
-          uri: item.sourceURL,
+          uri: uri,
           width: item.width,
           height: item.height,
         },
 
         draft: {
-          uri: item.sourceURL,
+          uri: uri,
         },
       };
 

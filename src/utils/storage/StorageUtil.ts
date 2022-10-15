@@ -24,7 +24,6 @@ export const writeItem = async (
           expires: null,
         });
 
-        console.log('writeItem resolved');
         resolve();
         return;
       }
@@ -32,7 +31,6 @@ export const writeItem = async (
       const json = JSON.stringify(value);
       await store.save({key: collection, id: key, data: json, expires: null});
 
-      console.log('writeItem resolved as json');
       resolve();
     } catch (err) {
       reject(err);

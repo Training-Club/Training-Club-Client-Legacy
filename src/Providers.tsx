@@ -18,8 +18,8 @@ export const Providers = ({children}: IProvidersProps): JSX.Element => {
   return (
     <GestureHandlerRootView style={{flex: 1}}>
       <NativeBaseProvider theme={theme()}>
-        <AccountContextProvider>
-          <NavigationContainer>
+        <NavigationContainer>
+          <AccountContextProvider>
             <ActionsheetContextProvider>
               <PushdownContextProvider>
                 <SessionContextProvider>
@@ -31,8 +31,8 @@ export const Providers = ({children}: IProvidersProps): JSX.Element => {
                 </SessionContextProvider>
               </PushdownContextProvider>
             </ActionsheetContextProvider>
-          </NavigationContainer>
-        </AccountContextProvider>
+          </AccountContextProvider>
+        </NavigationContainer>
       </NativeBaseProvider>
     </GestureHandlerRootView>
   );

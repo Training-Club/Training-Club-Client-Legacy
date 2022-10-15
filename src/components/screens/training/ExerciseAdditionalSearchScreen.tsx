@@ -3,25 +3,26 @@ import {useExerciseContext} from '../../../context/exercise/ExerciseContext';
 import {usePushdownContext} from '../../../context/pushdown/PushdownContext';
 import {useDebounce} from 'use-debounce';
 import {getExerciseSearchResults} from '../../../requests/Training';
+import {Capitalize, FormatExerciseInfoQuery} from '../../../utils/StringUtil';
+import {getMockExerciseData} from '../../../data/Training';
+import {useNavigation} from '@react-navigation/core';
+import {useAccountContext} from '../../../context/account/AccountContext';
 import {AxiosError} from 'axios';
 import {ExerciseInfo, MuscleGroup} from '../../../models/Training';
 import CloseableHeader from '../../molecules/design/CloseableHeader';
-import {Box, Icon, View, VStack} from 'native-base';
-import {Capitalize, FormatExerciseInfoQuery} from '../../../utils/StringUtil';
 import {default as MaterialIcons} from 'react-native-vector-icons/MaterialIcons';
 import InputField from '../../atoms/design/InputField';
 import TogglePillRow from '../../molecules/design/TogglePillRow';
 import TogglePill from '../../atoms/design/TogglePill';
 import ExerciseSearchResultList from '../../organisms/training/ExerciseSearchResultList';
 import AdditionalExerciseSelection from '../../molecules/training/AdditionalExerciseSelection';
+import {Box, Icon, View, VStack} from 'native-base';
 
 import Animated, {
   Layout,
   SlideInDown,
   SlideOutDown,
 } from 'react-native-reanimated';
-import {getMockExerciseData} from '../../../data/Training';
-import {useNavigation} from '@react-navigation/core';
 
 interface IExerciseAdditionalSearchScreenProps {
   route: any;
@@ -30,9 +31,11 @@ interface IExerciseAdditionalSearchScreenProps {
 const ExerciseAdditionalSearchScreen = ({
   route,
 }: IExerciseAdditionalSearchScreenProps): JSX.Element => {
-  const navigation = useNavigation();
+  const {accessToken} = useAccountContext();
   const {addExercise} = useExerciseContext();
   const {setPushdownConfig} = usePushdownContext();
+
+  const navigation = useNavigation();
   const [filters, setFilters] = React.useState<MuscleGroup[]>([]);
   const [nameQuery, setNameQuery] = React.useState<string>('');
   const [nameQueryDebounced] = useDebounce(nameQuery, 500);
@@ -133,7 +136,7 @@ const ExerciseAdditionalSearchScreen = ({
       return;
     }
 
-    getExerciseSearchResults(queryString)
+    getExerciseSearchResults(queryString, accessToken)
       .then(result => {
         setSearchResults(result);
       })
@@ -156,7 +159,7 @@ const ExerciseAdditionalSearchScreen = ({
           show: true,
         });
       });
-  }, [filters, nameQueryDebounced, setPushdownConfig]);
+  }, [accessToken, filters, nameQueryDebounced, setPushdownConfig]);
 
   return (
     <View>

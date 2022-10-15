@@ -1,18 +1,19 @@
 import React from 'react';
 import {View} from 'native-base';
+import StandardLoginInput from '../../organisms/auth/StandardLoginInput';
+import CloseableHeader from '../../molecules/design/CloseableHeader';
 import {useAccountContext} from '../../../context/account/AccountContext';
 import {usePushdownContext} from '../../../context/pushdown/PushdownContext';
-import CloseableHeader from '../../molecules/design/CloseableHeader';
-import Animated, {FadeIn, FadeOut} from 'react-native-reanimated';
 import LoadingIndicator from '../../molecules/design/LoadingIndicator';
-import StandardLoginInput from '../../organisms/auth/StandardLoginInput';
-import {useNavigation} from '@react-navigation/native';
 import {attemptStandardLogin} from '../../../requests/Account';
-import {setToken} from '../../../data/Account';
+import {setRefreshToken} from '../../../data/Account';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import Animated, {FadeIn, FadeOut} from 'react-native-reanimated';
 
 const LoginScreen = () => {
-  const navigation = useNavigation();
-  const {setAccount} = useAccountContext();
+  const navigation = useNavigation<NativeStackNavigationProp<any>>();
+  const {setAccount, setAccessToken, setInitialLoad} = useAccountContext();
   const {setPushdownConfig} = usePushdownContext();
 
   const [email, setEmail] = React.useState<string>('');
@@ -22,16 +23,18 @@ const LoginScreen = () => {
 
   const spacing = 4;
 
-  function submit() {
+  const onSubmit = React.useCallback(() => {
     setSubmitting(true);
 
     attemptStandardLogin(email, password)
-      .then(result => {
-        setAccount(result.account);
+      .then(response => {
+        setAccount(response.account);
+        setAccessToken(response.token);
 
-        setToken(result.token)
+        setRefreshToken(response.refresh_token)
           .then(() => {
-            navigation.navigate('Main' as never, {screen: 'Home'} as never);
+            navigation.push('Main', {screen: 'Feed'});
+            setInitialLoad(false);
           })
           .catch(() => {
             setPushdownConfig({
@@ -75,7 +78,15 @@ const LoginScreen = () => {
 
         setSubmitting(false);
       });
-  }
+  }, [
+    email,
+    navigation,
+    password,
+    setAccessToken,
+    setAccount,
+    setInitialLoad,
+    setPushdownConfig,
+  ]);
 
   /**
    * Handles navigation towards the forgot password screen
@@ -115,7 +126,7 @@ const LoginScreen = () => {
         setEmail={setEmail}
         setPassword={setPassword}
         setVisible={setVisible}
-        onSubmit={submit}
+        onSubmit={onSubmit}
         onForgotPassword={onForgotPassword}
         onBack={() =>
           navigation.navigate('Auth' as never, {screen: 'Welcome'} as never)

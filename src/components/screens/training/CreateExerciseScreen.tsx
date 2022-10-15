@@ -1,14 +1,15 @@
 import React from 'react';
 import CloseableHeader from '../../molecules/design/CloseableHeader';
 import InputField from '../../atoms/design/InputField';
-import {usePushdownContext} from '../../../context/pushdown/PushdownContext';
-import {useExerciseContext} from '../../../context/exercise/ExerciseContext';
 import CreateExerciseEquipment from '../../organisms/training/CreateExerciseEquipment';
 import CreateExerciseType from '../../organisms/training/CreateExerciseType';
 import CreateExerciseMuscleGroup from '../../organisms/training/CreateExerciseMuscleGroup';
+import {useExerciseContext} from '../../../context/exercise/ExerciseContext';
+import {usePushdownContext} from '../../../context/pushdown/PushdownContext';
 import {createExerciseInfo} from '../../../requests/ExerciseInfo';
 import {useNavigation} from '@react-navigation/core';
 import {nanoid} from 'nanoid/non-secure';
+import {useAccountContext} from '../../../context/account/AccountContext';
 import {MeasurementSystem} from '../../../models/Measurement';
 
 import {
@@ -18,10 +19,11 @@ import {
 } from '../../../models/Training';
 
 import {Box, Button, ScrollView, useColorModeValue, View} from 'native-base';
-import {AxiosError} from "axios";
 
 const CreateExerciseScreen = (): JSX.Element => {
   const navigation = useNavigation();
+
+  const {accessToken} = useAccountContext();
   const {addExercise} = useExerciseContext();
   const {setPushdownConfig} = usePushdownContext();
 
@@ -97,6 +99,7 @@ const CreateExerciseScreen = (): JSX.Element => {
       exerciseType: exerciseType,
       exerciseMuscleGroups: muscleGroups,
       exerciseEquipment: exerciseEquipment,
+      token: accessToken,
     })
       .then(() => {
         addExercise({
@@ -137,6 +140,7 @@ const CreateExerciseScreen = (): JSX.Element => {
         });
       });
   }, [
+    accessToken,
     addExercise,
     exerciseEquipment,
     exerciseName,

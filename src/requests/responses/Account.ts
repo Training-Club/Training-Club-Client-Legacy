@@ -28,6 +28,7 @@ export type GetSimilarAccountsByProfileNameResponse = {
 export type CreateStandardAccountResponse = {
   account: IAccount;
   token: string;
+  refresh_token: string;
 };
 
 export type DeleteAccountResponse = {

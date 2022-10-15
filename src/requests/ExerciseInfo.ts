@@ -1,6 +1,5 @@
 import axios, {AxiosError} from 'axios';
 import {ExerciseEquipment, ExerciseType, MuscleGroup} from '../models/Training';
-import {getToken} from '../data/Account';
 
 // TODO: Replace with api.trainingclubapp.com
 const url: string = 'http://146.190.2.76:80/v1';
@@ -10,6 +9,7 @@ interface ICreateExerciseInfoProps {
   exerciseType: ExerciseType;
   exerciseMuscleGroups: MuscleGroup[];
   exerciseEquipment?: ExerciseEquipment;
+  token?: string;
 }
 
 /**
@@ -25,10 +25,9 @@ export async function createExerciseInfo({
   exerciseType,
   exerciseMuscleGroups,
   exerciseEquipment,
+  token,
 }: ICreateExerciseInfoProps): Promise<any> {
   return new Promise(async (resolve, reject) => {
-    const token: string | null = await getToken();
-
     if (!token) {
       return reject('no token found on this device');
     }

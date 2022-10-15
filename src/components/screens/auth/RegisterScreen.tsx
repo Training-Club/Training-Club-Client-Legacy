@@ -1,15 +1,16 @@
 import React from 'react';
 import {View} from 'native-base';
 import CloseableHeader from '../../molecules/design/CloseableHeader';
-import {useDebounce} from 'use-debounce';
-import Animated, {FadeIn, FadeOut, SlideInRight} from 'react-native-reanimated';
 import EmailInput, {IEmailInputErrors} from '../../organisms/auth/EmailInput';
+import {useDebounce} from 'use-debounce';
 import {usePushdownContext} from '../../../context/pushdown/PushdownContext';
 import LoadingIndicator from '../../molecules/design/LoadingIndicator';
 import {attemptStandardAccountCreate} from '../../../requests/Account';
 import {useAccountContext} from '../../../context/account/AccountContext';
-import {setToken} from '../../../data/Account';
 import {useNavigation} from '@react-navigation/native';
+import {setRefreshToken} from '../../../data/Account';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import Animated, {FadeIn, FadeOut, SlideInRight} from 'react-native-reanimated';
 
 import UsernameInput, {
   IUsernameInputErrors,
@@ -35,8 +36,8 @@ export enum RegisterScreenState {
 }
 
 const RegisterScreen = () => {
-  const navigation = useNavigation();
-  const {setAccount} = useAccountContext();
+  const navigation = useNavigation<NativeStackNavigationProp<any>>();
+  const {setAccount, setAccessToken, setInitialLoad} = useAccountContext();
   const {setPushdownConfig} = usePushdownContext();
 
   const [state, setState] = React.useState<RegisterScreenState>(
@@ -163,18 +164,33 @@ const RegisterScreen = () => {
 
     attemptStandardAccountCreate(username, email, password)
       .then(submitResult => {
-        setPushdownConfig({
-          status: 'success',
-          title: 'Welcome',
-          body: `We've sent a confirmation email to ${email}. In the meantime, welcome aboard!`,
-          duration: 5000,
-          show: true,
-        });
-
         setAccount(submitResult.account);
-        setToken(submitResult.token);
+        setAccessToken(submitResult.token);
 
-        navigation.navigate('Main' as never, {screen: 'Feed'} as never);
+        setRefreshToken(submitResult.refresh_token)
+          .then(() => {
+            navigation.push('Main', {screen: 'Feed'});
+
+            setInitialLoad(false);
+            setPushdownConfig({
+              status: 'success',
+              title: 'Welcome',
+              body: `We've sent a confirmation email to ${email}. In the meantime, welcome aboard!`,
+              duration: 5000,
+              show: true,
+            });
+          })
+          .catch(() => {
+            setPushdownConfig({
+              title: 'Something went wrong',
+              body: 'Unable to store authentication credentials on your device',
+              status: 'error',
+              show: true,
+              duration: 5000,
+            });
+
+            setSubmitting(false);
+          });
       })
       .catch(err => {
         setSubmitting(false);

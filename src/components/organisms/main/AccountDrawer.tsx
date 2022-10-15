@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {Dimensions} from 'react-native';
 import {IAccount} from '../../../models/Account';
-import AccountDrawerHeader from '../../molecules/main/account-drawer/AccountDrawerHeader';
 import AccountDrawerButtonStack from '../../molecules/main/account-drawer/AccountDrawerButtonStack';
 import {AccountDrawerVersionInfo} from '../../atoms/main/account-drawer/AccountDrawerVersionInfo';
 import {getBothConnectionCounts} from '../../../requests/Follow';
 import {usePushdownContext} from '../../../context/pushdown/PushdownContext';
+import {useAccountContext} from '../../../context/account/AccountContext';
+import {Dimensions} from 'react-native';
+import AccountDrawerHeader from '../../molecules/main/account-drawer/AccountDrawerHeader';
 import {Box, View, useColorModeValue} from 'native-base';
 
 import {
@@ -26,6 +27,8 @@ interface IAccountDrawerProps {
 }
 
 const AccountDrawer = ({account, children}: IAccountDrawerProps) => {
+  const {accessToken} = useAccountContext();
+
   const [followerCount, setFollowerCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
   const {setPushdownConfig} = usePushdownContext();
@@ -82,10 +85,15 @@ const AccountDrawer = ({account, children}: IAccountDrawerProps) => {
   }));
 
   useEffect(() => {
-    getBothConnectionCounts(account.id)
+    getBothConnectionCounts(account.id, accessToken)
       .then(connectionCounts => {
-        setFollowerCount(connectionCounts.followers);
-        setFollowingCount(connectionCounts.following);
+        if (connectionCounts.followers !== followerCount) {
+          setFollowerCount(connectionCounts.followers);
+        }
+
+        if (connectionCounts.following !== followingCount) {
+          setFollowingCount(connectionCounts.following);
+        }
       })
       .catch(() => {
         setPushdownConfig({
@@ -96,7 +104,13 @@ const AccountDrawer = ({account, children}: IAccountDrawerProps) => {
           show: true,
         });
       });
-  }, [account.id, setPushdownConfig]);
+  }, [
+    accessToken,
+    account.id,
+    followerCount,
+    followingCount,
+    setPushdownConfig,
+  ]);
 
   return (
     <View position={'absolute'} top={0} left={0} w={'100%'} h={'100%'} p={0}>

@@ -1,7 +1,6 @@
 import axios from 'axios';
 import {IContentItem, IPost} from '../models/Content';
 import {CreatePostResponse, GetPostsByQueryResponse} from './responses/Content';
-import {getToken} from '../data/Account';
 import {PrivacyLevel} from '../models/Privacy';
 
 // TODO: Replace with api.trainingclubapp.com
@@ -13,6 +12,7 @@ type CreatePostParams = {
   content: IContentItem[];
   tags?: string[];
   privacy?: PrivacyLevel;
+  token?: string;
 };
 
 /**
@@ -40,10 +40,9 @@ export async function getPostByID(id: string): Promise<IPost> {
  */
 export async function getPostsByQuery(
   query: string,
+  token?: string,
 ): Promise<GetPostsByQueryResponse> {
   return new Promise<GetPostsByQueryResponse>(async (resolve, reject) => {
-    const token: string | null = await getToken();
-
     if (!token) {
       return reject('no token found on this device');
     }
@@ -72,9 +71,7 @@ export async function createPost(
   params: CreatePostParams,
 ): Promise<CreatePostResponse> {
   return new Promise<CreatePostResponse>(async (resolve, reject) => {
-    const token: string | null = await getToken();
-
-    if (!token) {
+    if (!params.token) {
       return reject('no token found on this device');
     }
 
@@ -82,7 +79,7 @@ export async function createPost(
       const result = await axios.post<CreatePostResponse>(
         `${url}/post/`,
         {...params},
-        {headers: {Authorization: `Bearer ${token}`}},
+        {headers: {Authorization: `Bearer ${params.token}`}},
       );
 
       resolve(result.data);

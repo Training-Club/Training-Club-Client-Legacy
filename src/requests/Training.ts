@@ -1,5 +1,4 @@
 import {ExerciseInfo} from '../models/Training';
-import {getToken} from '../data/Account';
 import {ExerciseInfoQueryResponse} from './responses/ExerciseInfo';
 import axios, {AxiosError} from 'axios';
 
@@ -13,10 +12,9 @@ const url: string = 'http://146.190.2.76:80/v1';
  */
 export async function getExerciseSearchResults(
   query: string,
+  token?: string,
 ): Promise<ExerciseInfo[]> {
   return new Promise<ExerciseInfo[]>(async (resolve, reject) => {
-    const token: string | null = await getToken();
-
     if (!token) {
       return reject('no token on this device');
     }

@@ -10,4 +10,9 @@ export type AuthenticateWithTokenResponse = {
 export type AuthenticateStandardCredentialsResponse = {
   account: IAccount;
   token: string;
+  refresh_token: string;
+};
+
+export type RefreshTokenResponse = {
+  access_token: string;
 };

@@ -3,11 +3,12 @@ import {Capitalize, FormatExerciseInfoQuery} from '../../../utils/StringUtil';
 import {getExerciseSearchResults} from '../../../requests/Training';
 import {useDebounce} from 'use-debounce';
 import {usePushdownContext} from '../../../context/pushdown/PushdownContext';
-import {AxiosError} from 'axios';
-import {ExerciseInfo, MuscleGroup} from '../../../models/Training';
 import {useNavigation} from '@react-navigation/core';
 import {useExerciseContext} from '../../../context/exercise/ExerciseContext';
 import {getMockExerciseData} from '../../../data/Training';
+import {useAccountContext} from '../../../context/account/AccountContext';
+import {AxiosError} from 'axios';
+import {ExerciseInfo, MuscleGroup} from '../../../models/Training';
 import CloseableHeader from '../../molecules/design/CloseableHeader';
 import TogglePillRow from '../../molecules/design/TogglePillRow';
 import TogglePill from '../../atoms/design/TogglePill';
@@ -18,6 +19,7 @@ import {Box, Icon, View, VStack} from 'native-base';
 
 const ExerciseSearchScreen = (): JSX.Element => {
   const navigation = useNavigation();
+  const {accessToken} = useAccountContext();
   const {addExercise} = useExerciseContext();
   const {setPushdownConfig} = usePushdownContext();
   const [filters, setFilters] = React.useState<MuscleGroup[]>([]);
@@ -89,7 +91,7 @@ const ExerciseSearchScreen = (): JSX.Element => {
       return;
     }
 
-    getExerciseSearchResults(queryString)
+    getExerciseSearchResults(queryString, accessToken)
       .then(result => {
         setSearchResults(result);
       })
@@ -112,7 +114,7 @@ const ExerciseSearchScreen = (): JSX.Element => {
           show: true,
         });
       });
-  }, [filters, nameQueryDebounced, setPushdownConfig]);
+  }, [accessToken, filters, nameQueryDebounced, setPushdownConfig]);
 
   return (
     <View>

@@ -1,20 +1,19 @@
+import axios, {AxiosError} from 'axios';
+
 import {
   GetBothConnectionCountsResponse,
   GetConnectionCountResponse,
 } from './responses/Follow';
-import {getToken} from '../data/Account';
-import axios, {AxiosError} from 'axios';
 
 // TODO: Replace with api.trainingclubapp.com
 const url: string = 'http://146.190.2.76:80/v1';
 
 export async function getBothConnectionCounts(
   accountId: string,
+  token?: string,
 ): Promise<GetBothConnectionCountsResponse> {
   return new Promise<GetBothConnectionCountsResponse>(
     async (resolve, reject) => {
-      const token: string | null = await getToken();
-
       if (!token) {
         return reject('no token found on this device');
       }

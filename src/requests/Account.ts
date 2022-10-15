@@ -1,7 +1,10 @@
 import axios from 'axios';
 import {IAccount} from '../models/Account';
-import {AuthenticateStandardCredentialsResponse} from './responses/Auth';
 import {CreateStandardAccountResponse} from './responses/Account';
+import {
+  AuthenticateStandardCredentialsResponse,
+  RefreshTokenResponse,
+} from './responses/Auth';
 
 // TODO: Replace with api.trainingclubapp.com
 const url: string = 'http://146.190.2.76:80/v1';
@@ -121,6 +124,25 @@ export async function checkAccountAvailability(
       return resolve(true);
     } catch (err) {
       reject(new Error('Failed to check account availability: ' + err));
+    }
+  });
+}
+
+/**
+ * Performs an access token refresh on the server
+ */
+export async function requestRefreshedToken(
+  refreshToken: string,
+): Promise<string> {
+  return new Promise<string>(async (resolve, reject) => {
+    try {
+      const result = await axios.get<RefreshTokenResponse>(
+        `${url}/auth/refresh/${refreshToken}`,
+      );
+
+      resolve(result.data.access_token);
+    } catch (err) {
+      reject(err);
     }
   });
 }

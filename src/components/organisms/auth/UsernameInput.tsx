@@ -33,7 +33,7 @@ const UsernameInput = ({
   errors,
   onSubmit,
 }: IUsernameInputProps): JSX.Element => {
-  const textColor = useColorModeValue('black', 'white');
+  const textColor = useColorModeValue('core.text.light', 'core.text.dark');
 
   return (
     <View w={'100%'} h={'100%'}>
@@ -68,6 +68,7 @@ const UsernameInput = ({
       </Box>
 
       <FormControl
+        mt={4}
         isInvalid={
           value.length > 0 &&
           (!errors.minLength ||

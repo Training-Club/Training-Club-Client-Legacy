@@ -9,7 +9,7 @@ import {
   Heading,
   View,
   VStack,
-  useColorModeValue,
+  useColorModeValue, FormControl,
 } from 'native-base';
 
 export interface IEmailInputErrors {
@@ -65,15 +65,25 @@ const EmailInput = ({
         </InputRequirement>
       </Box>
 
-      <InputField
-        value={value}
-        setValue={setValue}
-        options={{
-          autoCapitalize: 'none',
-          autoComplete: 'email',
-          placeholder: 'example@email.com',
-        }}
-      />
+      <FormControl
+        mt={4}
+        isInvalid={
+          value.length > 0 &&
+          (!errors.minLength ||
+            !errors.maxLength ||
+            !errors.format ||
+            !errors.available)
+        }>
+        <InputField
+          value={value}
+          setValue={setValue}
+          options={{
+            autoCapitalize: 'none',
+            autoComplete: 'email',
+            placeholder: 'example@email.com',
+          }}
+        />
+      </FormControl>
 
       <Box position={'absolute'} bottom={20} w={'100%'}>
         <VStack space={2}>

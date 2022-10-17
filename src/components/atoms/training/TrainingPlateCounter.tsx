@@ -18,8 +18,12 @@ interface ITrainingPlateCounterProps {
 const TrainingPlateCounter = ({
   data,
 }: ITrainingPlateCounterProps): JSX.Element => {
-  const textColor = useColorModeValue('black', 'white');
-  const mutedTextColor = useColorModeValue('apple.gray.800', 'apple.gray.200');
+  const textColor = useColorModeValue('core.text.light', 'core.text.dark');
+
+  const mutedTextColor = useColorModeValue(
+    'core.textMuted.light',
+    'core.textMuted.dark',
+  );
 
   const entering:
     | typeof BaseAnimationBuilder
@@ -49,6 +53,7 @@ const TrainingPlateCounter = ({
 
   const suffixStyle = {
     fontSize: 16,
+    fontWeight: 'semibold',
     color: mutedTextColor,
   };
 

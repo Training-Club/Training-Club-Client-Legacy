@@ -33,7 +33,7 @@ const LoginScreen = () => {
 
         setRefreshToken(response.refresh_token)
           .then(() => {
-            navigation.push('Main', {screen: 'Feed'});
+            navigation.navigate('Main', {screen: 'Feed'});
             setInitialLoad(false);
           })
           .catch(() => {
@@ -96,15 +96,7 @@ const LoginScreen = () => {
   }
 
   return (
-    <View px={spacing}>
-      <CloseableHeader
-        pageTitle={'Sign in'}
-        closeButton={{
-          stackName: 'Auth',
-          screenName: 'Welcome',
-        }}
-      />
-
+    <>
       {submitting && (
         <Animated.View
           style={{
@@ -119,20 +111,30 @@ const LoginScreen = () => {
         </Animated.View>
       )}
 
-      <StandardLoginInput
-        email={email}
-        password={password}
-        isVisible={visible}
-        setEmail={setEmail}
-        setPassword={setPassword}
-        setVisible={setVisible}
-        onSubmit={onSubmit}
-        onForgotPassword={onForgotPassword}
-        onBack={() =>
-          navigation.navigate('Auth' as never, {screen: 'Welcome'} as never)
-        }
-      />
-    </View>
+      <View px={spacing}>
+        <CloseableHeader
+          pageTitle={'Sign in'}
+          closeButton={{
+            stackName: 'Auth',
+            screenName: 'Welcome',
+          }}
+        />
+
+        <StandardLoginInput
+          email={email}
+          password={password}
+          isVisible={visible}
+          setEmail={setEmail}
+          setPassword={setPassword}
+          setVisible={setVisible}
+          onSubmit={onSubmit}
+          onForgotPassword={onForgotPassword}
+          onBack={() =>
+            navigation.navigate('Auth' as never, {screen: 'Welcome'} as never)
+          }
+        />
+      </View>
+    </>
   );
 };
 

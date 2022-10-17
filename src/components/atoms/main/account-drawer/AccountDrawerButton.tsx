@@ -42,8 +42,16 @@ const AccountDrawerButton = ({
   text,
   style,
 }: IAccountDrawerButtonProps): JSX.Element => {
-  const defaultTextColor = useColorModeValue('black', 'white');
-  const defaultButtonBgColor = useColorModeValue('white', 'black');
+  const defaultTextColor = useColorModeValue(
+    'core.text.light',
+    'core.text.dark',
+  );
+
+  const defaultButtonBgColor = useColorModeValue(
+    'core.backgroundHighlight.light',
+    'core.backgroundHighlight.dark',
+  );
+
   const defaultButtonBorderBottomColor = useColorModeValue(
     'apple.gray.200',
     'apple.gray.700',
@@ -55,8 +63,8 @@ const AccountDrawerButton = ({
   );
 
   const defaultButtonBgColorPressed = useColorModeValue(
-    'apple.gray.50',
-    'apple.gray.900',
+    'core.background.light',
+    'core.background.dark',
   );
 
   return (

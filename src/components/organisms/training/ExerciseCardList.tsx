@@ -24,7 +24,10 @@ const ExerciseCardList = ({
         entering={SlideInRight}
         exiting={SlideOutRight}
         layout={SequencedTransition}>
-        <ExerciseCard key={`${result.item.name}-${result.index}`} groupedExercise={result.item} />
+        <ExerciseCard
+          key={`${result.item.name}-${result.index}`}
+          groupedExercise={result.item}
+        />
       </Animated.View>
     );
   };

@@ -39,7 +39,10 @@ const AccountDrawer = ({account, children}: IAccountDrawerProps) => {
   const minVelocityThreshold = -1000.0;
   const translateX = useSharedValue(0);
 
-  const bgColor = useColorModeValue('apple.gray.50', 'apple.gray.900');
+  const bgColor = useColorModeValue(
+    'core.background.light',
+    'core.background.dark',
+  );
 
   const springConfig = React.useMemo(() => {
     return {overshootClamping: true, mass: 0.8, stiffness: 100};

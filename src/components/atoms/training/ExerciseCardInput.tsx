@@ -57,9 +57,13 @@ const ExerciseCardInput = ({
 }: IExerciseCardInputProps): JSX.Element => {
   const translateX = useSharedValue(0);
 
-  const textColor = useColorModeValue('black', 'white');
-  const bgColor = useColorModeValue('apple.gray.50', 'apple.gray.900');
+  const textColor = useColorModeValue('core.text.light', 'core.text.dark');
   const deleteBgColor = useColorModeValue('apple.red.light', 'apple.red.dark');
+
+  const bgColor = useColorModeValue(
+    'core.backgroundHighlight.light',
+    'core.backgroundHighlight.dark',
+  );
 
   const borderBottomColor = useColorModeValue(
     'apple.gray.100',

@@ -46,10 +46,29 @@ export default function () {
         },
       },
 
+      Text: {
+        baseStyle: ({colorMode}: any) => {
+          return {
+            color: colorMode === 'dark' ? 'core.text.dark' : 'core.text.light',
+          };
+        },
+      },
+
+      Heading: {
+        baseStyle: ({colorMode}: any) => {
+          return {
+            color: colorMode === 'dark' ? 'core.text.dark' : 'core.text.light',
+          };
+        },
+      },
+
       View: {
         baseStyle: ({colorMode}: any) => {
           return {
-            bgColor: colorMode === 'dark' ? 'black' : 'white',
+            bgColor:
+              colorMode === 'dark'
+                ? 'core.background.dark'
+                : 'core.background.light',
             width: '100%',
             height: '100%',
             pt: smallScreen ? '16px' : '32px',
@@ -59,6 +78,45 @@ export default function () {
     },
 
     colors: {
+      core: {
+        background: {
+          light: '#EEEEEE',
+          dark: '#1E1E1E',
+        },
+
+        backgroundAccent: {
+          light: '#DDDDDD',
+          dark: '#2F2F2F',
+        },
+
+        backgroundHighlight: {
+          light: '#F2F2F2',
+          dark: '#262626',
+        },
+
+        text: {
+          light: '#0D0D0D',
+          dark: '#FFFFFF',
+        },
+
+        textMuted: {
+          light: '#AAAAAA',
+          dark: '#AAAAAA',
+        },
+
+        pressable: {
+          background: {
+            light: '#FFFFFF',
+            dark: '#333333',
+          },
+
+          pressedBackground: {
+            light: '#e6e6e6',
+            dark: '#1a1a1a',
+          },
+        },
+      },
+
       apple: {
         red: {
           light: 'rgb(255, 59, 48)',

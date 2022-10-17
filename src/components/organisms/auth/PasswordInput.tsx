@@ -91,6 +91,7 @@ const EmailInput = ({
 
       <VStack w={'100%'} space={4}>
         <FormControl
+          mt={4}
           isInvalid={
             value.length > 0 &&
             (!errors.minLength ||

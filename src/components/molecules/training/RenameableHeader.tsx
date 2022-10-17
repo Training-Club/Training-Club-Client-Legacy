@@ -28,8 +28,11 @@ const RenameableHeader = ({
   closeButton,
 }: IRenameableHeaderProps): JSX.Element => {
   const navigation = useNavigation();
+
   const closeButtonStackName = closeButton?.stackName ?? 'Main';
   const closeButtonScreenName = closeButton?.screenName ?? 'Home';
+
+  const textColor = useColorModeValue('core.text.light', 'core.text.dark');
 
   const defaultCloseButtonBackgroundColor = useColorModeValue(
     'apple.gray.100',
@@ -55,6 +58,7 @@ const RenameableHeader = ({
         variant={'unstyled'}
         size={'2xl'}
         fontWeight={'bold'}
+        color={textColor}
         w={'100%'}
         pl={0}
         maxLength={options?.maxLength}

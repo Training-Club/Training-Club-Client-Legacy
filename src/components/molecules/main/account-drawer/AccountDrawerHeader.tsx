@@ -39,16 +39,26 @@ const AccountDrawerHeader = ({
 }: IAccountDrawerHeader): JSX.Element => {
   const defaultSpacing = 4;
   const defaultBorderRadius = 12;
-  const defaultBgColor = useColorModeValue('white', 'black');
+  const defaultBgColor = useColorModeValue(
+    'core.backgroundHighlight.light',
+    'core.backgroundHighlight.dark',
+  );
+
   const defaultAccentColor = useColorModeValue(
-    'apple.gray.100',
-    'apple.gray.900',
+    'core.backgroundAccent.light',
+    'core.backgroundAccent.dark',
   );
-  const defaultTextColor = useColorModeValue('black', 'white');
-  const defaultGhostTextColor = useColorModeValue(
-    'apple.gray.700',
-    'apple.gray.300',
+
+  const defaultTextColor = useColorModeValue(
+    'core.text.light',
+    'core.text.dark',
   );
+
+  const defaultMutedTextColor = useColorModeValue(
+    'core.textMuted.light',
+    'core.textMuted.dark',
+  );
+
   const defaultAvatarColor = useColorModeValue(
     'apple.blue.light',
     'apple.blue.dark',
@@ -100,7 +110,7 @@ const AccountDrawerHeader = ({
           <Text
             fontSize={'xs'}
             textAlign={'center'}
-            color={style?.ghostTextColor ?? defaultGhostTextColor}>
+            color={style?.ghostTextColor ?? defaultMutedTextColor}>
             Followers
           </Text>
         </VStack>
@@ -116,7 +126,7 @@ const AccountDrawerHeader = ({
           <Text
             fontSize={'xs'}
             textAlign={'center'}
-            color={style?.ghostTextColor ?? defaultGhostTextColor}>
+            color={style?.ghostTextColor ?? defaultMutedTextColor}>
             Following
           </Text>
         </VStack>

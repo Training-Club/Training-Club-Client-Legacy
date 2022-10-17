@@ -28,12 +28,19 @@ const PressablePill = ({
   icon,
   style,
 }: IPressablePillProps): JSX.Element => {
-  const defaultBackgroundColor = useColorModeValue('white', 'black');
-  const defaultTextColor = useColorModeValue('black', 'white');
+  const defaultBackgroundColor = useColorModeValue(
+    'core.pressable.background.light',
+    'core.pressable.background.dark',
+  );
+
+  const defaultTextColor = useColorModeValue(
+    'core.text.light',
+    'core.text.dark',
+  );
 
   const defaultPressedBackgroundColor = useColorModeValue(
-    'apple.gray.100',
-    'apple.gray.800',
+    'core.pressable.pressedBackground.light',
+    'core.pressable.pressedBackground.dark',
   );
 
   const defaultBorderColor = useColorModeValue(

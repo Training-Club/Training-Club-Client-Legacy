@@ -21,8 +21,17 @@ const AccountDrawerButtonStack = ({
   style,
 }: IAccountDrawerButtonStackProps): JSX.Element => {
   const {toggleColorMode} = useColorMode(); // TODO: Remove this later
-  const defaultBgColor = useColorModeValue('white', 'black');
-  const defaultTextColor = useColorModeValue('black', 'white');
+
+  const defaultTextColor = useColorModeValue(
+    'core.text.light',
+    'core.text.dark',
+  );
+
+  const defaultBgColor = useColorModeValue(
+    'core.backgroundHighlight.light',
+    'core.backgroundHighlight.dark',
+  );
+
   const defaultSpacing = 4;
   const defaultBorderRadius = 12;
 

@@ -16,12 +16,14 @@ const TrainingCheckbox = ({
   performed,
   setPerformed,
 }: ITrainingCheckboxProps): JSX.Element => {
-  const unsetColor = useColorModeValue('apple.gray.100', 'apple.gray.800');
+  const unsetColor = useColorModeValue('apple.gray.300', 'apple.gray.700');
+
   const unsetPressedColor = useColorModeValue(
-    'apple.gray.200',
-    'apple.gray.700',
+    'apple.gray.400',
+    'apple.gray.600',
   );
-  const setColor = useColorModeValue('apple.green.light', 'apple.green.dark');
+
+  const setColor = useColorModeValue('apple.blue.light', 'apple.blue.dark');
 
   return (
     <IconButton

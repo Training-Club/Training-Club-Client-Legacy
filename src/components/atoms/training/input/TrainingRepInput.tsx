@@ -1,7 +1,7 @@
 import React from 'react';
-import {Factory, HStack, Text, useColorModeValue} from 'native-base';
 import {ITrainingInputProps} from '../TrainingInput';
 import {TextInput} from 'react-native';
+import {Factory, HStack, Text, useColorModeValue} from 'native-base';
 
 const TrainingRepInput = ({
   setValue,
@@ -10,10 +10,15 @@ const TrainingRepInput = ({
   style,
 }: ITrainingInputProps<number>): JSX.Element => {
   const FactoryTextInput = Factory(TextInput);
-  const defaultTextColor = useColorModeValue('black', 'white');
+
+  const defaultTextColor = useColorModeValue(
+    'core.text.light',
+    'core.text.dark',
+  );
+
   const defaultMutedTextColor = useColorModeValue(
-    'apple.gray.400',
-    'apple.gray.600',
+    'core.mutedText.light',
+    'core.mutedText.dark',
   );
 
   const handleSetValue = React.useCallback(

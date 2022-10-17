@@ -6,7 +6,7 @@ interface IGreetingTextProps {
 }
 
 const GreetingText = ({name}: IGreetingTextProps): JSX.Element => {
-  const textColor = useColorModeValue('black', 'white');
+  const textColor = useColorModeValue('core.text.light', 'core.text.dark');
 
   /**
    * Conditionally provides the time of the day

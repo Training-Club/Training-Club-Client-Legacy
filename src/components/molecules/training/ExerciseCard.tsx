@@ -42,7 +42,10 @@ const ExerciseCard = ({groupedExercise}: IExerciseCardProps): JSX.Element => {
 
   const snapPoints = React.useMemo(() => ['90%'], []);
 
-  const bgColor = useColorModeValue('apple.gray.50', 'apple.gray.900');
+  const bgColor = useColorModeValue(
+    'core.backgroundHighlight.light',
+    'core.backgroundHighlight.dark',
+  );
 
   const nextIncompleteExercise = React.useMemo(
     () => getNextIncompleteExercise(groupedExercise.exercises),
@@ -217,7 +220,7 @@ const ExerciseCard = ({groupedExercise}: IExerciseCardProps): JSX.Element => {
   ]);
 
   return (
-    <View bgColor={bgColor} h={'auto'} rounded={'12px'} p={4} mb={8}>
+    <View bgColor={bgColor} h={'auto'} rounded={'12px'} shadow={4} p={4} mb={8}>
       <ExerciseCardHeader
         onSettingsPress={() => handleSettingsButtonPress()}
         title={groupedExercise.name}

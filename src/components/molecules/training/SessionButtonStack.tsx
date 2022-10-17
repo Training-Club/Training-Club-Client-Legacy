@@ -20,15 +20,22 @@ const SessionButtonStack = ({
   const navigation = useNavigation();
   const {setPushdownConfig} = usePushdownContext();
 
-  const grayButtonColor = useColorModeValue('apple.gray.100', 'apple.gray.900');
+  const grayButtonColor = useColorModeValue(
+    'core.pressable.background.light',
+    'core.pressable.background.dark',
+  );
+
   const grayButtonTextColor = useColorModeValue('black', 'white');
+
   const grayButtonColorPressed = useColorModeValue(
-    'apple.gray.200',
-    'apple.gray.800',
+    'core.pressable.pressedBackground.light',
+    'core.pressable.pressedBackground.dark',
   );
 
   const newButtonColor = useColorModeValue('apple.gray.900', 'apple.gray.100');
+
   const newButtonTextColor = useColorModeValue('white', 'black');
+
   const newButtonColorPressed = useColorModeValue(
     'apple.gray.700',
     'apple.gray.300',

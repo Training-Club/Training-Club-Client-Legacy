@@ -6,6 +6,7 @@ import MainNavigationItem from '../../atoms/main/MainNavigationItem';
 import StartNewActionsheet from './StartNewActionsheet';
 import DarkActionsheetTheme from '../../organisms/design/themes/DarkActionsheetTheme';
 import {Box, Center, HStack, useColorModeValue} from 'native-base';
+import Handle from "../../organisms/design/themes/Handle";
 
 enum MainNavigationScreen {
   FEED = 'Feed',
@@ -28,7 +29,11 @@ const MainNavigation = (): JSX.Element => {
     [smallDevice],
   );
 
-  const backgroundColor = useColorModeValue('white', 'black');
+  const backgroundColor = useColorModeValue(
+    'core.backgroundHighlight.light',
+    'core.backgroundHighlight.dark',
+  );
+
   const borderTopColor = useColorModeValue('apple.gray.50', 'apple.gray.900');
 
   /**
@@ -58,6 +63,7 @@ const MainNavigation = (): JSX.Element => {
       children: <StartNewActionsheet />,
       index: -1,
       backgroundComponent: DarkActionsheetTheme,
+      handleComponent: Handle,
       snapPoints: snapPoints,
     });
 

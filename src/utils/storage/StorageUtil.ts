@@ -70,7 +70,6 @@ export const readItem = async (
         return;
       }
 
-      console.log('resolved: ' + value);
       resolve(value);
     } catch (err) {
       reject(err);

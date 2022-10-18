@@ -3,18 +3,17 @@ import {Heading, useColorModeValue} from 'native-base';
 
 interface IGreetingTextProps {
   name: string;
+  time: Date;
 }
 
-const GreetingText = ({name}: IGreetingTextProps): JSX.Element => {
+const GreetingText = ({name, time}: IGreetingTextProps): JSX.Element => {
   const textColor = useColorModeValue('core.text.light', 'core.text.dark');
 
   /**
    * Conditionally provides the time of the day
    * depending on the hour of the day set on this device
    */
-  function getTime(): string {
-    const time: Date = new Date();
-
+  const getTime = React.useCallback(() => {
     if (time.getHours() >= 16 || time.getHours() < 4) {
       return 'evening';
     } else if (time.getHours() >= 4 && time.getHours() < 12) {
@@ -22,7 +21,7 @@ const GreetingText = ({name}: IGreetingTextProps): JSX.Element => {
     } else {
       return 'afternoon';
     }
-  }
+  }, [time]);
 
   return (
     <Heading testID={'greeting-text-heading'} color={textColor} my={4}>

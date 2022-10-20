@@ -1,13 +1,16 @@
 import React from 'react';
 import {IContentDraft} from '../../../models/Content';
 import {CropRect} from 'react-native-image-crop-picker';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useContentDraftContext} from '../../../context/content/ContentDraftContext';
+import {useNavigation} from '@react-navigation/native';
 import ContentEditorCard from '../../atoms/content/ContentEditorCard';
-import EditContentOptions from '../../organisms/content/EditContentOptions';
 import CloseableHeader from '../../molecules/design/CloseableHeader';
-import {Box, HStack, ScrollView, View} from 'native-base';
+import {Box, Button, HStack, ScrollView, View} from 'native-base';
 
 const EditContentScreen = (): JSX.Element => {
+  const navigation = useNavigation<NativeStackNavigationProp<any>>();
+
   const {content, selectedContent, setSelectedContent, updateContent} =
     useContentDraftContext();
 
@@ -71,17 +74,24 @@ const EditContentScreen = (): JSX.Element => {
               <ContentEditorCard
                 draftItem={draft}
                 key={draft.original.uri}
-                onPress={() => handleSelectingContent(draft)}
+                onCrop={handleCroppingContent}
+                onSelect={() => handleSelectingContent(draft)}
               />
             );
           })}
         </HStack>
       </ScrollView>
 
-      <EditContentOptions
-        draftItem={selectedContent ?? content[0]}
-        onCrop={handleCroppingContent}
-      />
+      <Box w={'100%'} position={'absolute'} bottom={0} left={0} mb={8} px={4}>
+        <Button
+          variant={'info'}
+          _text={{color: 'white'}}
+          onPress={() =>
+            navigation.navigate('Content', {screen: 'ContentDetails'})
+          }>
+          Complete
+        </Button>
+      </Box>
     </View>
   );
 };

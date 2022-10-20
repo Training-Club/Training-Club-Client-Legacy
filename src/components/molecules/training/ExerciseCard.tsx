@@ -1,15 +1,16 @@
 import React from 'react';
-import {useColorModeValue, View} from 'native-base';
-import ExerciseCardHeader from '../../atoms/training/ExerciseCardHeader';
 import {useExerciseContext} from '../../../context/exercise/ExerciseContext';
 import DarkActionsheetTheme from '../../organisms/design/themes/DarkActionsheetTheme';
 import ExerciseOptionsActionsheet from './ExerciseOptionsActionsheet';
 import {getPlateCount} from '../../../utils/PlateCounter';
 import {getNextIncompleteExercise} from '../../../data/Training';
+import Handle from '../../organisms/design/themes/Handle';
 import ExerciseCardInput from '../../atoms/training/ExerciseCardInput';
-import ExerciseCardFooter from '../../atoms/training/ExerciseCardFooter';
 import {useActionsheetContext} from '../../../context/actionsheet/ActionsheetContext';
+import ExerciseCardHeader from '../../atoms/training/ExerciseCardHeader';
+import ExerciseCardFooter from '../../atoms/training/ExerciseCardFooter';
 import Animated, {Layout} from 'react-native-reanimated';
+import {useColorModeValue, View} from 'native-base';
 
 import {
   DistanceMeasurement,
@@ -193,6 +194,7 @@ const ExerciseCard = ({groupedExercise}: IExerciseCardProps): JSX.Element => {
     setActionSheetConfig({
       index: -1,
       backgroundComponent: DarkActionsheetTheme,
+      handleComponent: Handle,
       snapPoints: snapPoints,
       children: (
         <ExerciseOptionsActionsheet

@@ -122,8 +122,6 @@ const TrainingDistanceInput = ({
         />
       ),
     });
-
-    actionSheetRef.current.snapToIndex(0);
   }, [
     actionSheetRef,
     handleSetMeasurementSystem,

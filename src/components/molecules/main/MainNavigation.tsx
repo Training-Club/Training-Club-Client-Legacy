@@ -1,12 +1,12 @@
 import React from 'react';
+import Handle from '../../organisms/design/themes/Handle';
 import {useNavigation} from '@react-navigation/native';
-import {Dimensions} from 'react-native';
 import {useActionsheetContext} from '../../../context/actionsheet/ActionsheetContext';
+import DarkActionsheetTheme from '../../organisms/design/themes/DarkActionsheetTheme';
+import {Dimensions} from 'react-native';
 import MainNavigationItem from '../../atoms/main/MainNavigationItem';
 import StartNewActionsheet from './StartNewActionsheet';
-import DarkActionsheetTheme from '../../organisms/design/themes/DarkActionsheetTheme';
 import {Box, Center, HStack, useColorModeValue} from 'native-base';
-import Handle from "../../organisms/design/themes/Handle";
 
 enum MainNavigationScreen {
   FEED = 'Feed',
@@ -66,8 +66,6 @@ const MainNavigation = (): JSX.Element => {
       handleComponent: Handle,
       snapPoints: snapPoints,
     });
-
-    actionSheetRef.current.snapToIndex(0);
   }
 
   return (

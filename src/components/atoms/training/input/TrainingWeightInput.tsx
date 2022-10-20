@@ -121,8 +121,6 @@ const TrainingWeightInput = ({
       backgroundComponent: DarkActionsheetTheme,
       snapPoints: snapPoints,
     });
-
-    actionSheetRef.current.snapToIndex(0);
   }, [
     actionSheetRef,
     handleSetMeasurementSystem,

@@ -205,8 +205,6 @@ const ExerciseCard = ({groupedExercise}: IExerciseCardProps): JSX.Element => {
         />
       ),
     });
-
-    actionSheetRef.current.snapToIndex(0);
   }, [
     actionSheetRef,
     groupedExercise,

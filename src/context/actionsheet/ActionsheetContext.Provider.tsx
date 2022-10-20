@@ -15,6 +15,14 @@ export function ActionsheetContextProvider({
 
   const actionSheetRef = React.useRef<BottomSheet>(null);
 
+  React.useEffect(() => {
+    if (!actionSheetRef || !actionSheetRef.current) {
+      return;
+    }
+
+    actionSheetRef.current.snapToIndex(0);
+  }, [actionSheetConfig]);
+
   return (
     <ActionsheetContext.Provider
       value={{actionSheetConfig, setActionSheetConfig, actionSheetRef}}>

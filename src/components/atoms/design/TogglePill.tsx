@@ -26,17 +26,21 @@ const TogglePill = ({
   style,
   onToggle,
 }: ITogglePillProps): JSX.Element => {
-  const defaultTextColor = useColorModeValue('black', 'white');
+  const defaultTextColor = useColorModeValue(
+    'core.text.light',
+    'core.text.dark',
+  );
+
   const defaultTextColorSelected = 'white';
 
   const defaultBgColorPrimary = useColorModeValue(
-    'apple.gray.100',
-    'apple.gray.900',
+    'core.backgroundAccent.light',
+    'core.backgroundAccent.dark',
   );
 
   const defaultBgColorPressed = useColorModeValue(
-    'apple.gray.300',
-    'apple.gray.700',
+    'core.backgroundHighlight.light',
+    'core.backgroundHighlight.dark',
   );
 
   const defaultBgColorSelected = useColorModeValue(

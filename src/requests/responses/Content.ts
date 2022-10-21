@@ -29,3 +29,7 @@ export type UpdateCommentResponse = {};
 export type DeletePostResponse = {};
 
 export type DeleteCommentResponse = {};
+
+export type FileUploadResponse = {
+  result: string[];
+};

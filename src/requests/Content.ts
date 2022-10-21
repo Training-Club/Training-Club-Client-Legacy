@@ -1,10 +1,21 @@
 import axios from 'axios';
-import {IContentItem, IPost} from '../models/Content';
-import {CreatePostResponse, GetPostsByQueryResponse} from './responses/Content';
 import {PrivacyLevel} from '../models/Privacy';
+import {
+  IContentDraft,
+  IContentItem,
+  IPost,
+  IUploadFile,
+} from '../models/Content';
+
+import {
+  CreatePostResponse,
+  FileUploadResponse,
+  GetPostsByQueryResponse,
+} from './responses/Content';
 
 // TODO: Replace with api.trainingclubapp.com
-const url: string = 'http://146.190.2.76:80/v1';
+// const url: string = 'http://146.190.2.76:80/v1';
+const url: string = 'http://localhost:8080/v1';
 
 type CreatePostParams = {
   location?: string;
@@ -83,6 +94,57 @@ export async function createPost(
       );
 
       resolve(result.data);
+    } catch (err) {
+      reject(err);
+    }
+  });
+}
+
+/**
+ * Sends a form data request to upload files
+ *
+ * @param items
+ * @param token
+ */
+export async function uploadFiles(
+  items: IContentDraft[],
+  token?: string,
+): Promise<any> {
+  return new Promise<string[]>(async (resolve, reject) => {
+    if (!token) {
+      return reject('no token found on this device');
+    }
+
+    if (!items || items.length <= 0) {
+      return reject('no items provided');
+    }
+
+    let formData = new FormData();
+
+    items.forEach(item => {
+      const uploadFile: IUploadFile = {
+        uri: item.draft.uri,
+        name: item.original.filename,
+        type: item.mime,
+      };
+
+      formData.append('upload[]', uploadFile);
+    });
+
+    try {
+      const result = await axios.post<FileUploadResponse>(
+        `${url}/fileupload/upload`,
+        formData,
+        {
+          onUploadProgress: e => console.log(e),
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        },
+      );
+
+      resolve(result.data.result);
     } catch (err) {
       reject(err);
     }

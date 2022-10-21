@@ -40,6 +40,47 @@ export const FormatExerciseInfoQuery = (
 };
 
 /**
+ * Formats a query string for a training session query
+ *
+ * @param sessionName Session name
+ * @param exerciseNames Exercise names
+ * @param authorId Author ID
+ * @param page Page
+ */
+export const FormatTrainingSessionQuery = (
+  sessionName?: string,
+  exerciseNames?: string[],
+  authorId?: string,
+  page?: number,
+): string | undefined => {
+  let query: string[] = [];
+
+  if (sessionName) {
+    query.push('&name=' + sessionName);
+  }
+
+  if (exerciseNames && exerciseNames.length > 0) {
+    exerciseNames.forEach(exerciseName =>
+      query.push('&exercise=' + exerciseName),
+    );
+  }
+
+  if (authorId) {
+    query.push('&author=' + authorId);
+  }
+
+  if (page) {
+    query.push('&page=' + page);
+  }
+
+  if (query.length <= 0) {
+    return undefined;
+  }
+
+  return `?${query.join('')}`;
+};
+
+/**
  * Formats a query string for a post query
  *
  * @param author Post Author ID
@@ -79,7 +120,7 @@ export const FormatPostQuery = (
 };
 
 /**
- * Accepts a large number and formats it in a mucher smaller, easier-on-the-eyes
+ * Accepts a large number and formats it in a much smaller, easier-on-the-eyes
  * format such as 1.1m, or 360k, rather than 1,100,000 or 360,000
  *
  * @param {number} value Number value to condense

@@ -37,3 +37,37 @@ export async function getExerciseSearchResults(
     }
   });
 }
+
+/**
+ * Returns training session data matching the provided query string
+ *
+ * @param query Query string to perform lookup with
+ * @param token Access token (JWT)
+ */
+export async function getTrainingSessions(
+  query: string,
+  token?: string,
+): Promise<ITrainingSession[]> {
+  return new Promise<ITrainingSession[]>(async (resolve, reject) => {
+    if (!token) {
+      return reject('no token on this device');
+    }
+
+    try {
+      const result = await axios.get<TrainingSessionQueryResponse>(
+        `${url}/exercise-session/search${query}`,
+        {
+          headers: {Authorization: `Bearer ${token}`},
+        },
+      );
+
+      if (!result.data) {
+        return reject(new AxiosError('No results found', '404'));
+      }
+
+      resolve(result.data.result);
+    } catch (err) {
+      reject(err);
+    }
+  });
+}

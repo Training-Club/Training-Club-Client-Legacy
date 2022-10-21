@@ -20,11 +20,13 @@ export async function createDraftContent(
       const draftItem: IContentDraft = {
         sortOrder: index,
         contentType: item.mime.startsWith('video', 0) ? 'video' : 'image',
+        mime: item.mime,
 
         original: {
           uri: uri,
           width: item.width,
           height: item.height,
+          filename: item.filename ?? '',
         },
 
         draft: {

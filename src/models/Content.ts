@@ -4,11 +4,13 @@ import {CropRect} from 'react-native-image-crop-picker';
 export interface IContentDraft {
   sortOrder: number;
   contentType: 'image' | 'video';
+  mime: string;
 
   original: {
     uri: string;
     width: number;
     height: number;
+    filename: string;
   };
 
   draft: {
@@ -52,6 +54,12 @@ export interface IComment {
   text: string;
   createdAt: Date;
   editedAt?: Date;
+}
+
+export interface IUploadFile {
+  uri: string;
+  name: string;
+  type: string;
 }
 
 export enum ContentType {

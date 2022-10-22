@@ -1,9 +1,11 @@
-import {ExerciseInfo} from '../models/Training';
+import {ExerciseInfo, ITrainingSession} from '../models/Training';
 import {ExerciseInfoQueryResponse} from './responses/ExerciseInfo';
 import axios, {AxiosError} from 'axios';
+import {TrainingSessionQueryResponse} from './responses/Training';
 
 // TODO: Replace with api.trainingclubapp.com
-const url: string = 'http://146.190.2.76:80/v1';
+// const url: string = 'http://146.190.2.76:80/v1';
+const url: string = 'http://localhost:8080/v1';
 
 /**
  * Returns exercise data matching a similar name to the provided query string

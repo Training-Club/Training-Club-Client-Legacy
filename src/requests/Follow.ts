@@ -6,7 +6,8 @@ import {
 } from './responses/Follow';
 
 // TODO: Replace with api.trainingclubapp.com
-const url: string = 'http://146.190.2.76:80/v1';
+// const url: string = 'http://146.190.2.76:80/v1';
+const url: string = 'http://localhost:8080/v1';
 
 export async function getBothConnectionCounts(
   accountId: string,

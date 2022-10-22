@@ -5,25 +5,14 @@ import {useAccountContext} from '../../../context/account/AccountContext';
 import {getTrainingSessions} from '../../../requests/Training';
 import {usePushdownContext} from '../../../context/pushdown/PushdownContext';
 import {useContentDraftContext} from '../../../context/content/ContentDraftContext';
-import {uploadFiles} from '../../../requests/Content';
+import {createPostWithFiles, uploadFiles} from '../../../requests/Content';
 
 import CloseableHeader from '../../molecules/design/CloseableHeader';
 
-import {
-  ITrainingSession,
-  TrainingSessionStatus,
-} from '../../../models/Training';
+import {ITrainingSession, TrainingSessionStatus,} from '../../../models/Training';
 
-import {
-  Box,
-  Button,
-  FormControl,
-  ScrollView,
-  Select,
-  TextArea,
-  useColorModeValue,
-  View,
-} from 'native-base';
+import {Box, Button, FormControl, ScrollView, Select, TextArea, useColorModeValue, View,} from 'native-base';
+import {PrivacyLevel} from "../../../models/Privacy";
 
 /*
 Post Caption
@@ -62,15 +51,22 @@ const DetailsContentScreen = (): JSX.Element => {
   const inputBgColor = useColorModeValue('apple.gray.50', 'apple.gray.900');
 
   const onSubmit = React.useCallback(() => {
-    uploadFiles(content, accessToken)
+    createPostWithFiles(
+      caption,
+      undefined,
+      undefined,
+      undefined,
+      content,
+      PrivacyLevel.PUBLIC,
+      accessToken,
+    )
       .then(response => {
         console.log(response);
       })
       .catch(err => {
-        const axiosError = err as AxiosError;
-        console.log(axiosError.response);
+        console.error(err);
       });
-  }, [accessToken, content]);
+  }, [accessToken, caption, content]);
 
   React.useEffect(() => {
     if (!account) {

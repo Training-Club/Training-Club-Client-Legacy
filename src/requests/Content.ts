@@ -1,10 +1,12 @@
-import axios from 'axios';
+import axios, {AxiosError} from 'axios';
 import {PrivacyLevel} from '../models/Privacy';
 import {
+  ContentType,
   IContentDraft,
   IContentItem,
   IPost,
   IUploadFile,
+  IUploadFileResult,
 } from '../models/Content';
 
 import {
@@ -109,8 +111,8 @@ export async function createPost(
 export async function uploadFiles(
   items: IContentDraft[],
   token?: string,
-): Promise<any> {
-  return new Promise<string[]>(async (resolve, reject) => {
+): Promise<IUploadFileResult[]> {
+  return new Promise<IUploadFileResult[]>(async (resolve, reject) => {
     if (!token) {
       return reject('no token found on this device');
     }
@@ -147,6 +149,83 @@ export async function uploadFiles(
       resolve(result.data.result);
     } catch (err) {
       reject(err);
+    }
+  });
+}
+
+/**
+ * Uploads files and uses the returned metadata to create
+ * a post with the provided params
+ *
+ * @param caption Post caption
+ * @param trainingSessionId Training Session ID
+ * @param locationId Location ID
+ * @param tags Tags
+ * @param files Content Drafts
+ * @param privacyLevel Privacy Level
+ * @param token Access Token
+ */
+export async function createPostWithFiles(
+  caption: string,
+  trainingSessionId?: string,
+  locationId?: string,
+  tags?: string[],
+  files?: IContentDraft[],
+  privacyLevel?: PrivacyLevel,
+  token?: string,
+): Promise<CreatePostResponse> {
+  return new Promise<CreatePostResponse>(async (resolve, reject) => {
+    if (!token) {
+      return reject('no token found on this device');
+    }
+
+    if (!files || files.length <= 0) {
+      return reject('no files provided');
+    }
+
+    let uploadResult: IUploadFileResult[];
+
+    try {
+      uploadResult = await uploadFiles(files, token);
+    } catch (err) {
+      return reject(err);
+    }
+
+    let contentItems: IContentItem[] = [];
+
+    uploadResult.forEach(item => {
+      const match = files.find(e => e.original.filename === item.filename);
+
+      if (match) {
+        contentItems.push({
+          destination: item.key,
+          type:
+            match.contentType === 'image'
+              ? ContentType.IMAGE
+              : ContentType.VIDEO,
+        });
+      }
+    });
+
+    try {
+      const createResult = await axios.post<CreatePostResponse>(
+        `${url}/content/post`,
+        {
+          session: trainingSessionId,
+          location: locationId,
+          text: caption,
+          tags: tags,
+          privacy: privacyLevel,
+          content: contentItems,
+        },
+        {headers: {Authorization: `Bearer ${token}`}},
+      );
+
+      return resolve(createResult.data);
+    } catch (err) {
+      const axiosError = err as AxiosError;
+      console.log(axiosError.response?.data);
+      return reject(err);
     }
   });
 }

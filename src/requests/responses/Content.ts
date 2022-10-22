@@ -1,4 +1,4 @@
-import {IPost} from '../../models/Content';
+import {IPost, IUploadFileResult} from '../../models/Content';
 
 export type GetPostsByQueryResponse = {
   result: IPost[];
@@ -31,5 +31,5 @@ export type DeletePostResponse = {};
 export type DeleteCommentResponse = {};
 
 export type FileUploadResponse = {
-  result: string[];
+  result: IUploadFileResult[];
 };

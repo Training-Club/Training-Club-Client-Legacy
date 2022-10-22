@@ -34,8 +34,6 @@ export interface IPost {
 export interface IContentItem {
   destination: string;
   type: ContentType;
-  latitude?: number;
-  longitude?: number;
 }
 
 export interface ILike {
@@ -54,6 +52,11 @@ export interface IComment {
   text: string;
   createdAt: Date;
   editedAt?: Date;
+}
+
+export interface IUploadFileResult {
+  key: string;
+  filename: string;
 }
 
 export interface IUploadFile {

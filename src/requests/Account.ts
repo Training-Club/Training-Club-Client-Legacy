@@ -1,6 +1,7 @@
 import axios from 'axios';
 import {IAccount} from '../models/Account';
 import {CreateStandardAccountResponse} from './responses/Account';
+
 import {
   AuthenticateStandardCredentialsResponse,
   RefreshTokenResponse,

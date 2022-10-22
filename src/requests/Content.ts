@@ -1,5 +1,12 @@
 import axios, {AxiosError} from 'axios';
 import {PrivacyLevel} from '../models/Privacy';
+
+import {
+  CreatePostResponse,
+  FileUploadResponse,
+  GetPostsByQueryResponse,
+} from './responses/Content';
+
 import {
   ContentType,
   IContentDraft,
@@ -8,12 +15,6 @@ import {
   IUploadFile,
   IUploadFileResult,
 } from '../models/Content';
-
-import {
-  CreatePostResponse,
-  FileUploadResponse,
-  GetPostsByQueryResponse,
-} from './responses/Content';
 
 // TODO: Replace with api.trainingclubapp.com
 // const url: string = 'http://146.190.2.76:80/v1';

@@ -1,18 +1,28 @@
 import React from 'react';
-import {AxiosError} from 'axios';
 import {FormatTrainingSessionQuery} from '../../../utils/StringUtil';
 import {useAccountContext} from '../../../context/account/AccountContext';
 import {getTrainingSessions} from '../../../requests/Training';
 import {usePushdownContext} from '../../../context/pushdown/PushdownContext';
 import {useContentDraftContext} from '../../../context/content/ContentDraftContext';
-import {createPostWithFiles, uploadFiles} from '../../../requests/Content';
-
+import {createPostWithFiles} from '../../../requests/Content';
+import {PrivacyLevel} from '../../../models/Privacy';
 import CloseableHeader from '../../molecules/design/CloseableHeader';
 
-import {ITrainingSession, TrainingSessionStatus,} from '../../../models/Training';
+import {
+  ITrainingSession,
+  TrainingSessionStatus,
+} from '../../../models/Training';
 
-import {Box, Button, FormControl, ScrollView, Select, TextArea, useColorModeValue, View,} from 'native-base';
-import {PrivacyLevel} from "../../../models/Privacy";
+import {
+  Box,
+  Button,
+  FormControl,
+  ScrollView,
+  Select,
+  TextArea,
+  useColorModeValue,
+  View,
+} from 'native-base';
 
 /*
 Post Caption

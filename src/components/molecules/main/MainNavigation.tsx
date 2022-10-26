@@ -78,6 +78,7 @@ const MainNavigation = (): JSX.Element => {
       pt={2}
       borderTopColor={borderTopColor}
       borderTopWidth={2}
+      borderRadius={16}
       bgColor={backgroundColor}
       w={'100%'}>
       <Center>

@@ -20,8 +20,8 @@ import {
   ScrollView,
   Select,
   TextArea,
-  useColorModeValue,
   View,
+  useColorModeValue,
 } from 'native-base';
 
 /*
@@ -65,7 +65,7 @@ const DetailsContentScreen = (): JSX.Element => {
       caption,
       undefined,
       undefined,
-      undefined,
+      tags,
       content,
       PrivacyLevel.PUBLIC,
       accessToken,
@@ -76,7 +76,7 @@ const DetailsContentScreen = (): JSX.Element => {
       .catch(err => {
         console.error(err);
       });
-  }, [accessToken, caption, content]);
+  }, [accessToken, caption, content, tags]);
 
   React.useEffect(() => {
     if (!account) {
@@ -112,7 +112,9 @@ const DetailsContentScreen = (): JSX.Element => {
         setPushdownConfig({
           status: 'error',
           title: 'Failed to query Training Sessions',
-          body: 'We were unable to query your recent training sessions and you may not be able to attach a Training Session to your post at this time.',
+          body:
+            err.response.message ??
+            'We were unable to query your training sessions and you may be unable to select them.',
           duration: 5000,
           show: true,
         });

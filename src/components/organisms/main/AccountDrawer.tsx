@@ -116,7 +116,7 @@ const AccountDrawer = ({account, children}: IAccountDrawerProps) => {
   ]);
 
   return (
-    <View position={'absolute'} top={0} left={0} w={'100%'} h={'100%'} p={0}>
+    <View position={'absolute'} top={0} left={0} w={'100%'} h={'100%'}>
       <PanGestureHandler
         onGestureEvent={panGestureHandler}
         activeOffsetX={[-10, 10]}>

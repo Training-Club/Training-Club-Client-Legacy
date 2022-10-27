@@ -41,7 +41,9 @@ export const PostScrollIndicatorItem = ({
   });
 
   return (
-    <Animated.View style={[indicatorStyle]}>
+    <Animated.View
+      testID={'post-scroll-indicator-item'}
+      style={[indicatorStyle]}>
       <Icon as={MaterialIcons} name={'circle'} color={'white'} size={2} />
     </Animated.View>
   );

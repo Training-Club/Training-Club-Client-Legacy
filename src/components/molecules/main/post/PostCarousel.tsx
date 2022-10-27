@@ -38,7 +38,7 @@ export const PostCarousel = ({
   );
 
   return (
-    <Box w={'100%'} h={'100%'}>
+    <Box w={'100%'} h={'100%'} testID={'post-carousel'}>
       <ScrollView
         w={'100%'}
         horizontal={true}

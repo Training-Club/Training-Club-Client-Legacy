@@ -25,7 +25,12 @@ export const PostAuthorDetails = ({
       left={2}
       bottom={2}>
       <HStack alignItems={'center'} space={2}>
-        <Avatar size={8} source={{uri: avatarUri}} bgColor={avatarBgColor} />
+        <Avatar
+          testID={'post-author-avatar'}
+          size={8}
+          source={{uri: avatarUri}}
+          bgColor={avatarBgColor}
+        />
 
         <Text fontWeight={'semibold'} color={'white'}>
           {username}

@@ -16,6 +16,7 @@ export const PostContentAudioControl = ({
 
   return (
     <IconButton
+      testID={'post-audio-control'}
       position={'absolute'}
       top={2}
       right={2}

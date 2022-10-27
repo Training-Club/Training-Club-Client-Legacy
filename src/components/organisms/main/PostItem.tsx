@@ -78,7 +78,7 @@ export const PostItem = ({
   );
 
   return (
-    <Box w={'100%'} h={width - 4} borderRadius={12} {...style}>
+    <Box w={'100%'} h={width * 1.33} borderRadius={12} shadow={6} {...style}>
       <PostAuthorDetails
         username={'john'}
         avatarUri={'https://source.unsplash.com/random/?strong,man'}

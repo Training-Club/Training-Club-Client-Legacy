@@ -42,7 +42,7 @@ const PostFeed = (): JSX.Element => {
         {"What's new"}
       </Heading>
 
-      <VStack space={2} mb={32}>
+      <VStack space={8} mb={32}>
         <PostItem
           content={sampleContent}
           attributes={{likeCount: 103, commentCount: 12, liked: true}}

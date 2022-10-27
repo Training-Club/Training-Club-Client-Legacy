@@ -26,12 +26,12 @@ const PostFeed = (): JSX.Element => {
       type: ContentType.IMAGE,
     },
     {
-      destination: 'https://source.unsplash.com/random/?strong,man',
-      type: ContentType.IMAGE,
+      destination: 'https://cdn.discordapp.com/attachments/481691188739702797/1035019561021481072/RPReplay_Final1663101410.mov',
+      type: ContentType.VIDEO,
     },
     {
       destination:
-        'https://cdn.discordapp.com/attachments/354081861909217280/1034333746398253056/-9SqHF5VSwvMxKIs.mp4',
+        'https://cdn.discordapp.com/attachments/462762564133060621/1035019135853281280/trim.8F5FB98A-FB19-4F11-B272-AED7BDAD0AAD.mov',
       type: ContentType.VIDEO,
     },
   ];

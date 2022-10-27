@@ -2,13 +2,13 @@ import React from 'react';
 import GreetingText from '../../atoms/main/home/GreetingText';
 import {useAccountContext} from '../../../context/account/AccountContext';
 import AccountDrawer from '../../organisms/main/AccountDrawer';
-import {HStack, useColorModeValue, View} from 'native-base';
+import PostFeed from '../../organisms/main/PostFeed';
+import {HStack, ScrollView, View, useColorModeValue} from 'native-base';
 
 const FeedScreen = () => {
   const {account} = useAccountContext();
   const name = account?.profile?.name ?? account?.username;
   const time: Date = new Date();
-  const spacing = 4;
 
   const bgColor = useColorModeValue(
     'core.background.light',
@@ -22,12 +22,21 @@ const FeedScreen = () => {
 
   return (
     <AccountDrawer account={account}>
-      <View shadow={6} bgColor={bgColor}>
-        {name && (
-          <HStack w={'100%'} px={spacing} justifyContent={'space-between'}>
-            <GreetingText name={name} time={time} />
-          </HStack>
-        )}
+      <View px={2} w={'100%'}>
+        <ScrollView
+          w={'100%'}
+          h={'100%'}
+          shadow={6}
+          bgColor={bgColor}
+          showsVerticalScrollIndicator={false}>
+          {name && (
+            <HStack w={'100%'} px={2} justifyContent={'space-between'}>
+              <GreetingText name={name} time={time} />
+            </HStack>
+          )}
+
+          <PostFeed />
+        </ScrollView>
       </View>
     </AccountDrawer>
   );

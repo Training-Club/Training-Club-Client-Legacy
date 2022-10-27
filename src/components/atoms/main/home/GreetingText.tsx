@@ -24,7 +24,7 @@ const GreetingText = ({name, time}: IGreetingTextProps): JSX.Element => {
   }, [time]);
 
   return (
-    <Heading testID={'greeting-text-heading'} color={textColor} my={4}>
+    <Heading testID={'greeting-text-heading'} color={textColor}>
       Good {getTime()}, {name}!
     </Heading>
   );

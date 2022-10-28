@@ -132,3 +132,39 @@ export const FormatLargeNumber = (value: number): string => {
     maximumFractionDigits: 1,
   }).format(value);
 };
+
+/**
+ * FormatElapsedTime formats time (in millis) to a
+ * simplified human-readable date
+ *
+ * @param ms Time difference (in millis)
+ */
+export const FormatElapsedTime = (ms: number): string => {
+  const days = Math.floor(ms / 86400000);
+  const years = Math.floor(days / 365);
+  const months = Math.floor(days / 30);
+  const minutes = Math.floor(ms / 60000);
+  const seconds = Math.floor(ms / 1000);
+
+  if (days >= 365 || months === 12) {
+    return years === 1 || months === 12 ? '1 year' : years + ' years';
+  }
+
+  if (days >= 30) {
+    return months === 1 ? '1 month' : months + ' months';
+  }
+
+  if (days > 0) {
+    return days === 1 ? '1 day' : days + ' days';
+  }
+
+  if (minutes > 0) {
+    return minutes === 1 ? '1 minute' : minutes + ' minutes';
+  }
+
+  if (seconds > 0) {
+    return seconds === 1 ? '1 second' : seconds + ' seconds';
+  }
+
+  return 'now';
+};

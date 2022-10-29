@@ -4,13 +4,20 @@ on:
     branches:
       - 'beta'
 jobs:
-  build:
+  setup:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
+      - run: rm -rf ~/Library/Developer/Xcode/DerivedData/*
+      - run: cd ios && rm -rf Pods
+      - run: pod install --clean-install
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: '2.7.2'
+  build:
+    runs-on: macos-latest
+    needs: [setup]
+    steps:
       - uses: maierj/fastlane-action@v2.3.0
         with:
           lane: 'beta'

@@ -14,7 +14,6 @@ jobs:
       - run: gem install bundler                                      # Installs bundler
       - run: cd ios && rm -rf ~/Library/Developer/Xcode/DerivedData/* # Clears cache
       - run: cd ios && rm -rf Pods
-      - run: cd ios && pod install --clean-install
   build:
     runs-on: macos-latest
     needs: [setup]

@@ -8,12 +8,13 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
-      - run: cd ios && rm -rf ~/Library/Developer/Xcode/DerivedData/*
-      - run: cd ios && rm -rf Pods
-      - run: cd ios && pod install --clean-install
-      - uses: ruby/setup-ruby@v1
+      - uses: ruby/setup-ruby@v1                                      # Configures Ruby gems
         with:
           ruby-version: '2.7.2'
+      - run: gem install bundler                                      # Installs bundler
+      - run: cd ios && rm -rf ~/Library/Developer/Xcode/DerivedData/* # Clears cache
+      - run: cd ios && rm -rf Pods
+      - run: cd ios && pod install --clean-install
   build:
     runs-on: macos-latest
     needs: [setup]

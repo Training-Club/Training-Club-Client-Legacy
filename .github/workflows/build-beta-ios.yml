@@ -6,7 +6,6 @@ on:
 jobs:
   build:
     runs-on: macos-latest
-    needs: [checkout]
     steps:
       - uses: actions/checkout@v2
       - uses: ruby/setup-ruby@v1

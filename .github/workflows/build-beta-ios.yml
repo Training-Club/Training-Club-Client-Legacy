@@ -8,13 +8,14 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: ruby/setup-ruby@v1                                      # Configures Ruby gems
+      - uses: ruby/setup-ruby@v1                                                # Configures Ruby gems
         with:
           ruby-version: '2.7.2'
-      - run: gem install bundler                                      # Installs bundler
-      - run: cd ios && rm -rf ~/Library/Developer/Xcode/DerivedData/* # Clears cache
+      - run: gem install bundler                                                # Installs bundler
+      - run: gem install fastlane                                               # Installs fastlane
+      - run: cd ios && rm -rf ~/Library/Developer/Xcode/DerivedData/* && cd ..  # Clears cache
       - run: cd ios && rm -rf Pods
-      - uses: maierj/fastlane-action@v2.3.0                           # Init Fastlane on 'beta' lane
+      - uses: maierj/fastlane-action@v2.3.0                                     # Init fastlane on 'beta' lane
         with:
           lane: 'beta'
-          # subdirectory: 'ios'
+          subdirectory: 'ios'

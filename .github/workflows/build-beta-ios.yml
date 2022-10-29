@@ -4,13 +4,11 @@ on:
     branches:
       - 'beta'
 jobs:
-  checkout:
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v2
   build:
+    runs-on: macos-latest
     needs: [checkout]
     steps:
+      - uses: actions/checkout@v2
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: '2.7.2'

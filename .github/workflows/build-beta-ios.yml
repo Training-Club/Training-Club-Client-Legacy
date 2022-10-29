@@ -4,12 +4,17 @@ on:
     branches:
       - 'beta'
 jobs:
-  build:
+  checkout:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
-      - run: cd ios
-      - run: fastlane beta
-        env:
-          FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
-          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+  build:
+    needs: [checkout]
+    steps:
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '2.7.2'
+      - uses: maierj/fastlane-action@v2.3.0
+        with:
+          lane: 'beta'
+          subdirectory: 'ios'

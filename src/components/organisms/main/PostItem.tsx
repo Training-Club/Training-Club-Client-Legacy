@@ -7,9 +7,13 @@ import {PostCarousel} from '../../molecules/main/post/PostCarousel';
 import {PostScrollIndicator} from '../../molecules/main/post/PostScrollIndicator';
 import {PostContentWrapper} from '../../atoms/main/home/post/PostContentWrapper';
 import {Box, IBoxProps} from 'native-base';
+import {ITrainingSession} from '../../../models/Training';
+import {ILocation} from '../../../models/Location';
 
 interface IPostItemProps {
   content: IContentItem[];
+  trainingSession?: ITrainingSession;
+  location?: ILocation;
 
   attributes?: {
     liked?: boolean;
@@ -22,6 +26,8 @@ interface IPostItemProps {
 
 export const PostItem = ({
   content,
+  trainingSession,
+  location,
   attributes,
   style,
 }: IPostItemProps): JSX.Element => {
@@ -82,6 +88,7 @@ export const PostItem = ({
       <PostAuthorDetails
         username={'john'}
         avatarUri={'https://source.unsplash.com/random/?strong,man'}
+        location={location}
         onPress={onAuthorPress}
       />
 
@@ -98,10 +105,15 @@ export const PostItem = ({
 
       {isAlbum() && (
         <>
-          <PostScrollIndicator index={index} size={content.length} />
+          <PostScrollIndicator
+            index={index}
+            size={trainingSession ? content.length + 1 : content.length}
+          />
 
           <PostCarousel
             content={content}
+            trainingSession={trainingSession}
+            location={location}
             contentWidth={width}
             onIndexChange={onIndexChange}
           />

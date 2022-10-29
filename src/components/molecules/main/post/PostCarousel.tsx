@@ -1,16 +1,23 @@
 import React from 'react';
 import {IContentItem} from '../../../../models/Content';
+import {ITrainingSession} from '../../../../models/Training';
+import {ILocation} from '../../../../models/Location';
 import {PostContentWrapper} from '../../../atoms/main/home/post/PostContentWrapper';
+import {PostTrainingSessionCard} from './PostTrainingSessionCard';
 import {Box, HStack, ScrollView} from 'native-base';
 
 interface IPostCarouselProps {
   content: IContentItem[];
+  trainingSession?: ITrainingSession;
+  location?: ILocation;
   contentWidth: number;
   onIndexChange: (index: number) => void;
 }
 
 export const PostCarousel = ({
   content,
+  trainingSession,
+  location,
   contentWidth,
   onIndexChange,
 }: IPostCarouselProps): JSX.Element => {
@@ -24,7 +31,11 @@ export const PostCarousel = ({
    */
   const getCurrentPage = React.useCallback(
     (x: number) => {
-      for (let i = 0; i < content.length; i++) {
+      const contentLength = trainingSession
+        ? content.length + 1
+        : content.length;
+
+      for (let i = 0; i < contentLength; i++) {
         const calculatedSize = adjustedWidth * i;
 
         if (x <= calculatedSize) {
@@ -32,9 +43,9 @@ export const PostCarousel = ({
         }
       }
 
-      return content.length;
+      return contentLength;
     },
-    [adjustedWidth, content.length],
+    [adjustedWidth, content.length, trainingSession],
   );
 
   return (
@@ -68,6 +79,14 @@ export const PostCarousel = ({
               contentWidth={adjustedWidth - content.length * spacing + 0.1}
             />
           ))}
+
+          {trainingSession && (
+            <PostTrainingSessionCard
+              trainingSession={trainingSession}
+              location={location}
+              contentWidth={adjustedWidth - content.length * spacing + 0.1}
+            />
+          )}
         </HStack>
       </ScrollView>
     </Box>

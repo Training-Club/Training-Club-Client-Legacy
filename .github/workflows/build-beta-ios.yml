@@ -1,0 +1,14 @@
+name: build-beta-ios
+on:
+  push:
+    branches:
+      - 'beta'
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: fastlane beta
+        env:
+          FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}

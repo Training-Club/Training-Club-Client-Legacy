@@ -6,7 +6,8 @@ on:
       - main
       - beta
       - release
-    pull_request:
+  pull_request:
+    branches:
       - feature/**
       - bug/**
 

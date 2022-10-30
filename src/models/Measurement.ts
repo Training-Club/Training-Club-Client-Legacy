@@ -94,8 +94,6 @@ export function getConvertedWeight(
     return converted;
   }
 
-  console.log(converted);
-
   return Math.round(converted / nearestValue) * nearestValue;
 }
 
@@ -114,57 +112,57 @@ export function getConvertedDistance(
 ): number {
   if (inputMeasurement === DistanceMeasurement.MILE) {
     if (outputMeasurement === DistanceMeasurement.FEET) {
-      return Math.round(inputValue * 5280);
+      return Number((inputValue * 5280).toFixed(2));
     }
 
     if (outputMeasurement === DistanceMeasurement.KILOMETER) {
-      return Math.round(inputValue * 1.60934);
+      return Number((inputValue * 1.60934).toFixed(2));
     }
 
     if (outputMeasurement === DistanceMeasurement.METER) {
-      return Math.round(inputValue * 1609.34);
+      return Number((inputValue * 1609.34).toFixed(2));
     }
   }
 
   if (inputMeasurement === DistanceMeasurement.FEET) {
     if (outputMeasurement === DistanceMeasurement.MILE) {
-      return Math.round(inputValue * 0.00018934);
+      return Number((inputValue * 0.00018934).toFixed(2));
     }
 
     if (outputMeasurement === DistanceMeasurement.KILOMETER) {
-      return Math.round(inputValue * 0.0003048);
+      return Number((inputValue * 0.0003048).toFixed(2));
     }
 
     if (outputMeasurement === DistanceMeasurement.METER) {
-      return Math.round(inputValue * 0.3048);
+      return Number((inputValue * 0.3048).toFixed(2));
     }
   }
 
   if (inputMeasurement === DistanceMeasurement.KILOMETER) {
     if (outputMeasurement === DistanceMeasurement.MILE) {
-      return Math.round(inputValue * 0.621371);
+      return Number((inputValue * 0.621371).toFixed(2));
     }
 
     if (outputMeasurement === DistanceMeasurement.FEET) {
-      return Math.round(inputValue * 3280.84);
+      return Number((inputValue * 3280.84).toFixed(2));
     }
 
     if (outputMeasurement === DistanceMeasurement.METER) {
-      return Math.round(inputValue * 3280.84);
+      return Number((inputValue * 1000.0).toFixed(2));
     }
   }
 
   if (inputMeasurement === DistanceMeasurement.METER) {
     if (outputMeasurement === DistanceMeasurement.MILE) {
-      return Math.round(inputValue * 0.000621371);
+      return Number((inputValue * 0.000621371).toFixed(2));
     }
 
     if (outputMeasurement === DistanceMeasurement.KILOMETER) {
-      return Math.round(inputValue * 0.000621371);
+      return Number((inputValue * 0.001).toFixed(2));
     }
 
     if (outputMeasurement === DistanceMeasurement.FEET) {
-      return Math.round(inputValue * 3.28084);
+      return Number((inputValue * 3.28084).toFixed(2));
     }
   }
 

@@ -3,6 +3,7 @@ import {ExerciseContext} from './ExerciseContext';
 import {nanoid} from 'nanoid/non-secure';
 import {
   DistanceMeasurement,
+  getConvertedDistance,
   getConvertedWeight,
   MeasurementSystem,
 } from '../../models/Measurement';
@@ -212,6 +213,8 @@ export function ExerciseContextProvider({
    * This function will iterate and update every exercise in the
    * Grouped Exercise instance
    *
+   * TODO: REFACTOR PLEASE
+   *
    * @param {GroupedExercise} groupedExercise Grouped Exercise to iterate over
    * @param {DistanceMeasurement} value Value to set measurement to
    */
@@ -228,7 +231,12 @@ export function ExerciseContextProvider({
                     ...prevExercise.values,
                     distance: {
                       measurement: measurement,
-                      value: prevExercise.values.distance?.value ?? 0,
+                      value: getConvertedDistance(
+                        prevExercise.values.distance!.value,
+                        prevExercise.values.distance!.measurement ??
+                          measurement,
+                        measurement,
+                      ),
                     },
                   },
                 },

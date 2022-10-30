@@ -47,7 +47,7 @@ const AccountDrawerButtonStack = ({
         onPress={() => console.log('My Account')}
         text={'My Account'}
         style={{
-          button: {renderBottomBorder: true},
+          button: {renderBottomBorder: true, roundedTop: true},
           icon: {
             iconName: 'account-circle',
             iconSize: 6,
@@ -102,6 +102,7 @@ const AccountDrawerButtonStack = ({
         onPress={() => toggleColorMode()}
         text={'Settings'}
         style={{
+          button: {roundedBottom: true},
           icon: {
             iconName: 'settings',
             iconSize: 6,

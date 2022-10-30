@@ -3,13 +3,13 @@ name: Unit Tests
 on:
   push:
     branches:
-      - main
-      - beta
-      - release
+      - 'main'
+      - 'beta'
+      - 'release'
   pull_request:
     branches:
-      - feature/**
-      - bug/**
+      - 'feature/**'
+      - 'bug/**'
 
 # This allows a subsequently queued workflow run to interrupt previous runs
 concurrency:

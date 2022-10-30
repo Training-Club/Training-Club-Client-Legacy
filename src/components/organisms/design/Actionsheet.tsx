@@ -35,6 +35,16 @@ const Actionsheet = ({children}: IActionsheetProps): JSX.Element | null => {
         backgroundComponent={actionSheetConfig.backgroundComponent}
         footerComponent={actionSheetConfig.footerComponent}
         snapPoints={actionSheetConfig.snapPoints ?? defaultSnapPoints}
+        style={{
+          shadowColor: 'black',
+          shadowRadius: 4.65,
+          shadowOpacity: 0.25,
+          elevation: 6,
+          shadowOffset: {
+            width: 0,
+            height: 3,
+          },
+        }}
         backgroundStyle={{
           backgroundColor: '#f2f2f2',
         }}>

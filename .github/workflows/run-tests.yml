@@ -1,6 +1,14 @@
 name: Unit Tests
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+      - beta
+      - release
+    pull_request:
+      - feature/**
+      - bug/**
 
 # This allows a subsequently queued workflow run to interrupt previous runs
 concurrency:

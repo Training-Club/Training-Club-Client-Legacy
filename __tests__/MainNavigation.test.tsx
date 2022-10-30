@@ -21,7 +21,7 @@ describe('Main Navigation ->', () => {
     );
 
     const homeElem = getByText('Home');
-    const discoverElem = getByText('Discovery');
+    const discoverElem = getByText('Discover');
     const newElem = getByText('New');
     const analyticsElem = getByText('Analytics');
     const profileElem = getByText('Profile');

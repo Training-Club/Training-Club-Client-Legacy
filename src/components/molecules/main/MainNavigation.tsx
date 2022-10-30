@@ -91,7 +91,7 @@ const MainNavigation = (): JSX.Element => {
           />
 
           <MainNavigationItem
-            text={'Discovery'}
+            text={'Discover'}
             icon={{name: 'search', size: 8}}
             selected={selectedScreen === MainNavigationScreen.DISCOVERY}
             onPress={() =>

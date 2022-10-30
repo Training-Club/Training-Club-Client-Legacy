@@ -193,6 +193,8 @@ const RegisterScreen = () => {
           });
       })
       .catch(err => {
+        console.error(err.response);
+
         setSubmitting(false);
 
         setPushdownConfig({

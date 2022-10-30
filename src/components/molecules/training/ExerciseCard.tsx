@@ -53,12 +53,17 @@ const ExerciseCard = ({groupedExercise}: IExerciseCardProps): JSX.Element => {
     [groupedExercise],
   );
 
+  // TODO: REFACTOR PLEASE
   const plateCounterData = React.useMemo(() => {
     return nextIncompleteExercise &&
       (nextIncompleteExercise.type === ExerciseType.WEIGHTED_TIME ||
         nextIncompleteExercise.type === ExerciseType.WEIGHTED_REPS) &&
       nextIncompleteExercise.values.weight
-      ? getPlateCount(nextIncompleteExercise.values.weight.value)
+      ? getPlateCount(
+          nextIncompleteExercise.values.weight.value,
+          nextIncompleteExercise.values.weight.measurement ??
+            MeasurementSystem.IMPERIAL,
+        )
       : undefined;
   }, [nextIncompleteExercise]);
 

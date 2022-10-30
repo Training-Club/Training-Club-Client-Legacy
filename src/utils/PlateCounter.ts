@@ -1,9 +1,59 @@
+import {MeasurementSystem} from '../models/Measurement';
+
 export interface IPlateCountResponse {
-  fortyFivePlates?: number;
-  twentyFivePlates?: number;
-  tenPlates?: number;
-  fivePlates?: number;
-  twoPtFivePlates?: number;
+  fortyFivePlates?: number; // imperial 45lb
+  twentyFivePlates?: number; // imperial 25lb
+  twentyPlates?: number; // metric 45lb, 20kg
+  tenPlates?: number; // imperial & metric
+  fivePlates?: number; // imperial & metric 5lb, 10kg
+  twoPtFivePlates?: number; // imperial & metric 2.5lb, 5kg
+  measurement: MeasurementSystem;
+}
+
+export function getPlateCount(
+  inputValue: number,
+  inputMeasurement: MeasurementSystem,
+): IPlateCountResponse {
+  return inputMeasurement === MeasurementSystem.METRIC
+    ? getMetricPlateCount(inputValue)
+    : getImperialPlateCount(inputValue);
+}
+
+export function getMetricPlateCount(inputValue: number): IPlateCountResponse {
+  const withoutBarbell = inputValue - 20.0;
+
+  let remainder = withoutBarbell / 2.0;
+  let twentyPlates = 0;
+  let tenPlates = 0;
+  let fivePlates = 0;
+  let twoPtFivePlates = 0;
+
+  if (remainder >= 20) {
+    twentyPlates = Math.floor(remainder / 20.0);
+    remainder -= 20 * twentyPlates;
+  }
+
+  if (remainder >= 10) {
+    tenPlates = Math.floor(remainder / 10.0);
+    remainder -= 10 * tenPlates;
+  }
+
+  if (remainder >= 5) {
+    fivePlates = Math.floor(remainder / 5.0);
+    remainder -= 5 * fivePlates;
+  }
+
+  if (remainder >= twoPtFivePlates) {
+    twoPtFivePlates = Math.floor(remainder / 2.5);
+  }
+
+  return {
+    twentyPlates: twentyPlates,
+    tenPlates: tenPlates,
+    fivePlates: fivePlates,
+    twoPtFivePlates: twoPtFivePlates,
+    measurement: MeasurementSystem.METRIC,
+  };
 }
 
 /**
@@ -12,7 +62,7 @@ export interface IPlateCountResponse {
  *
  * @param {number} inputValue Weight value
  */
-export function getPlateCount(inputValue: number): IPlateCountResponse {
+export function getImperialPlateCount(inputValue: number): IPlateCountResponse {
   const withoutBarbell: number = inputValue - 45.0;
 
   let remainder = withoutBarbell / 2.0;
@@ -52,5 +102,6 @@ export function getPlateCount(inputValue: number): IPlateCountResponse {
     tenPlates: tens,
     fivePlates: fives,
     twoPtFivePlates: twoPtFives,
+    measurement: MeasurementSystem.IMPERIAL,
   };
 }

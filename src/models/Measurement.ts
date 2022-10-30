@@ -84,11 +84,19 @@ export function getConvertedWeight(
   inputValue: number,
   inputMeasurement: MeasurementSystem,
 ): number {
-  if (inputMeasurement === MeasurementSystem.METRIC) {
-    return Math.round(inputValue * 2.20462);
+  const nearestValue = inputMeasurement === MeasurementSystem.METRIC ? 2.5 : 5;
+  const converted =
+    inputMeasurement === MeasurementSystem.METRIC
+      ? Math.round(inputValue / 2.2046)
+      : Math.ceil(inputValue * 2.2046);
+
+  if (converted % nearestValue === 0) {
+    return converted;
   }
 
-  return Math.round(inputValue * 0.453592);
+  console.log(converted);
+
+  return Math.round(converted / nearestValue) * nearestValue;
 }
 
 /**

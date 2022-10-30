@@ -1,5 +1,6 @@
 import React from 'react';
 import {IPlateCountResponse} from '../../../utils/PlateCounter';
+import {MeasurementSystem} from '../../../models/Measurement';
 
 import Animated, {
   BaseAnimationBuilder,
@@ -24,6 +25,8 @@ const TrainingPlateCounter = ({
     'core.textMuted.light',
     'core.textMuted.dark',
   );
+
+  const suffix = data.measurement === MeasurementSystem.IMPERIAL ? 'lb' : 'kg';
 
   const entering:
     | typeof BaseAnimationBuilder
@@ -70,7 +73,7 @@ const TrainingPlateCounter = ({
             <HStack space={0.5} alignItems={'center'} w={'100%'}>
               <Text {...multiplierStyle}>x{data.fortyFivePlates}</Text>
               <Text {...weightStyle}>45</Text>
-              <Text {...suffixStyle}>lbs</Text>
+              <Text {...suffixStyle}>{suffix}</Text>
             </HStack>
           </Animated.View>
         )}
@@ -81,9 +84,22 @@ const TrainingPlateCounter = ({
             exiting={exiting}
             style={{width: '33.333%'}}>
             <HStack space={0.5} alignItems={'center'} w={'100%'}>
-              <Text {...multiplierStyle}>x{data.fortyFivePlates}</Text>
+              <Text {...multiplierStyle}>x{data.twentyFivePlates}</Text>
               <Text {...weightStyle}>25</Text>
-              <Text {...suffixStyle}>lbs</Text>
+              <Text {...suffixStyle}>{suffix}</Text>
+            </HStack>
+          </Animated.View>
+        )}
+
+        {!!(data.twentyPlates && data.twentyPlates > 0) && (
+          <Animated.View
+            entering={entering}
+            exiting={exiting}
+            style={{width: '33.333%'}}>
+            <HStack space={0.5} alignItems={'center'} w={'100%'}>
+              <Text {...multiplierStyle}>x{data.twentyPlates}</Text>
+              <Text {...weightStyle}>20</Text>
+              <Text {...suffixStyle}>{suffix}</Text>
             </HStack>
           </Animated.View>
         )}
@@ -96,7 +112,7 @@ const TrainingPlateCounter = ({
             <HStack space={0.5} alignItems={'center'} w={'100%'}>
               <Text {...multiplierStyle}>x{data.tenPlates}</Text>
               <Text {...weightStyle}>10</Text>
-              <Text {...suffixStyle}>lbs</Text>
+              <Text {...suffixStyle}>{suffix}</Text>
             </HStack>
           </Animated.View>
         )}
@@ -109,7 +125,7 @@ const TrainingPlateCounter = ({
             <HStack space={0.5} alignItems={'center'} w={'100%'}>
               <Text {...multiplierStyle}>x{data.fivePlates}</Text>
               <Text {...weightStyle}>5</Text>
-              <Text {...suffixStyle}>lbs</Text>
+              <Text {...suffixStyle}>{suffix}</Text>
             </HStack>
           </Animated.View>
         )}
@@ -122,7 +138,7 @@ const TrainingPlateCounter = ({
             <HStack space={0.5} alignItems={'center'} w={'100%'}>
               <Text {...multiplierStyle}>x{data.twoPtFivePlates}</Text>
               <Text {...weightStyle}>2.5</Text>
-              <Text {...suffixStyle}>lbs</Text>
+              <Text {...suffixStyle}>{suffix}</Text>
             </HStack>
           </Animated.View>
         )}

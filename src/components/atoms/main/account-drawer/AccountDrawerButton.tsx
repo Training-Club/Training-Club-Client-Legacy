@@ -25,6 +25,8 @@ interface IAccountDrawerButtonProps {
       textColor?: ColorType;
       bgColor?: ColorType;
       bgColorPressed?: ColorType;
+      roundedTop?: boolean;
+      roundedBottom?: boolean;
       renderBottomBorder?: boolean;
       borderBottomColor?: ColorType;
     };
@@ -73,6 +75,8 @@ const AccountDrawerButton = ({
       bgColor={style?.button?.bgColor ?? defaultButtonBgColor}
       py={4}
       px={2}
+      borderTopRadius={style?.button?.roundedTop ? 12 : 0}
+      borderBottomRadius={style?.button?.roundedBottom ? 12 : 0}
       borderBottomWidth={style?.button?.renderBottomBorder ? 1 : 0}
       borderBottomColor={
         style?.button?.borderBottomColor ?? defaultButtonBorderBottomColor

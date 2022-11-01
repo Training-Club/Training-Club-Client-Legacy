@@ -53,18 +53,33 @@ const ExerciseCard = ({groupedExercise}: IExerciseCardProps): JSX.Element => {
     [groupedExercise],
   );
 
-  // TODO: REFACTOR PLEASE
+  /**
+   * Builds Plate Counter Response and returns plate counter data
+   */
   const plateCounterData = React.useMemo(() => {
-    return nextIncompleteExercise &&
-      (nextIncompleteExercise.type === ExerciseType.WEIGHTED_TIME ||
-        nextIncompleteExercise.type === ExerciseType.WEIGHTED_REPS) &&
-      nextIncompleteExercise.values.weight
-      ? getPlateCount(
-          nextIncompleteExercise.values.weight.value,
-          nextIncompleteExercise.values.weight.measurement ??
-            MeasurementSystem.IMPERIAL,
-        )
-      : undefined;
+    if (!nextIncompleteExercise) {
+      return undefined;
+    }
+
+    if (
+      nextIncompleteExercise.type !== ExerciseType.WEIGHTED_REPS &&
+      nextIncompleteExercise.type !== ExerciseType.WEIGHTED_TIME
+    ) {
+      return undefined;
+    }
+
+    if (
+      !nextIncompleteExercise.values.weight ||
+      !nextIncompleteExercise.values.weight.plateCounterEnabled ||
+      !nextIncompleteExercise.values.weight.measurement
+    ) {
+      return undefined;
+    }
+
+    return getPlateCount(
+      nextIncompleteExercise.values.weight.value,
+      nextIncompleteExercise.values.weight.measurement,
+    );
   }, [nextIncompleteExercise]);
 
   const additionalExerciseName = React.useMemo(() => {

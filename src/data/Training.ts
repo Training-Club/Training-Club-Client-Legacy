@@ -3,6 +3,7 @@ import {DistanceMeasurement, MeasurementSystem} from '../models/Measurement';
 
 import {
   AdditionalExerciseType,
+  ExerciseEquipment,
   ExerciseInfo,
   GroupedExercise,
   IAdditionalExercise,
@@ -128,6 +129,7 @@ export function getMockExerciseData(data: ExerciseInfo[]): IExercise {
         weight: {
           value: 135,
           measurement: MeasurementSystem.IMPERIAL,
+          plateCounterEnabled: elem.equipment === ExerciseEquipment.BARBELL,
         },
         distance: {
           value: 1,

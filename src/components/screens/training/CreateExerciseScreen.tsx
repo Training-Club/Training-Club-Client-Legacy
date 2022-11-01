@@ -112,6 +112,7 @@ const CreateExerciseScreen = (): JSX.Element => {
             reps: 5,
             weight: {
               value: 135,
+              plateCounterEnabled: true,
               measurement: MeasurementSystem.IMPERIAL,
             },
           },

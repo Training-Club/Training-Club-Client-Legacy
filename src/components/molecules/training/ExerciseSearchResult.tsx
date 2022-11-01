@@ -26,7 +26,7 @@ const ExerciseSearchResult = ({
   const textColorMuted = useColorModeValue('apple.gray.600', 'apple.gray.400');
 
   return (
-    <Pressable onPressIn={onPress}>
+    <Pressable onPress={onPress}>
       <HStack w={'100%'} alignItems={'center'} space={4} py={1}>
         <Box w={'64px'} h={'64px'}>
           {leftContent}

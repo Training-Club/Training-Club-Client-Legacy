@@ -72,25 +72,25 @@ const Navigation = () => {
           <Stack.Screen
             name={'Feed'}
             component={FeedScreen}
-            options={globalScreenOptions}
+            options={{...globalScreenOptions, animationEnabled: false}}
           />
 
           <Stack.Screen
             name={'Discovery'}
             component={DiscoveryScreen}
-            options={globalScreenOptions}
+            options={{...globalScreenOptions, animationEnabled: false}}
           />
 
           <Stack.Screen
             name={'Analytics'}
             component={AnalyticsScreen}
-            options={globalScreenOptions}
+            options={{...globalScreenOptions, animationEnabled: false}}
           />
 
           <Stack.Screen
             name={'Profile'}
             component={ProfileScreen}
-            options={globalScreenOptions}
+            options={{...globalScreenOptions, animationEnabled: false}}
           />
         </Stack.Navigator>
       </>

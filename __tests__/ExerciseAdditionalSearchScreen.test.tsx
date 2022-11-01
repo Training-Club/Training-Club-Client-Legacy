@@ -24,8 +24,8 @@ describe('Exercise Additional Search Screen ->', () => {
         name: 'Benchpress',
         type: ExerciseType.WEIGHTED_REPS,
         verified: true,
-        muscleGroups: [MuscleGroup.CHEST, MuscleGroup.TRICEPS],
-        exerciseEquipment: ExerciseEquipment.BARBELL,
+        muscleGroups: [MuscleGroup.CHEST, MuscleGroup.UPPER_ARMS],
+        equipment: ExerciseEquipment.BARBELL,
       },
 
       {
@@ -33,8 +33,8 @@ describe('Exercise Additional Search Screen ->', () => {
         name: 'Back Squat',
         type: ExerciseType.WEIGHTED_REPS,
         verified: true,
-        muscleGroups: [MuscleGroup.QUADS, MuscleGroup.HAMSTRING],
-        exerciseEquipment: ExerciseEquipment.BARBELL,
+        muscleGroups: [MuscleGroup.THIGHS, MuscleGroup.BACK],
+        equipment: ExerciseEquipment.BARBELL,
       },
     ];
 

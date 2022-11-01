@@ -41,7 +41,7 @@ const ExerciseCard = ({groupedExercise}: IExerciseCardProps): JSX.Element => {
     removeGroupedExercise,
   } = useExerciseContext();
 
-  const snapPoints = React.useMemo(() => ['90%'], []);
+  const snapPoints = React.useMemo(() => ['50%', '90%'], []);
 
   const bgColor = useColorModeValue(
     'core.backgroundHighlight.light',
@@ -82,6 +82,9 @@ const ExerciseCard = ({groupedExercise}: IExerciseCardProps): JSX.Element => {
     );
   }, [nextIncompleteExercise]);
 
+  /**
+   * Returns a comma separated list of additional exercise names
+   */
   const additionalExerciseName = React.useMemo(() => {
     const exerciseNames: string[] = [];
 
@@ -102,6 +105,9 @@ const ExerciseCard = ({groupedExercise}: IExerciseCardProps): JSX.Element => {
     return undefined;
   }, [nextIncompleteExercise]);
 
+  /**
+   * Sends an exercise toggle complete request
+   */
   const handleToggleComplete = React.useCallback(
     (exercise: ITrainable, parentExerciseId?: string) => {
       toggleComplete(exercise, parentExerciseId);

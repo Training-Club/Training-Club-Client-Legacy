@@ -41,7 +41,7 @@ const ExerciseCard = ({groupedExercise}: IExerciseCardProps): JSX.Element => {
     removeGroupedExercise,
   } = useExerciseContext();
 
-  const snapPoints = React.useMemo(() => ['90%'], []);
+  const snapPoints = React.useMemo(() => ['50%', '90%'], []);
 
   const bgColor = useColorModeValue(
     'core.backgroundHighlight.light',
@@ -53,20 +53,38 @@ const ExerciseCard = ({groupedExercise}: IExerciseCardProps): JSX.Element => {
     [groupedExercise],
   );
 
-  // TODO: REFACTOR PLEASE
+  /**
+   * Builds Plate Counter Response and returns plate counter data
+   */
   const plateCounterData = React.useMemo(() => {
-    return nextIncompleteExercise &&
-      (nextIncompleteExercise.type === ExerciseType.WEIGHTED_TIME ||
-        nextIncompleteExercise.type === ExerciseType.WEIGHTED_REPS) &&
-      nextIncompleteExercise.values.weight
-      ? getPlateCount(
-          nextIncompleteExercise.values.weight.value,
-          nextIncompleteExercise.values.weight.measurement ??
-            MeasurementSystem.IMPERIAL,
-        )
-      : undefined;
+    if (!nextIncompleteExercise) {
+      return undefined;
+    }
+
+    if (
+      nextIncompleteExercise.type !== ExerciseType.WEIGHTED_REPS &&
+      nextIncompleteExercise.type !== ExerciseType.WEIGHTED_TIME
+    ) {
+      return undefined;
+    }
+
+    if (
+      !nextIncompleteExercise.values.weight ||
+      !nextIncompleteExercise.values.weight.plateCounterEnabled ||
+      !nextIncompleteExercise.values.weight.measurement
+    ) {
+      return undefined;
+    }
+
+    return getPlateCount(
+      nextIncompleteExercise.values.weight.value,
+      nextIncompleteExercise.values.weight.measurement,
+    );
   }, [nextIncompleteExercise]);
 
+  /**
+   * Returns a comma separated list of additional exercise names
+   */
   const additionalExerciseName = React.useMemo(() => {
     const exerciseNames: string[] = [];
 
@@ -87,6 +105,9 @@ const ExerciseCard = ({groupedExercise}: IExerciseCardProps): JSX.Element => {
     return undefined;
   }, [nextIncompleteExercise]);
 
+  /**
+   * Sends an exercise toggle complete request
+   */
   const handleToggleComplete = React.useCallback(
     (exercise: ITrainable, parentExerciseId?: string) => {
       toggleComplete(exercise, parentExerciseId);

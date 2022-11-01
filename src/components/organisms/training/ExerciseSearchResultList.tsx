@@ -77,9 +77,7 @@ const ExerciseSearchResultList = ({
               key={`esr-${i}`}
               title={exercise.name}
               subtitle={
-                exercise.exerciseEquipment
-                  ? Capitalize(exercise.exerciseEquipment)
-                  : undefined
+                exercise.equipment ? Capitalize(exercise.equipment) : undefined
               }
               onPress={() => onPress(exercise)}
               leftContent={LeftContent(exercise)}

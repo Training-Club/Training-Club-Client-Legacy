@@ -70,7 +70,7 @@ export type ExerciseInfo = {
   type: ExerciseType;
   verified?: boolean;
   muscleGroups?: MuscleGroup[];
-  exerciseEquipment?: ExerciseEquipment;
+  equipment?: ExerciseEquipment;
 };
 
 export type GroupedExercise = {

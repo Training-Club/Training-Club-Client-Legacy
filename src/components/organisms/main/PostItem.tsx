@@ -1,14 +1,14 @@
 import React from 'react';
-import {IContentItem} from '../../../models/Content';
 import {Dimensions} from 'react-native';
 import {PostActionStack} from '../../molecules/main/post/PostActionStack';
 import {PostAuthorDetails} from '../../atoms/main/home/post/PostAuthorDetails';
 import {PostCarousel} from '../../molecules/main/post/PostCarousel';
 import {PostScrollIndicator} from '../../molecules/main/post/PostScrollIndicator';
 import {PostContentWrapper} from '../../atoms/main/home/post/PostContentWrapper';
-import {Box, IBoxProps} from 'native-base';
 import {ITrainingSession} from '../../../models/Training';
 import {ILocation} from '../../../models/Location';
+import {IContentItem} from '../../../models/Content';
+import {Box, IBoxProps} from 'native-base';
 
 interface IPostItemProps {
   content: IContentItem[];
@@ -84,7 +84,7 @@ export const PostItem = ({
   );
 
   return (
-    <Box w={'100%'} h={width * 1.33} borderRadius={12} shadow={6} {...style}>
+    <Box w={'100%'} h={width * 1.33} borderRadius={12} {...style}>
       <PostAuthorDetails
         username={'john'}
         avatarUri={'https://source.unsplash.com/random/?strong,man'}

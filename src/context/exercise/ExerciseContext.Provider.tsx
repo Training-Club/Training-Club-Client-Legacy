@@ -248,6 +248,55 @@ export function ExerciseContextProvider({
   );
 
   /**
+   * Toggles time in milliseconds for an entire grouped exercise
+   *
+   * This function will iterate and update every exercise in the
+   * Grouped Exercise instance
+   *
+   * TODO: REFACTOR PLEASE
+   *
+   * @param {GroupedExercise} groupedExercise Grouped Exercise to iterate over
+   * @param {DistanceMeasurement} value Value to set measurement to
+   */
+
+  /**
+   * Toggles the plate counter enabled/disabled for the entire grouped exercise
+   *
+   * This function will iterate and update every exercise in the
+   * Grouped Exercise instance
+   *
+   * TODO: REFACTOR PLEASE
+   *
+   * @param {GroupedExercise} groupedExercise Grouped Exercise to iterate over
+   */
+  const togglePlateCounter = React.useCallback(
+    (groupedExercise: GroupedExercise) => {
+      requestAnimationFrame(() => {
+        setExercises(prevState => {
+          return prevState.map(prevExercise =>
+            groupedExercise.exercises.find(ge => ge.id !== prevExercise.id)
+              ? prevExercise
+              : {
+                  ...prevExercise,
+                  values: {
+                    ...prevExercise.values,
+                    weight: {
+                      measurement: prevExercise.values.weight?.measurement,
+                      value: prevExercise.values.weight?.value ?? 0,
+                      plateCounterEnabled:
+                        !prevExercise.values.weight?.plateCounterEnabled ??
+                        true,
+                    },
+                  },
+                },
+          );
+        });
+      });
+    },
+    [],
+  );
+
+  /**
    * Toggles the provided exercise's completion state and sets it in state
    * @param exercise
    */
@@ -338,6 +387,7 @@ export function ExerciseContextProvider({
           e: GroupedExercise,
           m: DistanceMeasurement,
         ) => toggleDistanceMeasurement(e, m),
+        togglePlateCounter: (e: GroupedExercise) => togglePlateCounter(e),
         addExercise: (e: IExercise) => addExercise(e),
         removeGroupedExercise: (e: GroupedExercise) => removeGroupedExercise(e),
         setAdditionalField: (

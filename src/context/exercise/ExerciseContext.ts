@@ -28,6 +28,8 @@ export interface IExerciseContext {
     value: DistanceMeasurement,
   ) => void;
 
+  togglePlateCounter: (exercise: GroupedExercise) => void;
+
   setAdditionalField: (
     fieldName: string,
     additionalExercise: IAdditionalExercise,
@@ -46,6 +48,7 @@ export const ExerciseContext = React.createContext<IExerciseContext>({
   toggleComplete: () => {},
   toggleMilliseconds: () => {},
   toggleDistanceMeasurement: () => {},
+  togglePlateCounter: () => {},
   toggleMeasurement: () => {},
   addExercise: () => {},
   removeGroupedExercise: () => {},

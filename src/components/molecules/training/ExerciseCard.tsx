@@ -37,6 +37,7 @@ const ExerciseCard = ({groupedExercise}: IExerciseCardProps): JSX.Element => {
     toggleDistanceMeasurement,
     toggleMeasurement,
     toggleMilliseconds,
+    togglePlateCounter,
     removeSet,
     removeGroupedExercise,
   } = useExerciseContext();
@@ -182,6 +183,17 @@ const ExerciseCard = ({groupedExercise}: IExerciseCardProps): JSX.Element => {
   );
 
   /**
+   * Sends a plate counter toggle request for the entire grouped exercise array
+   */
+  const handlePlateCounterToggle = React.useCallback(() => {
+    togglePlateCounter(groupedExercise);
+
+    if (actionSheetRef && actionSheetRef.current) {
+      actionSheetRef.current.close();
+    }
+  }, [actionSheetRef, groupedExercise, togglePlateCounter]);
+
+  /**
    * Send measurement toggle request for the entire grouped exercise array
    */
   const handleToggleMeasurement = React.useCallback(
@@ -229,6 +241,7 @@ const ExerciseCard = ({groupedExercise}: IExerciseCardProps): JSX.Element => {
           onRemoveExercise={handleRemoveGroupedExercise}
           onUpdateDistance={handleToggleDistance}
           onUpdateMeasurement={handleToggleMeasurement}
+          onPlateCounterToggle={handlePlateCounterToggle}
           onMillisecondToggle={handleToggleMilliseconds}
         />
       ),
@@ -237,6 +250,7 @@ const ExerciseCard = ({groupedExercise}: IExerciseCardProps): JSX.Element => {
     actionSheetRef,
     groupedExercise,
     handleDuplicateSet,
+    handlePlateCounterToggle,
     handleRemoveGroupedExercise,
     handleToggleDistance,
     handleToggleMeasurement,

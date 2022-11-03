@@ -4,7 +4,7 @@ import InputField from '../../atoms/design/InputField';
 import CreateExerciseEquipment from '../../organisms/training/CreateExerciseEquipment';
 import CreateExerciseType from '../../organisms/training/CreateExerciseType';
 import CreateExerciseMuscleGroup from '../../organisms/training/CreateExerciseMuscleGroup';
-import {useExerciseContext} from '../../../context/exercise/ExerciseContext';
+import useExerciseStore from '../../../store/ExerciseStore';
 import {usePushdownContext} from '../../../context/pushdown/PushdownContext';
 import {createExerciseInfo} from '../../../requests/ExerciseInfo';
 import {useNavigation} from '@react-navigation/core';
@@ -22,9 +22,8 @@ import {Box, Button, ScrollView, useColorModeValue, View} from 'native-base';
 
 const CreateExerciseScreen = (): JSX.Element => {
   const navigation = useNavigation();
-
   const {accessToken} = useAccountContext();
-  const {addExercise} = useExerciseContext();
+  const addSet = useExerciseStore(state => state.addSet);
   const {setPushdownConfig} = usePushdownContext();
 
   const [exerciseName, setExerciseName] = React.useState<string>('');
@@ -102,7 +101,7 @@ const CreateExerciseScreen = (): JSX.Element => {
       token: accessToken,
     })
       .then(() => {
-        addExercise({
+        addSet({
           id: nanoid(5),
           exerciseName: exerciseName,
           addedAt: new Date(),
@@ -142,7 +141,7 @@ const CreateExerciseScreen = (): JSX.Element => {
       });
   }, [
     accessToken,
-    addExercise,
+    addSet,
     exerciseEquipment,
     exerciseName,
     exerciseType,

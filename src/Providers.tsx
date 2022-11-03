@@ -6,7 +6,6 @@ import {NavigationContainer} from '@react-navigation/native';
 import {ActionsheetContextProvider} from './context/actionsheet/ActionsheetContext.Provider';
 import {PushdownContextProvider} from './context/pushdown/PushdownContext.Provider';
 import {SessionContextProvider} from './context/session/SessionContext.Provider';
-import {ExerciseContextProvider} from './context/exercise/ExerciseContext.Provider';
 import {ContentDraftContextProvider} from './context/content/ContentDraftContext.Provider';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
@@ -23,11 +22,9 @@ export const Providers = ({children}: IProvidersProps): JSX.Element => {
             <ActionsheetContextProvider>
               <PushdownContextProvider>
                 <SessionContextProvider>
-                  <ExerciseContextProvider>
-                    <ContentDraftContextProvider>
-                      {children}
-                    </ContentDraftContextProvider>
-                  </ExerciseContextProvider>
+                  <ContentDraftContextProvider>
+                    {children}
+                  </ContentDraftContextProvider>
                 </SessionContextProvider>
               </PushdownContextProvider>
             </ActionsheetContextProvider>

@@ -60,6 +60,7 @@ const TrainingWeightInput = ({
       setValue({
         value: asNumber,
         measurement: value.measurement,
+        plateCounterEnabled: value.plateCounterEnabled,
       });
     },
     [setValue, value],

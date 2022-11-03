@@ -3,8 +3,8 @@ import {ColorType} from 'native-base/lib/typescript/components/types';
 import TrainingRepInput from './input/TrainingRepInput';
 import TrainingDistanceInput from './input/TrainingDistanceInput';
 import TrainingWeightInput from './input/TrainingWeightInput';
-import {useExerciseContext} from '../../../context/exercise/ExerciseContext';
 import TrainingTimeInput from './input/TrainingTimeInput';
+import useExerciseStore from '../../../store/ExerciseStore';
 import {Square, useColorModeValue} from 'native-base';
 
 import {
@@ -119,7 +119,7 @@ const ParentExerciseInput = ({
   fieldType,
   performed,
 }: IParentExerciseInputProps): JSX.Element => {
-  const {setParentField} = useExerciseContext();
+  const setParentField = useExerciseStore(state => state.setParentField);
 
   const setValue = (data: any) => {
     setParentField(fieldName, exercise, data);
@@ -145,7 +145,9 @@ const AdditionalExerciseInput = ({
   fieldType,
   performed,
 }: IAdditionalExerciseInputProps): JSX.Element => {
-  const {setAdditionalField} = useExerciseContext();
+  const setAdditionalField = useExerciseStore(
+    state => state.setAdditionalField,
+  );
 
   const setValue = (data: any) => {
     setAdditionalField(fieldName, additionalExercise, parentExerciseId, data);

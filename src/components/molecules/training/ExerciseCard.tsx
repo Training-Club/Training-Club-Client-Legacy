@@ -1,5 +1,4 @@
 import React from 'react';
-import {useExerciseContext} from '../../../context/exercise/ExerciseContext';
 import DarkActionsheetTheme from '../../organisms/design/themes/DarkActionsheetTheme';
 import ExerciseOptionsActionsheet from './ExerciseOptionsActionsheet';
 import {getPlateCount} from '../../../utils/PlateCounter';
@@ -23,6 +22,7 @@ import {
   IExercise,
   ITrainable,
 } from '../../../models/Training';
+import useExerciseStore from '../../../store/ExerciseStore';
 
 interface IExerciseCardProps {
   groupedExercise: GroupedExercise;
@@ -31,16 +31,29 @@ interface IExerciseCardProps {
 const ExerciseCard = ({groupedExercise}: IExerciseCardProps): JSX.Element => {
   const {actionSheetRef, setActionSheetConfig} = useActionsheetContext();
 
-  const {
-    duplicateSet,
-    toggleComplete,
-    toggleDistanceMeasurement,
-    toggleMeasurement,
-    toggleMilliseconds,
-    togglePlateCounter,
-    removeSet,
-    removeGroupedExercise,
-  } = useExerciseContext();
+  const removeSet = useExerciseStore(state => state.removeSet);
+  const duplicateSet = useExerciseStore(state => state.duplicateSet);
+  const toggleComplete = useExerciseStore(state => state.toggleComplete);
+
+  const removeGroupedExercise = useExerciseStore(
+    state => state.removeGroupedExercise,
+  );
+
+  const toggleDistanceMeasurement = useExerciseStore(
+    state => state.toggleDistanceMeasurement,
+  );
+
+  const toggleMeasurement = useExerciseStore(
+    state => state.toggleWeightMeasurement,
+  );
+
+  const toggleMilliseconds = useExerciseStore(
+    state => state.toggleMilliseconds,
+  );
+
+  const togglePlateCounter = useExerciseStore(
+    state => state.togglePlateCounter,
+  );
 
   const snapPoints = React.useMemo(() => ['50%', '90%'], []);
 
@@ -151,6 +164,8 @@ const ExerciseCard = ({groupedExercise}: IExerciseCardProps): JSX.Element => {
       return;
     }
 
+    console.log('handleToggleMilliseconds');
+
     toggleMilliseconds(
       groupedExercise,
       !groupedExercise.exercises[0].values.time.timeRenderMillis,
@@ -170,6 +185,7 @@ const ExerciseCard = ({groupedExercise}: IExerciseCardProps): JSX.Element => {
         !groupedExercise.exercises[0].values ||
         !groupedExercise.exercises[0].values.distance
       ) {
+        console.warn('skipped because distance field null');
         return;
       }
 

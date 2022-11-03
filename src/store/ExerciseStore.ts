@@ -121,7 +121,12 @@ function setParentField(
   data: any,
 ): IExercise {
   const duplicate: IExercise = {
-    ...exercise,
+    addedAt: exercise.addedAt,
+    exerciseName: exercise.exerciseName,
+    id: exercise.id,
+    performed: exercise.performed,
+    type: exercise.type,
+    additionalExercises: exercise.additionalExercises,
     values: {
       ...exercise.values,
       [fieldName]: data,
@@ -228,7 +233,9 @@ function togglePlateCounter(
   groupedExercise: GroupedExercise,
 ): IExercise[] {
   return exercises.map(prevExercise =>
-    groupedExercise.exercises.find(ge => ge.id !== prevExercise.id)
+    groupedExercise.exercises.find(
+      ge => ge.exerciseName !== prevExercise.exerciseName,
+    )
       ? prevExercise
       : {
           ...prevExercise,
@@ -256,7 +263,9 @@ function toggleMilliseconds(
   groupedExercise: GroupedExercise,
 ): IExercise[] {
   return exercises.map(prevExercise =>
-    groupedExercise.exercises.find(ge => ge.id !== prevExercise.id)
+    groupedExercise.exercises.find(
+      ge => ge.exerciseName !== prevExercise.exerciseName,
+    )
       ? prevExercise
       : {
           ...prevExercise,
@@ -289,7 +298,9 @@ function toggleDistanceMeasurement(
   measurement: DistanceMeasurement,
 ): IExercise[] {
   return exercises.map(prevExercise =>
-    groupedExercise.exercises.find(ge => ge.id !== prevExercise.id)
+    groupedExercise.exercises.find(
+      ge => ge.exerciseName !== prevExercise.exerciseName,
+    )
       ? prevExercise
       : {
           ...prevExercise,
@@ -320,10 +331,10 @@ function toggleWeightMeasurementSystem(
   groupedExercise: GroupedExercise,
   measurement: MeasurementSystem,
 ): IExercise[] {
-  console.log(measurement);
-
   return exercises.map(prevExercise =>
-    groupedExercise.exercises.find(ge => ge.id !== prevExercise.id)
+    groupedExercise.exercises.find(
+      ge => ge.exerciseName !== prevExercise.exerciseName,
+    )
       ? prevExercise
       : {
           ...prevExercise,
@@ -331,13 +342,15 @@ function toggleWeightMeasurementSystem(
             ...prevExercise.values,
             weight: {
               measurement: measurement,
+              plateCounterEnabled:
+                prevExercise.values.weight?.plateCounterEnabled,
               value:
                 prevExercise.values.weight &&
                 prevExercise.values.weight.value &&
                 prevExercise.values.weight.measurement
                   ? getConvertedWeight(
                       prevExercise.values.weight.value,
-                      prevExercise.values.weight.measurement,
+                      measurement,
                     )
                   : 0,
             },

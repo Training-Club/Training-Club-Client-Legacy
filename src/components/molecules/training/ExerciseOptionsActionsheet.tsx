@@ -1,16 +1,16 @@
 import React from 'react';
-import {BottomSheetView} from '@gorhom/bottom-sheet';
 import {ExerciseType, GroupedExercise} from '../../../models/Training';
-import PressablePill from '../../atoms/design/PressablePill';
+import {BottomSheetView} from '@gorhom/bottom-sheet';
 import {default as MaterialIcons} from 'react-native-vector-icons/MaterialIcons';
 import {default as MaterialCommunityIcons} from 'react-native-vector-icons/MaterialCommunityIcons';
+import PressablePill from '../../atoms/design/PressablePill';
 import {getAdditionalExerciseNames} from '../../../data/Training';
 import {Capitalize} from '../../../utils/StringUtil';
 import TrainingExerciseOptionsMenuItem from '../../atoms/training/TrainingExerciseOptionsMenuItem';
 
 import {
-  DistanceMeasurement,
   getDistanceMeasurement,
+  DistanceMeasurement,
   MeasurementSystem,
 } from '../../../models/Measurement';
 

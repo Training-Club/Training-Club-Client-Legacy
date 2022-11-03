@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react';
 import {useSessionContext} from '../../../context/session/SessionContext';
-import {useExerciseContext} from '../../../context/exercise/ExerciseContext';
+import useExerciseStore from '../../../store/ExerciseStore';
 import RenameableHeader from '../../molecules/training/RenameableHeader';
 import SessionButtonStack from '../../molecules/training/SessionButtonStack';
 import ExerciseCardList from '../../organisms/training/ExerciseCardList';
@@ -15,12 +15,15 @@ import {Box, View} from 'native-base';
 
 const CurrentSessionScreen = (): JSX.Element => {
   const {draft, setDraft} = useSessionContext();
-  const {exercises} = useExerciseContext();
+  const exercises = useExerciseStore(state => state.exercises);
 
   const sessionName = draft?.sessionName ?? 'My Workout';
   const spacing = 4;
 
-  const groupedExercises: GroupedExercise[] = getAsGroupedExercises(exercises);
+  const groupedExercises: GroupedExercise[] = getAsGroupedExercises(
+    exercises ?? [],
+  );
+
   const nextIncompleteExercise: IExercise | undefined =
     getNextIncompleteExercise(exercises);
 

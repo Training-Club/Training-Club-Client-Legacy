@@ -72,6 +72,10 @@ export function getNextIncompleteExercise(
 export function getAsGroupedExercises(
   exercises: IExercise[],
 ): GroupedExercise[] {
+  if (!exercises) {
+    return [];
+  }
+
   const processedExercises: string[] = [];
   const grouped: GroupedExercise[] = [];
   const copied: IExercise[] = [...exercises];

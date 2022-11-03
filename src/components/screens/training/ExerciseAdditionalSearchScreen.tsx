@@ -1,5 +1,4 @@
 import React, {useCallback} from 'react';
-import {useExerciseContext} from '../../../context/exercise/ExerciseContext';
 import {usePushdownContext} from '../../../context/pushdown/PushdownContext';
 import {useDebounce} from 'use-debounce';
 import {getExerciseSearchResults} from '../../../requests/Training';
@@ -16,6 +15,7 @@ import TogglePillRow from '../../molecules/design/TogglePillRow';
 import TogglePill from '../../atoms/design/TogglePill';
 import ExerciseSearchResultList from '../../organisms/training/ExerciseSearchResultList';
 import AdditionalExerciseSelection from '../../molecules/training/AdditionalExerciseSelection';
+import useExerciseStore from '../../../store/ExerciseStore';
 import {Box, Icon, View, VStack} from 'native-base';
 
 import Animated, {
@@ -32,7 +32,7 @@ const ExerciseAdditionalSearchScreen = ({
   route,
 }: IExerciseAdditionalSearchScreenProps): JSX.Element => {
   const {accessToken} = useAccountContext();
-  const {addExercise} = useExerciseContext();
+  const addSet = useExerciseStore(state => state.addSet);
   const {setPushdownConfig} = usePushdownContext();
 
   const navigation = useNavigation();
@@ -113,13 +113,13 @@ const ExerciseAdditionalSearchScreen = ({
    * TODO: Remove getMockExerciseData call
    */
   const handleAddExercises = useCallback(() => {
-    addExercise(getMockExerciseData(selectedExercises));
+    addSet(getMockExerciseData(selectedExercises));
 
     navigation.navigate(
       'Training' as never,
       {screen: 'CurrentSession'} as never,
     );
-  }, [addExercise, navigation, selectedExercises]);
+  }, [addSet, navigation, selectedExercises]);
 
   /**
    * Performs an Exercise Info lookup on

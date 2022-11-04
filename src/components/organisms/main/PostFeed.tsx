@@ -29,22 +29,26 @@ const PostFeed = (): JSX.Element => {
 
   const singleImageContent: IContentItem[] = [
     {
-      destination: 'https://source.unsplash.com/random/?strong,man',
+      destination:
+        'https://media.discordapp.net/attachments/462762564133060621/1038164214994436176/IMG_0616.jpg?width=702&height=936',
       type: ContentType.IMAGE,
     },
   ];
 
   const sampleContent: IContentItem[] = [
     {
-      destination: 'https://source.unsplash.com/random/?strong,man',
+      destination:
+        'https://media.discordapp.net/attachments/462762564133060621/1038164214994436176/IMG_0616.jpg?width=702&height=936',
       type: ContentType.IMAGE,
     },
     {
-      destination: 'https://source.unsplash.com/random/?strong,man',
+      destination:
+        'https://media.discordapp.net/attachments/462762564133060621/1038164214994436176/IMG_0616.jpg?width=702&height=936',
       type: ContentType.IMAGE,
     },
     {
-      destination: 'https://source.unsplash.com/random/?strong,man',
+      destination:
+        'https://media.discordapp.net/attachments/462762564133060621/1038164214994436176/IMG_0616.jpg?width=702&height=936',
       type: ContentType.IMAGE,
     },
     {
@@ -165,16 +169,10 @@ const PostFeed = (): JSX.Element => {
         <PostItem
           content={sampleContent}
           location={sampleLocation}
+          trainingSession={sampleTrainingSession}
           attributes={{likeCount: 103, commentCount: 12, liked: true}}
         />
 
-        <PostItem
-          content={sampleContent}
-          trainingSession={sampleTrainingSession}
-          location={sampleLocation}
-        />
-
-        <PostItem content={sampleContent} />
         <PostItem content={singleImageContent} />
       </VStack>
     </Box>

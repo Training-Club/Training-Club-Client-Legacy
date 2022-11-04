@@ -45,7 +45,7 @@ const AccountDrawer = ({account, children}: IAccountDrawerProps) => {
   );
 
   const springConfig = React.useMemo(() => {
-    return {overshootClamping: true, mass: 0.8, stiffness: 100};
+    return {overshootClamping: true, mass: 0.8, stiffness: 200.0};
   }, []);
 
   const panGestureHandler =

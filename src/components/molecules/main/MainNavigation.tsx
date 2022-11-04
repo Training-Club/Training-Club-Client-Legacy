@@ -3,7 +3,7 @@ import Handle from '../../organisms/design/themes/Handle';
 import {useNavigation} from '@react-navigation/native';
 import {useActionsheetContext} from '../../../context/actionsheet/ActionsheetContext';
 import DarkActionsheetTheme from '../../organisms/design/themes/DarkActionsheetTheme';
-import {Dimensions} from 'react-native';
+import {isSmallScreen} from '../../../utils/DeviceUtil';
 import MainNavigationItem from '../../atoms/main/MainNavigationItem';
 import StartNewActionsheet from './StartNewActionsheet';
 import {Box, Center, HStack, useColorModeValue} from 'native-base';
@@ -18,8 +18,7 @@ enum MainNavigationScreen {
 const MainNavigation = (): JSX.Element => {
   const navigation = useNavigation();
   const {actionSheetRef, setActionSheetConfig} = useActionsheetContext();
-  const {width} = Dimensions.get('screen');
-  const smallDevice = width <= 375;
+  const smallDevice = isSmallScreen();
 
   const [selectedScreen, setSelectedScreen] =
     React.useState<MainNavigationScreen>(MainNavigationScreen.FEED);
@@ -33,8 +32,6 @@ const MainNavigation = (): JSX.Element => {
     'core.backgroundHighlight.light',
     'core.backgroundHighlight.dark',
   );
-
-  const borderTopColor = useColorModeValue('apple.gray.50', 'apple.gray.900');
 
   /**
    * Toggles the screen selection state to the provided parameter

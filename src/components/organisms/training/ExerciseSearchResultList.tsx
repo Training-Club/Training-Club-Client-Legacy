@@ -12,6 +12,7 @@ import {
   Icon,
   ScrollView,
   useColorModeValue,
+  View,
 } from 'native-base';
 
 interface IExerciseSearchResultListProps {
@@ -62,28 +63,32 @@ const ExerciseSearchResultList = ({
 
   return (
     <Box w={'100%'} py={2}>
-      <ScrollView w={'100%'}>
-        {options && options.showCreateExercise && (
-          <ExerciseSearchResult
-            title={'Create New Exercise'}
-            onPress={() => handleCreateNewContent()}
-            leftContent={CreateNewContent()}
-          />
-        )}
-
-        {data.map((exercise, i) => {
-          return (
+      <ScrollView w={'100%'} showsVerticalScrollIndicator={false}>
+        <View flex={1} p={0} pb={48}>
+          {options && options.showCreateExercise && (
             <ExerciseSearchResult
-              key={`esr-${i}`}
-              title={exercise.name}
-              subtitle={
-                exercise.equipment ? Capitalize(exercise.equipment) : undefined
-              }
-              onPress={() => onPress(exercise)}
-              leftContent={LeftContent(exercise)}
+              title={'Create New Exercise'}
+              onPress={() => handleCreateNewContent()}
+              leftContent={CreateNewContent()}
             />
-          );
-        })}
+          )}
+
+          {data.map((exercise, i) => {
+            return (
+              <ExerciseSearchResult
+                key={`esr-${i}`}
+                title={exercise.name}
+                subtitle={
+                  exercise.equipment
+                    ? Capitalize(exercise.equipment)
+                    : undefined
+                }
+                onPress={() => onPress(exercise)}
+                leftContent={LeftContent(exercise)}
+              />
+            );
+          })}
+        </View>
       </ScrollView>
     </Box>
   );

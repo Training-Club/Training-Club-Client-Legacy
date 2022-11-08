@@ -221,6 +221,13 @@ const FeedScreen = () => {
     [currentIndexPosition],
   );
 
+  /**
+   * Callback function that triggers when the account drawers
+   * translateX has changed.
+   *
+   * If the account drawer state has changed state will be updated and
+   * scroll views will be locked.
+   */
   const onAccountDrawerTranslate = React.useCallback(
     (translation: number) => {
       if (translation === 0) {

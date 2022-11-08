@@ -7,6 +7,7 @@ import {PostTrainingSessionCard} from './PostTrainingSessionCard';
 import {Box, HStack, ScrollView} from 'native-base';
 
 interface IPostCarouselProps {
+  scrollEnabled?: boolean;
   content: IContentItem[];
 
   currentPosition: {
@@ -26,6 +27,7 @@ interface IPostCarouselProps {
 }
 
 export const PostCarousel = ({
+  scrollEnabled,
   content,
   currentPosition,
   position,
@@ -64,6 +66,7 @@ export const PostCarousel = ({
   return (
     <Box w={'100%'} h={'100%'} testID={'post-carousel'}>
       <ScrollView
+        scrollEnabled={currentPosition.post === position.post && scrollEnabled}
         w={'100%'}
         horizontal={true}
         pagingEnabled={true}

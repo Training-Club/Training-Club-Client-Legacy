@@ -6,12 +6,14 @@ import {ILocation} from '../../../models/Location';
 import {Box, Heading, VStack} from 'native-base';
 
 export type PostFeedItem = {
+  scrollEnabled?: boolean;
   content: IContentItem[];
   location?: ILocation;
   trainingSession?: ITrainingSession;
 };
 
 interface IPostFeedProps {
+  scrollEnabled?: boolean;
   currentPosition: {
     post: number;
     index: number;
@@ -22,6 +24,7 @@ interface IPostFeedProps {
 }
 
 const PostFeed = ({
+  scrollEnabled = true,
   currentPosition,
   data,
   onIndexUpdate,
@@ -36,6 +39,7 @@ const PostFeed = ({
         {data &&
           data.map((entry, i) => (
             <PostItem
+              scrollEnabled={scrollEnabled}
               content={entry.content}
               position={{post: i}}
               location={entry.location}

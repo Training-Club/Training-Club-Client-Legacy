@@ -2,7 +2,7 @@ import React, {useRef} from 'react';
 import {ContentType, IContentItem} from '../../../../../models/Content';
 import Video from 'react-native-video';
 import {PostContentAudioControl} from './PostContentAudioControl';
-import {Image} from 'native-base';
+import {Box, Image} from 'native-base';
 
 interface IPostContentWrapperProps {
   content: IContentItem;
@@ -34,7 +34,7 @@ export const PostContentWrapper = ({
   }, [muted, setMuted]);
 
   return (
-    <>
+    <Box w={contentWidth ?? '100%'} h={'100%'}>
       {content.type === ContentType.IMAGE && (
         <Image
           key={content.destination}
@@ -56,7 +56,7 @@ export const PostContentWrapper = ({
           <Video
             ref={playerRef}
             source={{uri: content.destination}}
-            muted={muted}
+            muted={muted || currentPosition.index !== position.index}
             repeat={true}
             playWhenInactive={false}
             playInBackground={false}
@@ -75,6 +75,6 @@ export const PostContentWrapper = ({
           />
         </>
       )}
-    </>
+    </Box>
   );
 };

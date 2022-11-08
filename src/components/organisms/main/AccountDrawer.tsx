@@ -15,6 +15,7 @@ import {
 } from 'react-native-gesture-handler';
 
 import Animated, {
+  runOnJS,
   useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
@@ -23,10 +24,15 @@ import Animated, {
 
 interface IAccountDrawerProps {
   account: IAccount;
+  onTranslate: (value: number) => void;
   children: any;
 }
 
-const AccountDrawer = ({account, children}: IAccountDrawerProps) => {
+const AccountDrawer = ({
+  account,
+  onTranslate,
+  children,
+}: IAccountDrawerProps) => {
   const {accessToken} = useAccountContext();
 
   const [followerCount, setFollowerCount] = useState(0);
@@ -61,12 +67,18 @@ const AccountDrawer = ({account, children}: IAccountDrawerProps) => {
 
       onEnd: event => {
         if (event.velocityX <= minVelocityThreshold) {
-          translateX.value = withSpring(translationThreshold, springConfig);
+          translateX.value = withSpring(
+            translationThreshold,
+            springConfig,
+            () => runOnJS(onTranslate)(translateX.value),
+          );
           return;
         }
 
         if (translateX.value >= minTranslationDistance) {
-          translateX.value = withSpring(0, springConfig);
+          translateX.value = withSpring(0, springConfig, () =>
+            runOnJS(onTranslate)(translateX.value),
+          );
           return;
         }
 
@@ -74,9 +86,15 @@ const AccountDrawer = ({account, children}: IAccountDrawerProps) => {
           translateX.value < translationThreshold ||
           translateX.value + event.translationX < translationThreshold
         ) {
-          translateX.value = withSpring(translationThreshold, springConfig);
+          translateX.value = withSpring(
+            translationThreshold,
+            springConfig,
+            () => runOnJS(onTranslate)(translateX.value),
+          );
           return;
         }
+
+        runOnJS(onTranslate)(event.translationX);
       },
     });
 

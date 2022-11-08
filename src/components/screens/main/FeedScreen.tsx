@@ -24,6 +24,7 @@ const FeedScreen = () => {
   const {account} = useAccountContext();
   const [currentPostPosition, setCurrentPostPosition] = React.useState(0);
   const [currentIndexPosition, setCurrentIndexPosition] = React.useState(0);
+  const [isAccountDrawerOpen, setAccountDrawerOpen] = React.useState(false);
 
   const feedOffset = 100.0;
   const feedCardHeight = Dimensions.get('screen').width * 1.33;
@@ -220,15 +221,33 @@ const FeedScreen = () => {
     [currentIndexPosition],
   );
 
+  const onAccountDrawerTranslate = React.useCallback(
+    (translation: number) => {
+      if (translation === 0) {
+        if (isAccountDrawerOpen) {
+          setAccountDrawerOpen(false);
+        }
+
+        return;
+      }
+
+      if (!isAccountDrawerOpen) {
+        setAccountDrawerOpen(true);
+      }
+    },
+    [isAccountDrawerOpen],
+  );
+
   // TODO: Handle this properly
   if (!account) {
     return null;
   }
 
   return (
-    <AccountDrawer account={account}>
+    <AccountDrawer account={account} onTranslate={onAccountDrawerTranslate}>
       <View px={2} w={'100%'}>
         <ScrollView
+          scrollEnabled={!isAccountDrawerOpen}
           w={'100%'}
           h={'100%'}
           shadow={6}
@@ -243,6 +262,7 @@ const FeedScreen = () => {
           )}
 
           <PostFeed
+            scrollEnabled={!isAccountDrawerOpen}
             currentPosition={{
               post: currentPostPosition,
               index: currentIndexPosition,

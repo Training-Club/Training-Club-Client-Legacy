@@ -11,6 +11,7 @@ import {IContentItem} from '../../../models/Content';
 import {Box, IBoxProps} from 'native-base';
 
 interface IPostItemProps {
+  scrollEnabled?: boolean;
   content: IContentItem[];
 
   currentPosition: {
@@ -36,6 +37,7 @@ interface IPostItemProps {
 }
 
 export const PostItem = ({
+  scrollEnabled,
   content,
   currentPosition,
   position,
@@ -129,6 +131,7 @@ export const PostItem = ({
           />
 
           <PostCarousel
+            scrollEnabled={scrollEnabled}
             currentPosition={currentPosition}
             position={{post: position.post, index: index}}
             content={content}

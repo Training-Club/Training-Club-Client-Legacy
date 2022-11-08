@@ -6,11 +6,24 @@ import {Image} from 'native-base';
 
 interface IPostContentWrapperProps {
   content: IContentItem;
+
+  currentPosition: {
+    post: number;
+    index: number;
+  };
+
+  position: {
+    post: number;
+    index: number;
+  };
+
   contentWidth?: number;
 }
 
 export const PostContentWrapper = ({
   content,
+  currentPosition,
+  position,
   contentWidth,
 }: IPostContentWrapperProps): JSX.Element => {
   const [muted, setMuted] = React.useState(true);
@@ -47,6 +60,10 @@ export const PostContentWrapper = ({
             repeat={true}
             playWhenInactive={false}
             playInBackground={false}
+            paused={
+              currentPosition.post !== position.post ||
+              currentPosition.index !== position.index
+            }
             resizeMode={'cover'}
             onBuffer={data => console.info(`buffering: ${data.isBuffering}`)}
             onError={err => console.warn(err.error)}

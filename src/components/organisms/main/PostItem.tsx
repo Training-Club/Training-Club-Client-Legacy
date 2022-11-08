@@ -12,8 +12,19 @@ import {Box, IBoxProps} from 'native-base';
 
 interface IPostItemProps {
   content: IContentItem[];
+
+  currentPosition: {
+    post: number;
+    index: number;
+  };
+
+  position: {
+    post: number;
+  };
+
   trainingSession?: ITrainingSession;
   location?: ILocation;
+  onIndexUpdate?: (page: number) => void;
 
   attributes?: {
     liked?: boolean;
@@ -26,8 +37,11 @@ interface IPostItemProps {
 
 export const PostItem = ({
   content,
+  currentPosition,
+  position,
   trainingSession,
   location,
+  onIndexUpdate,
   attributes,
   style,
 }: IPostItemProps): JSX.Element => {
@@ -79,8 +93,12 @@ export const PostItem = ({
       }
 
       setIndex(i);
+
+      if (onIndexUpdate) {
+        onIndexUpdate(i);
+      }
     },
-    [index],
+    [index, onIndexUpdate],
   );
 
   return (
@@ -111,6 +129,8 @@ export const PostItem = ({
           />
 
           <PostCarousel
+            currentPosition={currentPosition}
+            position={{post: position.post, index: index}}
             content={content}
             trainingSession={trainingSession}
             location={location}
@@ -120,7 +140,13 @@ export const PostItem = ({
         </>
       )}
 
-      {!isAlbum() && <PostContentWrapper content={content[0]} />}
+      {!isAlbum() && (
+        <PostContentWrapper
+          content={content[0]}
+          currentPosition={currentPosition}
+          position={{post: position.post, index: index}}
+        />
+      )}
     </Box>
   );
 };

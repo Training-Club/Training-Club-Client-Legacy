@@ -8,6 +8,17 @@ import {Box, HStack, ScrollView} from 'native-base';
 
 interface IPostCarouselProps {
   content: IContentItem[];
+
+  currentPosition: {
+    post: number;
+    index: number;
+  };
+
+  position: {
+    post: number;
+    index: number;
+  };
+
   trainingSession?: ITrainingSession;
   location?: ILocation;
   contentWidth: number;
@@ -16,6 +27,8 @@ interface IPostCarouselProps {
 
 export const PostCarousel = ({
   content,
+  currentPosition,
+  position,
   trainingSession,
   location,
   contentWidth,
@@ -72,9 +85,11 @@ export const PostCarousel = ({
           onIndexChange(getCurrentPage(e.nativeEvent.contentOffset.x))
         }>
         <HStack space={spacing} h={'100%'} ml={spacing}>
-          {content.map((contentItem, index) => (
+          {content.map((contentItem, i) => (
             <PostContentWrapper
-              key={contentItem.destination + index}
+              currentPosition={currentPosition}
+              position={position}
+              key={contentItem.destination + i}
               content={contentItem}
               contentWidth={adjustedWidth - content.length * spacing + 0.1}
             />

@@ -65,7 +65,6 @@ export const PostContentWrapper = ({
               currentPosition.index !== position.index
             }
             resizeMode={'cover'}
-            onBuffer={data => console.info(`buffering: ${data.isBuffering}`)}
             onError={err => console.warn(err.error)}
             style={{
               width: contentWidth ?? '100%',

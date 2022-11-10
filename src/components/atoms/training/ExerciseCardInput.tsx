@@ -322,4 +322,30 @@ const ExerciseCardInput = ({
   );
 };
 
-export default ExerciseCardInput;
+const propsAreEqual = (
+  prevProps: Readonly<IExerciseCardInputProps>,
+  nextProps: Readonly<IExerciseCardInputProps>,
+): boolean => {
+  if (prevProps.onDeleteSet !== nextProps.onDeleteSet) {
+    return false;
+  }
+
+  if (prevProps.onToggleComplete !== nextProps.onToggleComplete) {
+    return false;
+  }
+
+  if (prevProps.index !== nextProps.index) {
+    return false;
+  }
+
+  const prevString = JSON.stringify(prevProps);
+  const nextString = JSON.stringify(nextProps);
+
+  if (prevString !== nextString) {
+    return false;
+  }
+
+  return true;
+};
+
+export default React.memo(ExerciseCardInput, propsAreEqual);

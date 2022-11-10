@@ -161,19 +161,4 @@ const TrainingDistanceInput = ({
   );
 };
 
-const propsAreEqual = (
-  prevProps: Readonly<ITrainingInputProps<IExerciseValueDistance | undefined>>,
-  nextProps: Readonly<ITrainingInputProps<IExerciseValueDistance | undefined>>,
-) => {
-  if (prevProps.performed !== nextProps.performed) {
-    return false;
-  }
-
-  if (prevProps.value !== nextProps.value) {
-    return false;
-  }
-
-  return true;
-};
-
-export default React.memo(TrainingDistanceInput, propsAreEqual);
+export default TrainingDistanceInput;

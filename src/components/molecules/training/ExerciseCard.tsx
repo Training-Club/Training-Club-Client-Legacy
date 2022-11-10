@@ -30,7 +30,6 @@ interface IExerciseCardProps {
 
 const ExerciseCard = ({groupedExercise}: IExerciseCardProps): JSX.Element => {
   const {actionSheetRef, setActionSheetConfig} = useActionsheetContext();
-
   const removeSet = useExerciseStore(state => state.removeSet);
   const duplicateSet = useExerciseStore(state => state.duplicateSet);
   const toggleComplete = useExerciseStore(state => state.toggleComplete);
@@ -163,8 +162,6 @@ const ExerciseCard = ({groupedExercise}: IExerciseCardProps): JSX.Element => {
     ) {
       return;
     }
-
-    console.log('handleToggleMilliseconds');
 
     toggleMilliseconds(
       groupedExercise,
@@ -314,4 +311,34 @@ const ExerciseCard = ({groupedExercise}: IExerciseCardProps): JSX.Element => {
   );
 };
 
-export default React.memo(ExerciseCard);
+const propsAreEqual = (
+  prevProps: Readonly<IExerciseCardProps>,
+  nextProps: Readonly<IExerciseCardProps>,
+): boolean => {
+  if (prevProps.groupedExercise.name !== nextProps.groupedExercise.name) {
+    return false;
+  }
+
+  if (
+    prevProps.groupedExercise.exercises.length !==
+    nextProps.groupedExercise.exercises.length
+  ) {
+    return false;
+  }
+
+  for (let i = 0; i < prevProps.groupedExercise.exercises.length; i++) {
+    const prevExercise = prevProps.groupedExercise.exercises[i];
+    const nextExercise = nextProps.groupedExercise.exercises[i];
+
+    const prevString = JSON.stringify(prevExercise);
+    const nextString = JSON.stringify(nextExercise);
+
+    if (prevString !== nextString) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
+export default React.memo(ExerciseCard, propsAreEqual);

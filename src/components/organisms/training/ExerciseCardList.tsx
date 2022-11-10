@@ -47,4 +47,4 @@ const ExerciseCardList = ({
   );
 };
 
-export default React.memo(ExerciseCardList);
+export default ExerciseCardList;

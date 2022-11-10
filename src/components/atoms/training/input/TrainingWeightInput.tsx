@@ -161,19 +161,4 @@ const TrainingWeightInput = ({
   );
 };
 
-const propsAreEqual = (
-  prevProps: Readonly<ITrainingInputProps<IExerciseValueWeight | undefined>>,
-  nextProps: ITrainingInputProps<IExerciseValueWeight | undefined>,
-) => {
-  if (prevProps.value !== nextProps.value) {
-    return false;
-  }
-
-  if (prevProps.performed !== nextProps.performed) {
-    return false;
-  }
-
-  return true;
-};
-
-export default React.memo(TrainingWeightInput, propsAreEqual);
+export default TrainingWeightInput;

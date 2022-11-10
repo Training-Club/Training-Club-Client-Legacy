@@ -39,7 +39,7 @@ const TrainingCheckbox = ({
       }}
       _icon={{
         as: MaterialIcons,
-        name: performed ? 'check-circle' : 'circle',
+        name: performed ? 'check-circle' : 'radio-button-unchecked',
         size: 7,
         color: performed ? setColor : unsetColor,
       }}

@@ -56,7 +56,7 @@ const RenameableHeader = ({
       justifyContent={'space-between'}>
       <Input
         variant={'unstyled'}
-        size={'2xl'}
+        fontSize={24}
         fontWeight={'bold'}
         color={textColor}
         w={'100%'}

@@ -57,4 +57,4 @@ const ExerciseCardFooter = ({
   );
 };
 
-export default React.memo(ExerciseCardFooter);
+export default ExerciseCardFooter;

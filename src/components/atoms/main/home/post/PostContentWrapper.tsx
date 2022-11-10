@@ -2,15 +2,28 @@ import React, {useRef} from 'react';
 import {ContentType, IContentItem} from '../../../../../models/Content';
 import Video from 'react-native-video';
 import {PostContentAudioControl} from './PostContentAudioControl';
-import {Image} from 'native-base';
+import {Box, Image} from 'native-base';
 
 interface IPostContentWrapperProps {
   content: IContentItem;
+
+  currentPosition: {
+    post: number;
+    index: number;
+  };
+
+  position: {
+    post: number;
+    index: number;
+  };
+
   contentWidth?: number;
 }
 
 export const PostContentWrapper = ({
   content,
+  currentPosition,
+  position,
   contentWidth,
 }: IPostContentWrapperProps): JSX.Element => {
   const [muted, setMuted] = React.useState(true);
@@ -21,7 +34,7 @@ export const PostContentWrapper = ({
   }, [muted, setMuted]);
 
   return (
-    <>
+    <Box w={contentWidth ?? '100%'} h={'100%'}>
       {content.type === ContentType.IMAGE && (
         <Image
           key={content.destination}
@@ -43,12 +56,15 @@ export const PostContentWrapper = ({
           <Video
             ref={playerRef}
             source={{uri: content.destination}}
-            muted={muted}
+            muted={muted || currentPosition.index !== position.index}
             repeat={true}
             playWhenInactive={false}
             playInBackground={false}
+            paused={
+              currentPosition.post !== position.post ||
+              currentPosition.index !== position.index
+            }
             resizeMode={'cover'}
-            onBuffer={data => console.info(`buffering: ${data.isBuffering}`)}
             onError={err => console.warn(err.error)}
             style={{
               width: contentWidth ?? '100%',
@@ -58,6 +74,6 @@ export const PostContentWrapper = ({
           />
         </>
       )}
-    </>
+    </Box>
   );
 };

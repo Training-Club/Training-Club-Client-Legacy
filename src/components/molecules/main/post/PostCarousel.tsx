@@ -7,7 +7,19 @@ import {PostTrainingSessionCard} from './PostTrainingSessionCard';
 import {Box, HStack, ScrollView} from 'native-base';
 
 interface IPostCarouselProps {
+  scrollEnabled?: boolean;
   content: IContentItem[];
+
+  currentPosition: {
+    post: number;
+    index: number;
+  };
+
+  position: {
+    post: number;
+    index: number;
+  };
+
   trainingSession?: ITrainingSession;
   location?: ILocation;
   contentWidth: number;
@@ -15,7 +27,10 @@ interface IPostCarouselProps {
 }
 
 export const PostCarousel = ({
+  scrollEnabled,
   content,
+  currentPosition,
+  position,
   trainingSession,
   location,
   contentWidth,
@@ -51,6 +66,7 @@ export const PostCarousel = ({
   return (
     <Box w={'100%'} h={'100%'} testID={'post-carousel'}>
       <ScrollView
+        scrollEnabled={currentPosition.post === position.post && scrollEnabled}
         w={'100%'}
         horizontal={true}
         pagingEnabled={true}
@@ -72,9 +88,11 @@ export const PostCarousel = ({
           onIndexChange(getCurrentPage(e.nativeEvent.contentOffset.x))
         }>
         <HStack space={spacing} h={'100%'} ml={spacing}>
-          {content.map((contentItem, index) => (
+          {content.map((contentItem, i) => (
             <PostContentWrapper
-              key={contentItem.destination + index}
+              currentPosition={currentPosition}
+              position={position}
+              key={contentItem.destination + i}
               content={contentItem}
               contentWidth={adjustedWidth - content.length * spacing + 0.1}
             />

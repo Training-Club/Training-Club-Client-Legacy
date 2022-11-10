@@ -59,15 +59,4 @@ const TrainingRepInput = ({
   );
 };
 
-const propsAreEqual = (
-  prevProps: Readonly<ITrainingInputProps<number>>,
-  nextProps: Readonly<ITrainingInputProps<number>>,
-): boolean => {
-  if (prevProps.performed !== nextProps.performed) {
-    return false;
-  }
-
-  return prevProps.value === nextProps.value;
-};
-
-export default React.memo(TrainingRepInput, propsAreEqual);
+export default TrainingRepInput;

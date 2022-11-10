@@ -78,6 +78,9 @@ describe('Post Item ->', () => {
       <NativeBaseProvider initialWindowMetrics={inset} theme={theme()}>
         <NavigationContainer>
           <PostCarousel
+            position={{post: 0, index: 0}}
+            currentPosition={{post: 0, index: 0}}
+            scrollEnabled={true}
             content={content}
             contentWidth={300}
             onIndexChange={jest.fn()}

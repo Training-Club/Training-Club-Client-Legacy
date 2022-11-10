@@ -1,4 +1,5 @@
 import 'react-native-gesture-handler/jestSetup';
+import mockRNDeviceInfo from 'react-native-device-info/jest/react-native-device-info-mock';
 
 jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper');
 jest.mock('react-native-reanimated', () => {
@@ -10,3 +11,5 @@ jest.mock('react-native-reanimated', () => {
 
   return Reanimated;
 });
+
+jest.mock('react-native-device-info', () => mockRNDeviceInfo);

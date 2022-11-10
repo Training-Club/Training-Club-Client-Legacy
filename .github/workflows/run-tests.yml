@@ -7,9 +7,6 @@ on:
       - 'beta'
       - 'release'
   pull_request:
-    branches:
-      - 'feature/**'
-      - 'bug/**'
 
 # This allows a subsequently queued workflow run to interrupt previous runs
 concurrency:

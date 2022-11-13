@@ -52,16 +52,6 @@ const FeedScreen = () => {
     },
     {
       destination:
-        'https://media.discordapp.net/attachments/462762564133060621/1038164214994436176/IMG_0616.jpg?width=702&height=936',
-      type: ContentType.IMAGE,
-    },
-    {
-      destination:
-        'https://media.discordapp.net/attachments/462762564133060621/1038164214994436176/IMG_0616.jpg?width=702&height=936',
-      type: ContentType.IMAGE,
-    },
-    {
-      destination:
         'https://cdn.discordapp.com/attachments/481691188739702797/1035019561021481072/RPReplay_Final1663101410.mov',
       type: ContentType.VIDEO,
     },
@@ -169,16 +159,6 @@ const FeedScreen = () => {
   };
 
   const samplePosts: PostFeedItem[] = [
-    {
-      content: sampleContent,
-      trainingSession: sampleTrainingSession,
-      location: sampleLocation,
-    },
-    {
-      content: sampleContent,
-      trainingSession: sampleTrainingSession,
-      location: sampleLocation,
-    },
     {
       content: sampleContent,
       trainingSession: sampleTrainingSession,

@@ -6,6 +6,11 @@ type BasicAccount = {
   profile: IProfile;
 };
 
+export type GetAccountWithRefreshTokenResponse = {
+  account: IAccount;
+  accessToken: string;
+};
+
 export type GetAccountResponse = {
   id: string;
   username: string;

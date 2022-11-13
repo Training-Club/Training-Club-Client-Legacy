@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {IAccount} from '../../models/Account';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {AccountContext} from './AccountContext';
-import {getRefreshToken} from '../../data/Account';
+import {getRefreshToken, handleAccountLoad} from '../../data/Account';
 import {requestRefreshedToken} from '../../requests/Account';
 import {useNavigation} from '@react-navigation/native';
 
@@ -14,7 +14,6 @@ export function AccountContextProvider({
   children,
 }: IAccountContextProviderProps) {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
-
   const [account, setAccount] = useState<IAccount | undefined>(undefined);
   const [accessToken, setAccessToken] = useState<string | undefined>(undefined);
   const [fetching, setFetching] = useState(true);
@@ -46,7 +45,22 @@ export function AccountContextProvider({
 
   React.useEffect(() => {
     if (initialLoad || !accessToken) {
-      return;
+      handleAccountLoad()
+        .then(response => {
+          if (response.accessToken && response.accessToken !== accessToken) {
+            setAccessToken(response.accessToken);
+          }
+
+          if (response.account && response.account.id !== account?.id) {
+            setAccount(response.account);
+            navigation.navigate('Main', {screen: 'Feed'});
+          }
+        })
+        .catch(err => {
+          console.error(err);
+        });
+
+      setInitialLoad(false);
     }
 
     const interval = setInterval(() => {
@@ -54,7 +68,7 @@ export function AccountContextProvider({
     }, 300 * 1000);
 
     return () => clearInterval(interval);
-  }, [accessToken, handleTokenRefresh, initialLoad]);
+  }, [accessToken, account?.id, handleTokenRefresh, initialLoad, navigation]);
 
   return (
     <AccountContext.Provider

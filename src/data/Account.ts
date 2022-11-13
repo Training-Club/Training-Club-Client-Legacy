@@ -1,6 +1,11 @@
 import {deleteItem, readItem, writeItem} from '../utils/storage/StorageUtil';
 import {IAccount} from '../models/Account';
-import {attemptLoginWithToken} from '../requests/Account';
+import {GetAccountWithRefreshTokenResponse} from '../requests/responses/Account';
+
+import {
+  attemptLoginWithToken,
+  requestRefreshedToken,
+} from '../requests/Account';
 
 const TOKEN_COLLECTION_NAME = 'tokens';
 const REFRESH_TOKEN_NAME = 'refreshToken';
@@ -39,19 +44,23 @@ export async function deleteRefreshToken() {
  * to the authentication services and if an account is authorized with the
  * provided token the promise will return an IAccount result.
  */
-export async function handleAccountLoad(): Promise<IAccount> {
-  return new Promise<IAccount>(async (resolve, reject) => {
-    const token: string | null = await getRefreshToken();
+export async function handleAccountLoad(): Promise<GetAccountWithRefreshTokenResponse> {
+  return new Promise<GetAccountWithRefreshTokenResponse>(
+    async (resolve, reject) => {
+      const token: string | null = await getRefreshToken();
 
-    if (!token) {
-      return reject(new Error('No token stored on this device'));
-    }
+      if (!token) {
+        return reject(new Error('No refresh token stored on this device'));
+      }
 
-    try {
-      const account: IAccount = await attemptLoginWithToken(token);
-      return resolve(account);
-    } catch (err) {
-      return reject(err);
-    }
-  });
+      const accessToken = await requestRefreshedToken(token);
+
+      try {
+        const account: IAccount = await attemptLoginWithToken(accessToken);
+        return resolve({account, accessToken});
+      } catch (err) {
+        return reject(err);
+      }
+    },
+  );
 }

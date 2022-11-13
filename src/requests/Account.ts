@@ -31,7 +31,7 @@ export async function attemptLoginWithToken(token: string): Promise<IAccount> {
 
       return resolve(result.data);
     } catch (err) {
-      reject(new Error('account not found'));
+      reject(err);
     }
   });
 }

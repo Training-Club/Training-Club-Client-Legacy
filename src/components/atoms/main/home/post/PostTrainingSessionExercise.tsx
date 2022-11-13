@@ -75,11 +75,8 @@ export const PostTrainingSessionExercise = ({
 
       <VStack space={2}>
         {groupedExercise.exercises.map((exercise, i) => (
-          <Box w={'100%'}>
-            <HStack
-              key={exercise.id}
-              w={'100%'}
-              justifyContent={'space-between'}>
+          <Box w={'100%'} key={exercise.id}>
+            <HStack w={'100%'} justifyContent={'space-between'}>
               <Box w={'33%'}>
                 <Text fontWeight={'semibold'}>{`Set ${i + 1}`}</Text>
               </Box>
@@ -222,7 +219,7 @@ export const PostTrainingSessionExercise = ({
                   {(additionalExercise.type === ExerciseType.TIME ||
                     additionalExercise.type === ExerciseType.WEIGHTED_TIME ||
                     additionalExercise.type === ExerciseType.DISTANCE_TIME) && (
-                    <Box w={'33%'} h={'24px'} bgColor={'orange.500'} />
+                    <Box w={'33%'} h={'24px'} />
                   )}
                 </HStack>
               ))}

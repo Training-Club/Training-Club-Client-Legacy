@@ -27,7 +27,6 @@ const Stack = createStackNavigator();
 const Navigation = () => {
   const {account} = useAccountContext();
   const {colorMode} = useColorMode();
-
   const initialStack = account ? 'Main' : 'Auth';
 
   const globalScreenOptions: StackNavigationOptions = {

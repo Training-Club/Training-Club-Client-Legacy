@@ -4,6 +4,7 @@ import GreetingText from '../../atoms/main/home/GreetingText';
 import useAccountStore from '../../../store/AccountStore';
 import AccountDrawer from '../../organisms/main/AccountDrawer';
 import PostFeed, {PostFeedItem} from '../../organisms/main/PostFeed';
+import {useNavigation} from '@react-navigation/native';
 import {ILocation} from '../../../models/Location';
 import {ContentType, IContentItem} from '../../../models/Content';
 import {HStack, ScrollView, View, useColorModeValue} from 'native-base';
@@ -22,9 +23,10 @@ import {
 
 const FeedScreen = () => {
   const account = useAccountStore(state => state.account);
+  const navigation = useNavigation();
   const [currentPostPosition, setCurrentPostPosition] = React.useState(0);
   const [currentIndexPosition, setCurrentIndexPosition] = React.useState(0);
-  const [isAccountDrawerOpen, setAccountDrawerOpen] = React.useState(false);
+  const [isSuspended, setSuspended] = React.useState(false);
 
   const feedOffset = 100.0;
   const feedCardHeight = Dimensions.get('screen').width * 1.33;
@@ -211,19 +213,41 @@ const FeedScreen = () => {
   const onAccountDrawerTranslate = React.useCallback(
     (translation: number) => {
       if (translation === 0) {
-        if (isAccountDrawerOpen) {
-          setAccountDrawerOpen(false);
+        if (isSuspended) {
+          setSuspended(false);
         }
 
         return;
       }
 
-      if (!isAccountDrawerOpen) {
-        setAccountDrawerOpen(true);
+      if (!isSuspended) {
+        setSuspended(true);
       }
     },
-    [isAccountDrawerOpen],
+    [isSuspended],
   );
+
+  /**
+   * Suspend content when screen is unfocused
+   */
+  React.useEffect(() => {
+    const listener = navigation.addListener('blur', () => {
+      setSuspended(true);
+    });
+
+    return listener;
+  }, [navigation]);
+
+  /**
+   * Unsuspended content when screen is remounted
+   */
+  React.useEffect(() => {
+    const listener = navigation.addListener('focus', () => {
+      setSuspended(false);
+    });
+
+    return listener;
+  }, [navigation]);
 
   // TODO: Handle this properly
   if (!account) {
@@ -234,7 +258,7 @@ const FeedScreen = () => {
     <AccountDrawer account={account} onTranslate={onAccountDrawerTranslate}>
       <View px={2} w={'100%'}>
         <ScrollView
-          scrollEnabled={!isAccountDrawerOpen}
+          scrollEnabled={!isSuspended}
           w={'100%'}
           h={'100%'}
           shadow={6}
@@ -249,7 +273,7 @@ const FeedScreen = () => {
           )}
 
           <PostFeed
-            scrollEnabled={!isAccountDrawerOpen}
+            scrollEnabled={!isSuspended}
             currentPosition={{
               post: currentPostPosition,
               index: currentIndexPosition,

@@ -145,6 +145,7 @@ export const PostItem = ({
 
       {!isAlbum() && (
         <PostContentWrapper
+          paused={!scrollEnabled}
           content={content[0]}
           currentPosition={currentPosition}
           position={{post: position.post, index: index}}

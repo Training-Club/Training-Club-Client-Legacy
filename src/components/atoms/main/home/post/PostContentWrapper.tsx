@@ -6,6 +6,7 @@ import {Box, Image} from 'native-base';
 
 interface IPostContentWrapperProps {
   content: IContentItem;
+  paused?: boolean;
 
   currentPosition: {
     post: number;
@@ -22,6 +23,7 @@ interface IPostContentWrapperProps {
 
 export const PostContentWrapper = ({
   content,
+  paused,
   currentPosition,
   position,
   contentWidth,
@@ -32,6 +34,21 @@ export const PostContentWrapper = ({
   const onToggleMute = React.useCallback(() => {
     setMuted(!muted);
   }, [muted, setMuted]);
+
+  /**
+   * Seeks the content back to 0 when the pause value is set to false
+   */
+  React.useEffect(() => {
+    if (!playerRef || !playerRef.current) {
+      return;
+    }
+
+    if (paused) {
+      return;
+    }
+
+    playerRef.current.seek(0);
+  }, [paused]);
 
   return (
     <Box w={contentWidth ?? '100%'} h={'100%'}>
@@ -56,11 +73,12 @@ export const PostContentWrapper = ({
           <Video
             ref={playerRef}
             source={{uri: content.destination}}
-            muted={muted || currentPosition.index !== position.index}
+            muted={muted || paused || currentPosition.index !== position.index}
             repeat={true}
             playWhenInactive={false}
             playInBackground={false}
             paused={
+              paused ||
               currentPosition.post !== position.post ||
               currentPosition.index !== position.index
             }

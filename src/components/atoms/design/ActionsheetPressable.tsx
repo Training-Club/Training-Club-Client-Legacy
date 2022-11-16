@@ -27,6 +27,7 @@ interface IActionsheetPressableProps {
   styling?: {
     primary?: ITextProps;
     secondary?: ITextProps;
+    borderBottom?: boolean;
   };
 }
 
@@ -37,13 +38,23 @@ export const ActionsheetPressable = ({
   styling,
 }: IActionsheetPressableProps): JSX.Element => {
   const textColor = useColorModeValue('core.text.light', 'core.text.dark');
+
+  const borderBottomColor = useColorModeValue(
+    'apple.gray.50',
+    'apple.gray.800',
+  );
+
   const textMutedColor = useColorModeValue(
     'core.textMuted.light',
     'core.textMuted.dark',
   );
 
   return (
-    <Pressable onPress={onPress} py={2}>
+    <Pressable
+      onPress={onPress}
+      py={2.5}
+      borderBottomWidth={styling?.borderBottom ? 1 : 0}
+      borderBottomColor={borderBottomColor}>
       <HStack space={3}>
         {icon && (
           <Icon

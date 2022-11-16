@@ -14,12 +14,7 @@ export const ActionsheetHeading = ({
   );
 
   return (
-    <Box
-      w={'100%'}
-      borderBottomWidth={1}
-      borderBottomColor={color}
-      pb={2}
-      mb={2}>
+    <Box w={'100%'} mb={2}>
       <Heading size={'xs'} color={color}>
         {children}
       </Heading>

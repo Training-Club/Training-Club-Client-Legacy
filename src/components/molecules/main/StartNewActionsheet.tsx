@@ -6,7 +6,7 @@ import {useNavigation} from '@react-navigation/core';
 import {useActionsheetContext} from '../../../context/actionsheet/ActionsheetContext';
 import {ActionsheetHeading} from '../../atoms/design/ActionsheetHeading';
 import {ActionsheetPressable} from '../../atoms/design/ActionsheetPressable';
-import {useColorModeValue, VStack} from 'native-base';
+import {Box, useColorModeValue, VStack} from 'native-base';
 
 const StartNewActionsheet = (): JSX.Element => {
   const exercises = useExerciseStore(state => state.exercises);
@@ -15,10 +15,21 @@ const StartNewActionsheet = (): JSX.Element => {
   const navigation = useNavigation();
   const {actionSheetRef} = useActionsheetContext();
 
+  const bgColor = useColorModeValue(
+    'core.backgroundHighlight.light',
+    'core.backgroundAccent.dark',
+  );
+
   const specialTextColor = useColorModeValue(
     'apple.blue.light',
     'apple.blue.dark',
   );
+
+  const boxStyling = {
+    bgColor: bgColor,
+    px: 4,
+    borderRadius: 12,
+  };
 
   /**
    * Transitions to the current session screen and closes the actionsheet
@@ -63,60 +74,68 @@ const StartNewActionsheet = (): JSX.Element => {
 
   return (
     <BottomSheetView>
-      <VStack px={4}>
+      <Box px={4}>
         <ActionsheetHeading>Training</ActionsheetHeading>
 
-        {exercises && exercises.length > 0 && (
+        <VStack {...boxStyling}>
+          {exercises && exercises.length > 0 && (
+            <ActionsheetPressable
+              onPress={() => handleResumeSessionTransition()}
+              icon={{name: 'replay', size: 6}}
+              text={{primary: 'Resume', secondary: 'Training Session'}}
+              styling={{primary: {color: specialTextColor}, borderBottom: true}}
+            />
+          )}
+
           <ActionsheetPressable
-            onPress={() => handleResumeSessionTransition()}
-            icon={{name: 'replay', size: 6}}
-            text={{primary: 'Resume', secondary: 'Training Session'}}
-            styling={{primary: {color: specialTextColor}}}
+            onPress={() => handleNewSessionTransition()}
+            icon={{name: 'fitness-center', size: 6}}
+            text={{primary: 'Blank', secondary: 'Training Session'}}
+            styling={{borderBottom: true}}
           />
-        )}
 
-        <ActionsheetPressable
-          onPress={() => handleNewSessionTransition()}
-          icon={{name: 'fitness-center', size: 6}}
-          text={{primary: 'Blank', secondary: 'Training Session'}}
-        />
+          <ActionsheetPressable
+            onPress={() => console.log('Training Session From Template')}
+            icon={{name: 'article', size: 6}}
+            text={{primary: 'Template', secondary: 'Training Session'}}
+          />
+        </VStack>
+      </Box>
 
-        <ActionsheetPressable
-          onPress={() => console.log('Training Session From Template')}
-          icon={{name: 'article', size: 6}}
-          text={{primary: 'Template', secondary: 'Training Session'}}
-        />
-      </VStack>
-
-      <VStack px={4} mt={4}>
+      <Box px={4} mt={4}>
         <ActionsheetHeading>Diet</ActionsheetHeading>
 
-        <ActionsheetPressable
-          onPress={() => console.log('Add Food')}
-          icon={{name: 'restaurant', size: 6}}
-          text={{primary: 'Add Food'}}
-        />
+        <VStack {...boxStyling}>
+          <ActionsheetPressable
+            onPress={() => console.log('Add Food')}
+            icon={{name: 'restaurant', size: 6}}
+            text={{primary: 'Add Food'}}
+            styling={{borderBottom: true}}
+          />
 
-        <ActionsheetPressable
-          onPress={() => console.log('Add Biometric')}
-          text={{primary: 'Add Biometric'}}
-          icon={{
-            family: MaterialCommunityIcons,
-            name: 'scale-bathroom',
-            size: 6,
-          }}
-        />
-      </VStack>
+          <ActionsheetPressable
+            onPress={() => console.log('Add Biometric')}
+            text={{primary: 'Add Biometric'}}
+            icon={{
+              family: MaterialCommunityIcons,
+              name: 'scale-bathroom',
+              size: 6,
+            }}
+          />
+        </VStack>
+      </Box>
 
-      <VStack px={4} mt={4}>
+      <Box px={4} mt={4}>
         <ActionsheetHeading>Content</ActionsheetHeading>
 
-        <ActionsheetPressable
-          onPress={() => handleNewPostTransition()}
-          icon={{name: 'photo-camera', size: 6}}
-          text={{primary: 'New Post'}}
-        />
-      </VStack>
+        <VStack {...boxStyling}>
+          <ActionsheetPressable
+            onPress={() => handleNewPostTransition()}
+            icon={{name: 'photo-camera', size: 6}}
+            text={{primary: 'New Post'}}
+          />
+        </VStack>
+      </Box>
     </BottomSheetView>
   );
 };

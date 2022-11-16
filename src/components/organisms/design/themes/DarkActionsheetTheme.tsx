@@ -7,7 +7,7 @@ const DarkActionsheetTheme: React.FC<BottomSheetBackgroundProps> = ({
   style,
 }) => {
   // values have to be hardcoded to be used in a container style
-  const backgroundColor = useColorModeValue('#FFF', '#1B1C1E');
+  const backgroundColor = useColorModeValue('#F2F2F2', '#17181A');
 
   const containerAnimatedStyle = useAnimatedStyle(() => ({
     backgroundColor: backgroundColor,

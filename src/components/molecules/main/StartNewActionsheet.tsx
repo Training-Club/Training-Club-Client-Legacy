@@ -1,15 +1,29 @@
 import React, {useCallback} from 'react';
-import {Heading, Text, VStack} from 'native-base';
 import {BottomSheetView} from '@gorhom/bottom-sheet';
-import PressablePill from '../../atoms/design/PressablePill';
+import useExerciseStore from '../../../store/ExerciseStore';
+import {default as MaterialCommunityIcons} from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/core';
 import {useActionsheetContext} from '../../../context/actionsheet/ActionsheetContext';
+import {ActionsheetHeading} from '../../atoms/design/ActionsheetHeading';
+import {ActionsheetPressable} from '../../atoms/design/ActionsheetPressable';
+import {useColorModeValue, VStack} from 'native-base';
 
 const StartNewActionsheet = (): JSX.Element => {
+  const exercises = useExerciseStore(state => state.exercises);
+  const clearExercises = useExerciseStore(state => state.clearExercises);
+
   const navigation = useNavigation();
   const {actionSheetRef} = useActionsheetContext();
 
-  const handleNewSessionTransition = useCallback(() => {
+  const specialTextColor = useColorModeValue(
+    'apple.blue.light',
+    'apple.blue.dark',
+  );
+
+  /**
+   * Transitions to the current session screen and closes the actionsheet
+   */
+  const handleResumeSessionTransition = useCallback(() => {
     navigation.navigate(
       'Training' as never,
       {screen: 'CurrentSession'} as never,
@@ -20,6 +34,25 @@ const StartNewActionsheet = (): JSX.Element => {
     }
   }, [actionSheetRef, navigation]);
 
+  /**
+   * Wipes the current session data and transitions to the current session screen
+   */
+  const handleNewSessionTransition = useCallback(() => {
+    clearExercises();
+
+    navigation.navigate(
+      'Training' as never,
+      {screen: 'CurrentSession'} as never,
+    );
+
+    if (actionSheetRef && actionSheetRef.current) {
+      actionSheetRef.current.close();
+    }
+  }, [actionSheetRef, clearExercises, navigation]);
+
+  /**
+   * Transitions to the content select screen and closes the actionsheet
+   */
   const handleNewPostTransition = useCallback(() => {
     navigation.navigate('Content' as never, {screen: 'ContentSelect'} as never);
 
@@ -31,52 +64,61 @@ const StartNewActionsheet = (): JSX.Element => {
   return (
     <BottomSheetView>
       <VStack px={4}>
-        <Heading size={'sm'} mb={2} textAlign={'center'}>
-          Training
-        </Heading>
+        <ActionsheetHeading>Training</ActionsheetHeading>
 
-        <PressablePill
+        {exercises && exercises.length > 0 && (
+          <ActionsheetPressable
+            onPress={() => handleResumeSessionTransition()}
+            icon={{name: 'replay', size: 6}}
+            text={{primary: 'Resume', secondary: 'Training Session'}}
+            styling={{primary: {color: specialTextColor}}}
+          />
+        )}
+
+        <ActionsheetPressable
           onPress={() => handleNewSessionTransition()}
-          style={{roundedTop: true}}
-          icon={{name: 'fitness-center', size: 6}}>
-          <Text fontWeight={'semibold'}>Blank Training Session</Text>
-        </PressablePill>
+          icon={{name: 'fitness-center', size: 6}}
+          text={{primary: 'Blank', secondary: 'Training Session'}}
+        />
 
-        <PressablePill
+        <ActionsheetPressable
           onPress={() => console.log('Training Session From Template')}
-          style={{roundedBottom: true}}
-          icon={{name: 'article', size: 6}}>
-          <Text fontWeight={'semibold'}>Training Session From Template</Text>
-        </PressablePill>
+          icon={{name: 'article', size: 6}}
+          text={{primary: 'Template', secondary: 'Training Session'}}
+        />
       </VStack>
 
       <VStack px={4} mt={4}>
-        <Heading size={'sm'} mb={2} textAlign={'center'}>
-          Diet
-        </Heading>
+        <ActionsheetHeading>Diet</ActionsheetHeading>
 
-        <PressablePill
+        <ActionsheetPressable
           onPress={() => console.log('Add Food')}
-          style={{roundedTop: true, roundedBottom: true}}
-          icon={{name: 'restaurant', size: 6}}>
-          <Text fontWeight={'semibold'}>Add Food</Text>
-        </PressablePill>
+          icon={{name: 'restaurant', size: 6}}
+          text={{primary: 'Add Food'}}
+        />
+
+        <ActionsheetPressable
+          onPress={() => console.log('Add Biometric')}
+          text={{primary: 'Add Biometric'}}
+          icon={{
+            family: MaterialCommunityIcons,
+            name: 'scale-bathroom',
+            size: 6,
+          }}
+        />
       </VStack>
 
       <VStack px={4} mt={4}>
-        <Heading size={'sm'} mb={2} textAlign={'center'}>
-          Pictures/Videos
-        </Heading>
+        <ActionsheetHeading>Content</ActionsheetHeading>
 
-        <PressablePill
+        <ActionsheetPressable
           onPress={() => handleNewPostTransition()}
-          style={{roundedTop: true, roundedBottom: true}}
-          icon={{name: 'photo-camera', size: 6}}>
-          <Text fontWeight={'semibold'}>Create Post</Text>
-        </PressablePill>
+          icon={{name: 'photo-camera', size: 6}}
+          text={{primary: 'New Post'}}
+        />
       </VStack>
     </BottomSheetView>
   );
 };
 
-export default React.memo(StartNewActionsheet);
+export default StartNewActionsheet;

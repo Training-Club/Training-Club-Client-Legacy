@@ -1,7 +1,7 @@
 import React from 'react';
 import theme from './Theme';
+import {AccountComponentWrapper} from './store/AccountStore';
 import {NativeBaseProvider} from 'native-base';
-import {AccountContextProvider} from './context/account/AccountContext.Provider';
 import {NavigationContainer} from '@react-navigation/native';
 import {ActionsheetContextProvider} from './context/actionsheet/ActionsheetContext.Provider';
 import {PushdownContextProvider} from './context/pushdown/PushdownContext.Provider';
@@ -18,17 +18,15 @@ export const Providers = ({children}: IProvidersProps): JSX.Element => {
     <GestureHandlerRootView style={{flex: 1}}>
       <NativeBaseProvider theme={theme()}>
         <NavigationContainer>
-          <AccountContextProvider>
-            <ActionsheetContextProvider>
-              <PushdownContextProvider>
-                <SessionContextProvider>
-                  <ContentDraftContextProvider>
-                    {children}
-                  </ContentDraftContextProvider>
-                </SessionContextProvider>
-              </PushdownContextProvider>
-            </ActionsheetContextProvider>
-          </AccountContextProvider>
+          <ActionsheetContextProvider>
+            <PushdownContextProvider>
+              <SessionContextProvider>
+                <ContentDraftContextProvider>
+                  <AccountComponentWrapper>{children}</AccountComponentWrapper>
+                </ContentDraftContextProvider>
+              </SessionContextProvider>
+            </PushdownContextProvider>
+          </ActionsheetContextProvider>
         </NavigationContainer>
       </NativeBaseProvider>
     </GestureHandlerRootView>

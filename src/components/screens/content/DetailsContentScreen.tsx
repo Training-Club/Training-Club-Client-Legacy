@@ -1,12 +1,12 @@
 import React from 'react';
 import {FormatTrainingSessionQuery} from '../../../utils/StringUtil';
-import {useAccountContext} from '../../../context/account/AccountContext';
 import {getTrainingSessions} from '../../../requests/Training';
 import {usePushdownContext} from '../../../context/pushdown/PushdownContext';
 import {useContentDraftContext} from '../../../context/content/ContentDraftContext';
 import {createPostWithFiles} from '../../../requests/Content';
 import {PrivacyLevel} from '../../../models/Privacy';
 import CloseableHeader from '../../molecules/design/CloseableHeader';
+import useAccountStore from '../../../store/AccountStore';
 
 import {
   ITrainingSession,
@@ -24,16 +24,9 @@ import {
   useColorModeValue,
 } from 'native-base';
 
-/*
-Post Caption
-Attach to a training session
-Attach a meal
-Add tags
-Tag a location
- */
-
 const DetailsContentScreen = (): JSX.Element => {
-  const {account, accessToken} = useAccountContext();
+  const account = useAccountStore(state => state.account);
+  const accessToken = useAccountStore(state => state.accessToken);
   const {content} = useContentDraftContext();
   const {setPushdownConfig} = usePushdownContext();
 

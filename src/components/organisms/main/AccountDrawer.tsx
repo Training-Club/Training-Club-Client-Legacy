@@ -4,7 +4,7 @@ import AccountDrawerButtonStack from '../../molecules/main/account-drawer/Accoun
 import {AccountDrawerVersionInfo} from '../../atoms/main/account-drawer/AccountDrawerVersionInfo';
 import {getBothConnectionCounts} from '../../../requests/Follow';
 import {usePushdownContext} from '../../../context/pushdown/PushdownContext';
-import {useAccountContext} from '../../../context/account/AccountContext';
+import useAccountStore from '../../../store/AccountStore';
 import {Dimensions} from 'react-native';
 import AccountDrawerHeader from '../../molecules/main/account-drawer/AccountDrawerHeader';
 import {Box, View, useColorModeValue} from 'native-base';
@@ -33,8 +33,7 @@ const AccountDrawer = ({
   onTranslate,
   children,
 }: IAccountDrawerProps) => {
-  const {accessToken} = useAccountContext();
-
+  const accessToken = useAccountStore(state => state.accessToken);
   const [followerCount, setFollowerCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
   const {setPushdownConfig} = usePushdownContext();

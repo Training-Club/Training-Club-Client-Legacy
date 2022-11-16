@@ -2,11 +2,11 @@ import React from 'react';
 import {View} from 'native-base';
 import CloseableHeader from '../../molecules/design/CloseableHeader';
 import EmailInput, {IEmailInputErrors} from '../../organisms/auth/EmailInput';
+import useAccountStore from '../../../store/AccountStore';
 import {useDebounce} from 'use-debounce';
 import {usePushdownContext} from '../../../context/pushdown/PushdownContext';
 import LoadingIndicator from '../../molecules/design/LoadingIndicator';
 import {attemptStandardAccountCreate} from '../../../requests/Account';
-import {useAccountContext} from '../../../context/account/AccountContext';
 import {useNavigation} from '@react-navigation/native';
 import {setRefreshToken} from '../../../data/Account';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -37,7 +37,9 @@ export enum RegisterScreenState {
 
 const RegisterScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
-  const {setAccount, setAccessToken, setInitialLoad} = useAccountContext();
+  const setAccount = useAccountStore(state => state.setAccount);
+  const setAccessToken = useAccountStore(state => state.setAccessToken);
+  const setInitialLoad = useAccountStore(state => state.setInitialLoad);
   const {setPushdownConfig} = usePushdownContext();
 
   const [state, setState] = React.useState<RegisterScreenState>(

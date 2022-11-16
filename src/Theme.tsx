@@ -78,17 +78,17 @@ export default function () {
       core: {
         background: {
           light: '#F2F2F2',
-          dark: '#1E1E1E',
+          dark: '#1B1C1E',
         },
 
         backgroundAccent: {
           light: '#F2F2F2',
-          dark: '#2F2F2F',
+          dark: '#1F1F1F',
         },
 
         backgroundHighlight: {
           light: '#FFF',
-          dark: '#262626',
+          dark: '#2B2B2B',
         },
 
         text: {

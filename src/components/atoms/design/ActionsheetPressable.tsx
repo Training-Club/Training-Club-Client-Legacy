@@ -58,6 +58,7 @@ export const ActionsheetPressable = ({
       <HStack space={3}>
         {icon && (
           <Icon
+            testID={'actionsheet-pressable-icon'}
             as={icon.family ?? MaterialIcons}
             name={icon.name}
             size={icon.size}

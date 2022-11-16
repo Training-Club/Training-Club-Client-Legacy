@@ -70,6 +70,7 @@ const RenameableHeader = ({
         <IconButton
           testID={'renameable-header-close-btn'}
           position={'absolute'}
+          top={1}
           right={0}
           size={'sm'}
           rounded={'full'}
@@ -99,4 +100,4 @@ const RenameableHeader = ({
   );
 };
 
-export default React.memo(RenameableHeader);
+export default RenameableHeader;

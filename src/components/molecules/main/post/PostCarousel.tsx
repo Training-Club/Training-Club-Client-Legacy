@@ -90,6 +90,7 @@ export const PostCarousel = ({
         <HStack space={spacing} h={'100%'} ml={spacing}>
           {content.map((contentItem, i) => (
             <PostContentWrapper
+              paused={!scrollEnabled}
               currentPosition={currentPosition}
               position={position}
               key={contentItem.destination + i}

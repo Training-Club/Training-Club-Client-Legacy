@@ -24,7 +24,7 @@ const MainNavigation = (): JSX.Element => {
     React.useState<MainNavigationScreen>(MainNavigationScreen.FEED);
 
   const snapPoints = React.useMemo(
-    () => [smallDevice ? '60%' : '50%'],
+    () => [smallDevice ? '65%' : '55%'],
     [smallDevice],
   );
 

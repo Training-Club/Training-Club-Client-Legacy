@@ -1,15 +1,40 @@
 import React, {useCallback} from 'react';
-import {Heading, Text, VStack} from 'native-base';
 import {BottomSheetView} from '@gorhom/bottom-sheet';
-import PressablePill from '../../atoms/design/PressablePill';
+import useExerciseStore from '../../../store/ExerciseStore';
+import {default as MaterialCommunityIcons} from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/core';
 import {useActionsheetContext} from '../../../context/actionsheet/ActionsheetContext';
+import {ActionsheetHeading} from '../../atoms/design/ActionsheetHeading';
+import {ActionsheetPressable} from '../../atoms/design/ActionsheetPressable';
+import {Box, useColorModeValue, VStack} from 'native-base';
 
 const StartNewActionsheet = (): JSX.Element => {
+  const exercises = useExerciseStore(state => state.exercises);
+  const clearExercises = useExerciseStore(state => state.clearExercises);
+
   const navigation = useNavigation();
   const {actionSheetRef} = useActionsheetContext();
 
-  const handleNewSessionTransition = useCallback(() => {
+  const bgColor = useColorModeValue(
+    'core.backgroundHighlight.light',
+    'core.backgroundAccent.dark',
+  );
+
+  const specialTextColor = useColorModeValue(
+    'apple.blue.light',
+    'apple.blue.dark',
+  );
+
+  const boxStyling = {
+    bgColor: bgColor,
+    px: 4,
+    borderRadius: 12,
+  };
+
+  /**
+   * Transitions to the current session screen and closes the actionsheet
+   */
+  const handleResumeSessionTransition = useCallback(() => {
     navigation.navigate(
       'Training' as never,
       {screen: 'CurrentSession'} as never,
@@ -20,6 +45,25 @@ const StartNewActionsheet = (): JSX.Element => {
     }
   }, [actionSheetRef, navigation]);
 
+  /**
+   * Wipes the current session data and transitions to the current session screen
+   */
+  const handleNewSessionTransition = useCallback(() => {
+    clearExercises();
+
+    navigation.navigate(
+      'Training' as never,
+      {screen: 'CurrentSession'} as never,
+    );
+
+    if (actionSheetRef && actionSheetRef.current) {
+      actionSheetRef.current.close();
+    }
+  }, [actionSheetRef, clearExercises, navigation]);
+
+  /**
+   * Transitions to the content select screen and closes the actionsheet
+   */
   const handleNewPostTransition = useCallback(() => {
     navigation.navigate('Content' as never, {screen: 'ContentSelect'} as never);
 
@@ -30,53 +74,70 @@ const StartNewActionsheet = (): JSX.Element => {
 
   return (
     <BottomSheetView>
-      <VStack px={4}>
-        <Heading size={'sm'} mb={2} textAlign={'center'}>
-          Training
-        </Heading>
+      <Box px={4}>
+        <ActionsheetHeading>Training</ActionsheetHeading>
 
-        <PressablePill
-          onPress={() => handleNewSessionTransition()}
-          style={{roundedTop: true}}
-          icon={{name: 'fitness-center', size: 6}}>
-          <Text fontWeight={'semibold'}>Blank Training Session</Text>
-        </PressablePill>
+        <VStack {...boxStyling}>
+          {exercises && exercises.length > 0 && (
+            <ActionsheetPressable
+              onPress={() => handleResumeSessionTransition()}
+              icon={{name: 'replay', size: 6}}
+              text={{primary: 'Resume', secondary: 'Training Session'}}
+              styling={{primary: {color: specialTextColor}, borderBottom: true}}
+            />
+          )}
 
-        <PressablePill
-          onPress={() => console.log('Training Session From Template')}
-          style={{roundedBottom: true}}
-          icon={{name: 'article', size: 6}}>
-          <Text fontWeight={'semibold'}>Training Session From Template</Text>
-        </PressablePill>
-      </VStack>
+          <ActionsheetPressable
+            onPress={() => handleNewSessionTransition()}
+            icon={{name: 'fitness-center', size: 6}}
+            text={{primary: 'Blank', secondary: 'Training Session'}}
+            styling={{borderBottom: true}}
+          />
 
-      <VStack px={4} mt={4}>
-        <Heading size={'sm'} mb={2} textAlign={'center'}>
-          Diet
-        </Heading>
+          <ActionsheetPressable
+            onPress={() => console.log('Training Session From Template')}
+            icon={{name: 'article', size: 6}}
+            text={{primary: 'Template', secondary: 'Training Session'}}
+          />
+        </VStack>
+      </Box>
 
-        <PressablePill
-          onPress={() => console.log('Add Food')}
-          style={{roundedTop: true, roundedBottom: true}}
-          icon={{name: 'restaurant', size: 6}}>
-          <Text fontWeight={'semibold'}>Add Food</Text>
-        </PressablePill>
-      </VStack>
+      <Box px={4} mt={4}>
+        <ActionsheetHeading>Diet</ActionsheetHeading>
 
-      <VStack px={4} mt={4}>
-        <Heading size={'sm'} mb={2} textAlign={'center'}>
-          Pictures/Videos
-        </Heading>
+        <VStack {...boxStyling}>
+          <ActionsheetPressable
+            onPress={() => console.log('Add Food')}
+            icon={{name: 'restaurant', size: 6}}
+            text={{primary: 'Add Food'}}
+            styling={{borderBottom: true}}
+          />
 
-        <PressablePill
-          onPress={() => handleNewPostTransition()}
-          style={{roundedTop: true, roundedBottom: true}}
-          icon={{name: 'photo-camera', size: 6}}>
-          <Text fontWeight={'semibold'}>Create Post</Text>
-        </PressablePill>
-      </VStack>
+          <ActionsheetPressable
+            onPress={() => console.log('Add Biometric')}
+            text={{primary: 'Add Biometric'}}
+            icon={{
+              family: MaterialCommunityIcons,
+              name: 'scale-bathroom',
+              size: 6,
+            }}
+          />
+        </VStack>
+      </Box>
+
+      <Box px={4} mt={4}>
+        <ActionsheetHeading>Content</ActionsheetHeading>
+
+        <VStack {...boxStyling}>
+          <ActionsheetPressable
+            onPress={() => handleNewPostTransition()}
+            icon={{name: 'photo-camera', size: 6}}
+            text={{primary: 'New Post'}}
+          />
+        </VStack>
+      </Box>
     </BottomSheetView>
   );
 };
 
-export default React.memo(StartNewActionsheet);
+export default StartNewActionsheet;

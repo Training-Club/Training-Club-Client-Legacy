@@ -77,6 +77,8 @@ export const PostContentWrapper = ({
             repeat={true}
             playWhenInactive={false}
             playInBackground={false}
+            ignoreSilentSwitch={'ignore'}
+            mixWithOthers={'duck'}
             paused={
               paused ||
               currentPosition.post !== position.post ||

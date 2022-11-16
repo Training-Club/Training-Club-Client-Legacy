@@ -5,11 +5,11 @@ import CreateExerciseEquipment from '../../organisms/training/CreateExerciseEqui
 import CreateExerciseType from '../../organisms/training/CreateExerciseType';
 import CreateExerciseMuscleGroup from '../../organisms/training/CreateExerciseMuscleGroup';
 import useExerciseStore from '../../../store/ExerciseStore';
+import useAccountStore from '../../../store/AccountStore';
 import {usePushdownContext} from '../../../context/pushdown/PushdownContext';
 import {createExerciseInfo} from '../../../requests/ExerciseInfo';
 import {useNavigation} from '@react-navigation/core';
 import {nanoid} from 'nanoid/non-secure';
-import {useAccountContext} from '../../../context/account/AccountContext';
 import {MeasurementSystem} from '../../../models/Measurement';
 
 import {
@@ -18,11 +18,11 @@ import {
   MuscleGroup,
 } from '../../../models/Training';
 
-import {Box, Button, ScrollView, useColorModeValue, View} from 'native-base';
+import {Box, Button, ScrollView, View, useColorModeValue} from 'native-base';
 
 const CreateExerciseScreen = (): JSX.Element => {
   const navigation = useNavigation();
-  const {accessToken} = useAccountContext();
+  const accessToken = useAccountStore(state => state.accessToken);
   const addSet = useExerciseStore(state => state.addSet);
   const {setPushdownConfig} = usePushdownContext();
 

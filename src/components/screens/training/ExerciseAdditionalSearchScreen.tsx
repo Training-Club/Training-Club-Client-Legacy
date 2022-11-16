@@ -5,7 +5,6 @@ import {getExerciseSearchResults} from '../../../requests/Training';
 import {Capitalize, FormatExerciseInfoQuery} from '../../../utils/StringUtil';
 import {getMockExerciseData} from '../../../data/Training';
 import {useNavigation} from '@react-navigation/core';
-import {useAccountContext} from '../../../context/account/AccountContext';
 import {AxiosError} from 'axios';
 import {ExerciseInfo, MuscleGroup} from '../../../models/Training';
 import CloseableHeader from '../../molecules/design/CloseableHeader';
@@ -16,6 +15,7 @@ import TogglePill from '../../atoms/design/TogglePill';
 import ExerciseSearchResultList from '../../organisms/training/ExerciseSearchResultList';
 import AdditionalExerciseSelection from '../../molecules/training/AdditionalExerciseSelection';
 import useExerciseStore from '../../../store/ExerciseStore';
+import useAccountStore from '../../../store/AccountStore';
 import {Box, Icon, View, VStack} from 'native-base';
 
 import Animated, {
@@ -31,10 +31,9 @@ interface IExerciseAdditionalSearchScreenProps {
 const ExerciseAdditionalSearchScreen = ({
   route,
 }: IExerciseAdditionalSearchScreenProps): JSX.Element => {
-  const {accessToken} = useAccountContext();
+  const accessToken = useAccountStore(state => state.accessToken);
   const addSet = useExerciseStore(state => state.addSet);
   const {setPushdownConfig} = usePushdownContext();
-
   const navigation = useNavigation();
   const [filters, setFilters] = React.useState<MuscleGroup[]>([]);
   const [nameQuery, setNameQuery] = React.useState<string>('');

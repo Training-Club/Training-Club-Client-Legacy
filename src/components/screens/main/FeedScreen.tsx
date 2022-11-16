@@ -1,7 +1,7 @@
 import React from 'react';
 import {Dimensions} from 'react-native';
 import GreetingText from '../../atoms/main/home/GreetingText';
-import {useAccountContext} from '../../../context/account/AccountContext';
+import useAccountStore from '../../../store/AccountStore';
 import AccountDrawer from '../../organisms/main/AccountDrawer';
 import PostFeed, {PostFeedItem} from '../../organisms/main/PostFeed';
 import {ILocation} from '../../../models/Location';
@@ -21,7 +21,7 @@ import {
 } from '../../../models/Measurement';
 
 const FeedScreen = () => {
-  const {account} = useAccountContext();
+  const account = useAccountStore(state => state.account);
   const [currentPostPosition, setCurrentPostPosition] = React.useState(0);
   const [currentIndexPosition, setCurrentIndexPosition] = React.useState(0);
   const [isAccountDrawerOpen, setAccountDrawerOpen] = React.useState(false);

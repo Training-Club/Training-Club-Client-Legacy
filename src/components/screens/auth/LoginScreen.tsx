@@ -2,7 +2,6 @@ import React from 'react';
 import {View} from 'native-base';
 import StandardLoginInput from '../../organisms/auth/StandardLoginInput';
 import CloseableHeader from '../../molecules/design/CloseableHeader';
-import {useAccountContext} from '../../../context/account/AccountContext';
 import {usePushdownContext} from '../../../context/pushdown/PushdownContext';
 import LoadingIndicator from '../../molecules/design/LoadingIndicator';
 import {attemptStandardLogin} from '../../../requests/Account';
@@ -10,12 +9,14 @@ import {setRefreshToken} from '../../../data/Account';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated';
+import useAccountStore from '../../../store/AccountStore';
 
 const LoginScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
-  const {setAccount, setAccessToken, setInitialLoad} = useAccountContext();
+  const setAccount = useAccountStore(state => state.setAccount);
+  const setAccessToken = useAccountStore(state => state.setAccessToken);
+  const setInitialLoad = useAccountStore(state => state.setInitialLoad);
   const {setPushdownConfig} = usePushdownContext();
-
   const [email, setEmail] = React.useState<string>('');
   const [password, setPassword] = React.useState<string>('');
   const [visible, setVisible] = React.useState<boolean>(false);

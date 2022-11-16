@@ -1,6 +1,6 @@
 import React from 'react';
 import {StatusBar, useColorMode} from 'native-base';
-import {useAccountContext} from './context/account/AccountContext';
+import useAccountStore from './store/AccountStore';
 import FeedScreen from './components/screens/main/FeedScreen';
 import RegisterScreen from './components/screens/auth/RegisterScreen';
 import WelcomeScreen from './components/screens/auth/WelcomeScreen';
@@ -25,7 +25,7 @@ import {
 const Stack = createStackNavigator();
 
 const Navigation = () => {
-  const {account} = useAccountContext();
+  const account = useAccountStore(state => state.account);
   const {colorMode} = useColorMode();
   const initialStack = account ? 'Main' : 'Auth';
 

@@ -62,7 +62,9 @@ const TrainingPlateCounter = ({
 
   return (
     <Box position={'relative'} w={'70%'}>
-      <Heading size={'xs'}>Plate Counter</Heading>
+      <Heading size={'xs'}>
+        Plate Counter <Heading fontSize={10}>(per side)</Heading>
+      </Heading>
 
       <HStack w={'100%'} flexWrap={'wrap'}>
         {!!(data.fortyFivePlates && data.fortyFivePlates > 0) && (

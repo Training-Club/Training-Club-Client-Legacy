@@ -1,14 +1,26 @@
-import {IPost, IUploadFileResult} from '../../models/Content';
+import {
+  IPost,
+  ISignedContentItem,
+  IUploadFileResult,
+} from '../../models/Content';
 
 export type GetPostsByQueryResponse = {
   result: IPost[];
 };
 
+export type GetSignedContentResponse = {
+  result: ISignedContentItem[];
+};
+
 export type GetCommentsByPostIdResponse = {};
 
-export type GetCommentCountResponse = {};
+export type GetCommentCountResponse = {
+  result: number;
+};
 
-export type GetLikeCountResponse = {};
+export type GetLikeCountResponse = {
+  result: number;
+};
 
 export type GetLikeListResponse = {};
 
@@ -18,7 +30,9 @@ export type CreatePostResponse = {
 
 export type CreateCommentResponse = {};
 
-export type AddLikeResponse = {};
+export type AddLikeResponse = {
+  message: string;
+};
 
 export type RemoveLikeResponse = {};
 

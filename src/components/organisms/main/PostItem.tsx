@@ -13,6 +13,7 @@ import {Box, IBoxProps} from 'native-base';
 interface IPostItemProps {
   scrollEnabled?: boolean;
   content: IContentItem[];
+  username: string;
 
   currentPosition: {
     post: number;
@@ -38,6 +39,7 @@ interface IPostItemProps {
 
 export const PostItem = ({
   scrollEnabled,
+  username,
   content,
   currentPosition,
   position,
@@ -106,7 +108,7 @@ export const PostItem = ({
   return (
     <Box w={'100%'} h={width * 1.33} borderRadius={12} {...style}>
       <PostAuthorDetails
-        username={'john'}
+        username={username}
         avatarUri={'https://source.unsplash.com/random/?strong,man'}
         location={location}
         onPress={onAuthorPress}

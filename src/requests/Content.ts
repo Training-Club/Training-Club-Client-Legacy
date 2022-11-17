@@ -2,6 +2,7 @@ import axios, {AxiosError} from 'axios';
 import {PrivacyLevel} from '../models/Privacy';
 
 import {
+  AddLikeResponse,
   CreatePostResponse,
   FileUploadResponse,
   GetPostsByQueryResponse,
@@ -17,7 +18,8 @@ import {
 } from '../models/Content';
 
 // TODO: Replace with api.trainingclubapp.com
-const url: string = 'http://146.190.2.76:80/v1';
+// const url: string = 'http://146.190.2.76:80/v1';
+const url: string = 'http://localhost:8080/v1';
 
 type CreatePostParams = {
   location?: string;
@@ -148,6 +150,8 @@ export async function uploadFiles(
 
       resolve(result.data.result);
     } catch (err) {
+      const axiosError = err as AxiosError;
+      console.log(axiosError.response);
       reject(err);
     }
   });
@@ -224,8 +228,16 @@ export async function createPostWithFiles(
       return resolve(createResult.data);
     } catch (err) {
       const axiosError = err as AxiosError;
-      console.log(axiosError.response?.data);
+      console.log(axiosError.response);
       return reject(err);
     }
   });
 }
+
+// TODO: Implement attempt like post function
+/* export async function attemptLikePost(postId: string, token?: string): Promise<AddLikeResponse> {
+  return new Promise<AddLikeResponse>(async (resolve, reject) => {
+
+  });
+}
+*/

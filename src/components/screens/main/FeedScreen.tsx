@@ -7,13 +7,14 @@ import {getFeedContent} from '../../../requests/Discovery';
 import AccountDrawer from '../../organisms/main/AccountDrawer';
 import PostFeed from '../../organisms/main/PostFeed';
 import {useNavigation} from '@react-navigation/native';
+import {usePushdownContext} from '../../../context/pushdown/PushdownContext';
 import {HStack, ScrollView, View, useColorModeValue} from 'native-base';
 
 const FeedScreen = () => {
   const account = useAccountStore(state => state.account);
   const accessToken = useAccountStore(state => state.accessToken);
-
   const navigation = useNavigation();
+  const {setPushdownConfig} = usePushdownContext();
   const [content, setContent] = React.useState<IFeedData[]>([]);
   const [currentPostPosition, setCurrentPostPosition] = React.useState(0);
   const [currentIndexPosition, setCurrentIndexPosition] = React.useState(0);
@@ -110,15 +111,24 @@ const FeedScreen = () => {
     return listener;
   }, [navigation]);
 
+  /**
+   * Queries initial feed content in to state
+   */
   React.useEffect(() => {
     getFeedContent(0, accessToken)
       .then(data => {
         setContent(data);
       })
-      .catch(err => {
-        console.error(err);
+      .catch(() => {
+        setPushdownConfig({
+          status: 'error',
+          title: 'An error has occurred',
+          body: 'We were unable to fetch your feed content',
+          duration: 5000,
+          show: true,
+        });
       });
-  }, [accessToken]);
+  }, [accessToken, setPushdownConfig]);
 
   // TODO: Handle this properly
   if (!account) {

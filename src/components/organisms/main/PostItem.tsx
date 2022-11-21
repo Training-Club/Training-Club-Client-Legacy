@@ -5,13 +5,19 @@ import {PostAuthorDetails} from '../../atoms/main/home/post/PostAuthorDetails';
 import {PostCarousel} from '../../molecules/main/post/PostCarousel';
 import {PostScrollIndicator} from '../../molecules/main/post/PostScrollIndicator';
 import {PostContentWrapper} from '../../atoms/main/home/post/PostContentWrapper';
+import {usePushdownContext} from '../../../context/pushdown/PushdownContext';
+import {createLike, removePostLike} from '../../../requests/Content';
 import {ITrainingSession} from '../../../models/Training';
 import {ILocation} from '../../../models/Location';
-import {IContentItem} from '../../../models/Content';
+import {IContentItem, PostItemType} from '../../../models/Content';
+import {AxiosError} from 'axios';
 import {Box, IBoxProps} from 'native-base';
+import useAccountStore from '../../../store/AccountStore';
 
 interface IPostItemProps {
   scrollEnabled?: boolean;
+
+  postId: string;
   content: IContentItem[];
   username: string;
 
@@ -39,6 +45,7 @@ interface IPostItemProps {
 
 export const PostItem = ({
   scrollEnabled,
+  postId,
   username,
   content,
   currentPosition,
@@ -49,8 +56,12 @@ export const PostItem = ({
   attributes,
   style,
 }: IPostItemProps): JSX.Element => {
-  const {width} = Dimensions.get('screen');
+  const accessToken = useAccountStore(state => state.accessToken);
+  const {setPushdownConfig} = usePushdownContext();
   const [index, setIndex] = React.useState(1);
+  const [isLiked, setLiked] = React.useState(attributes?.liked ?? false);
+
+  const {width} = Dimensions.get('screen');
 
   /**
    * Returns true if this post is an album
@@ -62,9 +73,44 @@ export const PostItem = ({
   /**
    * Callback when the post like button is pressed
    */
-  const onLike = React.useCallback(() => {
-    console.log('onLike called');
-  }, []);
+  const onLike = React.useCallback(async () => {
+    if (isLiked) {
+      try {
+        await removePostLike(postId, accessToken);
+        setLiked(false);
+      } catch (err) {
+        setPushdownConfig({
+          status: 'error',
+          title: 'An error occurred',
+          body: 'Failed to remove your like from this post',
+          duration: 5000,
+          show: true,
+        });
+
+        console.error('failed to remove post like: ' + err);
+      }
+
+      return;
+    }
+
+    try {
+      await createLike(postId, PostItemType.POST, accessToken);
+      setLiked(true);
+    } catch (err) {
+      const axiosError = err as AxiosError;
+
+      setPushdownConfig({
+        status: 'error',
+        title: 'An error occurred',
+        body: 'Failed to add your like to this post',
+        duration: 5000,
+        show: true,
+      });
+
+      console.error('failed to create like:');
+      console.error(axiosError.response);
+    }
+  }, [accessToken, isLiked, postId, setPushdownConfig]);
 
   /**
    * Callback when the post comment button is pressed
@@ -121,7 +167,7 @@ export const PostItem = ({
         attributes={{
           likeCount: attributes?.likeCount,
           commentCount: attributes?.commentCount,
-          isLiked: attributes?.liked,
+          isLiked: isLiked,
         }}
       />
 

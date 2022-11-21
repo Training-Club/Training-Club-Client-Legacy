@@ -32,6 +32,7 @@ const PostFeed = ({
             <PostItem
               key={entry.content[0].destination}
               scrollEnabled={scrollEnabled}
+              postId={entry.id}
               content={entry.content}
               username={entry.author.username}
               position={{post: i}}

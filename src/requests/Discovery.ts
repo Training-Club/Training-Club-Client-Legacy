@@ -2,7 +2,7 @@ import axios from 'axios';
 import {getProfile} from './Account';
 import {getLike} from './Content';
 import {GetFeedContentResponse} from './responses/Discovery';
-import {ContentType, IContentItem, IFeedData} from '../models/Content';
+import {IContentItem, IFeedData} from '../models/Content';
 
 import {
   GetCommentCountResponse,
@@ -107,7 +107,7 @@ export async function getFeedContent(
         // TODO: Update Ares to return content type
         for (const signed of signResult.data.result) {
           contentItems.push({
-            type: ContentType.IMAGE,
+            type: signed.type,
             destination: signed.url,
           });
         }

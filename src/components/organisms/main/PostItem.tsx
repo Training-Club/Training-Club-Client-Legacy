@@ -59,6 +59,8 @@ export const PostItem = ({
   const accessToken = useAccountStore(state => state.accessToken);
   const {setPushdownConfig} = usePushdownContext();
   const [index, setIndex] = React.useState(1);
+
+  const [likes, setLikes] = React.useState(attributes?.likeCount ?? 0);
   const [isLiked, setLiked] = React.useState(attributes?.liked ?? false);
 
   const {width} = Dimensions.get('screen');
@@ -77,7 +79,9 @@ export const PostItem = ({
     if (isLiked) {
       try {
         await removePostLike(postId, accessToken);
+
         setLiked(false);
+        setLikes(prevState => prevState - 1);
       } catch (err) {
         setPushdownConfig({
           status: 'error',
@@ -95,10 +99,10 @@ export const PostItem = ({
 
     try {
       await createLike(postId, PostItemType.POST, accessToken);
-      setLiked(true);
-    } catch (err) {
-      const axiosError = err as AxiosError;
 
+      setLiked(true);
+      setLikes(prevState => prevState + 1);
+    } catch (err) {
       setPushdownConfig({
         status: 'error',
         title: 'An error occurred',
@@ -106,9 +110,6 @@ export const PostItem = ({
         duration: 5000,
         show: true,
       });
-
-      console.error('failed to create like:');
-      console.error(axiosError.response);
     }
   }, [accessToken, isLiked, postId, setPushdownConfig]);
 
@@ -165,7 +166,7 @@ export const PostItem = ({
         onComment={onComment}
         onMore={onMore}
         attributes={{
-          likeCount: attributes?.likeCount,
+          likeCount: likes,
           commentCount: attributes?.commentCount,
           isLiked: isLiked,
         }}

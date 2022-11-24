@@ -1,16 +1,7 @@
 import React from 'react';
 import {PostItem} from './PostItem';
-import {IContentItem} from '../../../models/Content';
-import {ITrainingSession} from '../../../models/Training';
-import {ILocation} from '../../../models/Location';
+import {IFeedData} from '../../../models/Content';
 import {Box, Heading, VStack} from 'native-base';
-
-export type PostFeedItem = {
-  scrollEnabled?: boolean;
-  content: IContentItem[];
-  location?: ILocation;
-  trainingSession?: ITrainingSession;
-};
 
 interface IPostFeedProps {
   scrollEnabled?: boolean;
@@ -19,7 +10,7 @@ interface IPostFeedProps {
     index: number;
   };
 
-  data?: PostFeedItem[];
+  data: IFeedData[];
   onIndexUpdate?: (page: number) => void;
 }
 
@@ -41,12 +32,19 @@ const PostFeed = ({
             <PostItem
               key={entry.content[0].destination}
               scrollEnabled={scrollEnabled}
+              postId={entry.id}
               content={entry.content}
+              username={entry.author.username}
               position={{post: i}}
               location={entry.location}
               trainingSession={entry.trainingSession}
               onIndexUpdate={onIndexUpdate}
               currentPosition={currentPosition}
+              attributes={{
+                likeCount: entry.likes,
+                commentCount: entry.comments,
+                liked: entry.isLiked,
+              }}
             />
           ))}
       </VStack>

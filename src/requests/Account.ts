@@ -1,6 +1,9 @@
 import axios from 'axios';
 import {IAccount} from '../models/Account';
-import {CreateStandardAccountResponse} from './responses/Account';
+import {
+  CreateStandardAccountResponse,
+  GetProfileResponse,
+} from './responses/Account';
 
 import {
   AuthenticateStandardCredentialsResponse,
@@ -8,7 +11,8 @@ import {
 } from './responses/Auth';
 
 // TODO: Replace with api.trainingclubapp.com
-const url: string = 'http://146.190.2.76:80/v1';
+// const url: string = 'http://146.190.2.76:80/v1';
+const url: string = 'http://localhost:8080/v1';
 
 /**
  * Accepts an auth token as a param and attempts to obtain an account authorized
@@ -144,6 +148,30 @@ export async function requestRefreshedToken(
       resolve(result.data.access_token);
     } catch (err) {
       reject(err);
+    }
+  });
+}
+
+/**
+ * Queries profile data
+ *
+ * @param accountId Account ID to query
+ * @param token Access Token JWT
+ */
+export async function getProfile(
+  accountId: string,
+  token?: string,
+): Promise<GetProfileResponse> {
+  return new Promise<GetProfileResponse>(async (resolve, reject) => {
+    try {
+      const result = await axios.get<GetProfileResponse>(
+        `${url}/account/profile/id/${accountId}`,
+        {headers: {Authorization: `Bearer ${token}`}},
+      );
+
+      return resolve(result.data);
+    } catch (err) {
+      return reject(err);
     }
   });
 }

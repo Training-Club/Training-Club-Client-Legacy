@@ -1,29 +1,21 @@
 import React from 'react';
+import {IFeedData} from '../../../models/Content';
 import {Dimensions} from 'react-native';
 import GreetingText from '../../atoms/main/home/GreetingText';
 import useAccountStore from '../../../store/AccountStore';
+import {getFeedContent} from '../../../requests/Discovery';
 import AccountDrawer from '../../organisms/main/AccountDrawer';
-import PostFeed, {PostFeedItem} from '../../organisms/main/PostFeed';
+import PostFeed from '../../organisms/main/PostFeed';
 import {useNavigation} from '@react-navigation/native';
-import {ILocation} from '../../../models/Location';
-import {ContentType, IContentItem} from '../../../models/Content';
+import {usePushdownContext} from '../../../context/pushdown/PushdownContext';
 import {HStack, ScrollView, View, useColorModeValue} from 'native-base';
-
-import {
-  AdditionalExerciseType,
-  ExerciseType,
-  ITrainingSession,
-  TrainingSessionStatus,
-} from '../../../models/Training';
-
-import {
-  DistanceMeasurement,
-  MeasurementSystem,
-} from '../../../models/Measurement';
 
 const FeedScreen = () => {
   const account = useAccountStore(state => state.account);
+  const accessToken = useAccountStore(state => state.accessToken);
   const navigation = useNavigation();
+  const {setPushdownConfig} = usePushdownContext();
+  const [content, setContent] = React.useState<IFeedData[]>([]);
   const [currentPostPosition, setCurrentPostPosition] = React.useState(0);
   const [currentIndexPosition, setCurrentIndexPosition] = React.useState(0);
   const [isSuspended, setSuspended] = React.useState(false);
@@ -37,136 +29,6 @@ const FeedScreen = () => {
     'core.background.light',
     'core.background.dark',
   );
-
-  // TODO: Sample data, remove this
-  const sampleLocation: ILocation = {
-    id: '#',
-    author: '',
-    name: 'PROTOGYM',
-    description: '',
-  };
-
-  const sampleContent: IContentItem[] = [
-    {
-      destination:
-        'https://media.discordapp.net/attachments/462762564133060621/1038164214994436176/IMG_0616.jpg?width=702&height=936',
-      type: ContentType.IMAGE,
-    },
-    {
-      destination:
-        'https://cdn.discordapp.com/attachments/481691188739702797/1035019561021481072/RPReplay_Final1663101410.mov',
-      type: ContentType.VIDEO,
-    },
-    {
-      destination:
-        'https://cdn.discordapp.com/attachments/462762564133060621/1035019135853281280/trim.8F5FB98A-FB19-4F11-B272-AED7BDAD0AAD.mov',
-      type: ContentType.VIDEO,
-    },
-  ];
-
-  const sampleTrainingSession: ITrainingSession = {
-    id: '0',
-    author: '0',
-    sessionName: 'Powerlifting D4W3',
-    timestamp: new Date('2021-10-29'),
-    status: TrainingSessionStatus.COMPLETED,
-    exercises: [
-      {
-        id: '0',
-        exerciseName: 'Benchpress',
-        addedAt: new Date(),
-        values: {
-          reps: 8,
-          weight: {
-            measurement: MeasurementSystem.IMPERIAL,
-            plateCounterEnabled: false,
-            value: 135,
-          },
-        },
-        performed: true,
-        type: ExerciseType.WEIGHTED_REPS,
-        additionalExercises: [
-          {
-            exerciseName: 'Incline Dumbbell Press',
-            addedAt: new Date(),
-            variant: AdditionalExerciseType.SUPERSET,
-            type: ExerciseType.WEIGHTED_REPS,
-            performed: true,
-            values: {
-              reps: 8,
-              weight: {
-                measurement: MeasurementSystem.IMPERIAL,
-                plateCounterEnabled: false,
-                value: 65,
-              },
-            },
-          },
-        ],
-      },
-      {
-        id: '1',
-        exerciseName: 'Benchpress',
-        addedAt: new Date(),
-        values: {
-          reps: 5,
-          weight: {
-            measurement: MeasurementSystem.IMPERIAL,
-            plateCounterEnabled: false,
-            value: 225,
-          },
-        },
-        additionalExercises: [
-          {
-            exerciseName: 'Incline Dumbbell Press',
-            addedAt: new Date(),
-            variant: AdditionalExerciseType.SUPERSET,
-            type: ExerciseType.WEIGHTED_REPS,
-            performed: true,
-            values: {
-              reps: 8,
-              weight: {
-                measurement: MeasurementSystem.IMPERIAL,
-                plateCounterEnabled: false,
-                value: 65,
-              },
-            },
-          },
-        ],
-        performed: true,
-        type: ExerciseType.WEIGHTED_REPS,
-      },
-      {
-        id: '2',
-        exerciseName: 'Run',
-        addedAt: new Date(),
-        values: {
-          distance: {
-            value: 3,
-            measurement: DistanceMeasurement.MILE,
-          },
-          time: {
-            value: {
-              hours: 0,
-              minutes: 10,
-              seconds: 30,
-              milliseconds: 0,
-            },
-            timeRenderMillis: false,
-          },
-        },
-        performed: true,
-        type: ExerciseType.DISTANCE_TIME,
-      },
-    ],
-  };
-
-  const samplePosts: PostFeedItem[] = [
-    {
-      content: sampleContent,
-      trainingSession: sampleTrainingSession,
-      location: sampleLocation,
-    },
-  ];
 
   /**
    * Reads on current scroll pos and determines which post the user
@@ -249,6 +111,25 @@ const FeedScreen = () => {
     return listener;
   }, [navigation]);
 
+  /**
+   * Queries initial feed content in to state
+   */
+  React.useEffect(() => {
+    getFeedContent(0, accessToken)
+      .then(data => {
+        setContent(data);
+      })
+      .catch(() => {
+        setPushdownConfig({
+          status: 'error',
+          title: 'An error has occurred',
+          body: 'We were unable to fetch your feed content',
+          duration: 5000,
+          show: true,
+        });
+      });
+  }, [accessToken, setPushdownConfig]);
+
   // TODO: Handle this properly
   if (!account) {
     return null;
@@ -278,7 +159,7 @@ const FeedScreen = () => {
               post: currentPostPosition,
               index: currentIndexPosition,
             }}
-            data={samplePosts}
+            data={content}
             onIndexUpdate={onIndexUpdate}
           />
         </ScrollView>

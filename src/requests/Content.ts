@@ -153,8 +153,6 @@ export async function uploadFiles(
 
       resolve(result.data.result);
     } catch (err) {
-      const axiosError = err as AxiosError;
-      console.log(axiosError.response);
       reject(err);
     }
   });
@@ -307,7 +305,7 @@ export async function removePostLike(
   return new Promise<RemoveLikeResponse>(async (resolve, reject) => {
     try {
       const result = await axios.delete<RemoveLikeResponse>(
-        `${url}/content/post/${postId}`,
+        `${url}/content/like/post/${postId}`,
         {
           headers: {Authorization: `Bearer ${token}`},
         },

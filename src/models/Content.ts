@@ -65,6 +65,7 @@ export interface IContentItem {
 export interface ISignedContentItem {
   key: string;
   url: string;
+  type: ContentType;
 }
 
 export interface ILike {

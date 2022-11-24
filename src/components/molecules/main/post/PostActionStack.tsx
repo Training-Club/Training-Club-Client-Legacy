@@ -39,9 +39,7 @@ export const PostActionStack = ({
             size={6}
           />
 
-          {attributes && attributes.likeCount && (
-            <Text {...textStyling}>{attributes.likeCount}</Text>
-          )}
+          <Text {...textStyling}>{attributes?.likeCount}</Text>
         </Square>
       </Pressable>
 
@@ -54,9 +52,7 @@ export const PostActionStack = ({
             size={6}
           />
 
-          {attributes && attributes.commentCount && (
-            <Text {...textStyling}>{attributes.commentCount}</Text>
-          )}
+          <Text {...textStyling}>{attributes?.commentCount}</Text>
         </Square>
       </Pressable>
 

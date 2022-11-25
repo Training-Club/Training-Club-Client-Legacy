@@ -136,11 +136,13 @@ const DetailsContentScreen = (): JSX.Element => {
     getTrainingSessions(queryString, accessToken)
       .then(sessions => {
         setTrainingSessions(sessions);
+        console.log(sessions);
       })
       .catch(err => {
         if (err.response.status === 404) {
           if (trainingSessions && trainingSessions.length > 0) {
             setTrainingSessions([]);
+            console.log('no sessions found');
             return;
           }
 

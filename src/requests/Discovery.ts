@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {API_URL} from '../Constants';
 import {getProfile} from './Account';
 import {getLike} from './Content';
 import {GetFeedContentResponse} from './responses/Discovery';
@@ -9,10 +10,6 @@ import {
   GetLikeCountResponse,
   GetSignedContentResponse,
 } from './responses/Content';
-
-// TODO: Replace with api.trainingclubapp.com
-// const url: string = 'http://146.190.2.76:80/v1';
-const url: string = 'http://localhost:8080/v1';
 
 /**
  * Queries feed content
@@ -29,7 +26,7 @@ export async function getFeedContent(
 
     try {
       const contentResult = await axios.get<GetFeedContentResponse>(
-        `${url}/discovery/query?page=${page}`,
+        `${API_URL}/discovery/query?page=${page}`,
         {
           headers: {Authorization: `Bearer ${token}`},
         },
@@ -76,7 +73,7 @@ export async function getFeedContent(
       // query like count
       try {
         const likeResult = await axios.get<GetLikeCountResponse>(
-          `${url}/content/post/id/${id}/likes/count`,
+          `${API_URL}/content/post/id/${id}/likes/count`,
           {headers: {Authorization: `Bearer ${token}`}},
         );
 
@@ -88,7 +85,7 @@ export async function getFeedContent(
       // query comment counts
       try {
         const commentResult = await axios.get<GetCommentCountResponse>(
-          `${url}/content/post/id/${id}/comments/count`,
+          `${API_URL}/content/post/id/${id}/comments/count`,
           {headers: {Authorization: `Bearer ${token}`}},
         );
 
@@ -100,7 +97,7 @@ export async function getFeedContent(
       // query image signing
       try {
         const signResult = await axios.get<GetSignedContentResponse>(
-          `${url}/content/post/content/${id}`,
+          `${API_URL}/content/post/content/${id}`,
           {headers: {Authorization: `Bearer ${token}`}},
         );
 

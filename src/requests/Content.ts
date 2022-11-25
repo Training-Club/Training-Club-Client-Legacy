@@ -1,5 +1,6 @@
 import axios, {AxiosError} from 'axios';
 import {PrivacyLevel} from '../models/Privacy';
+import {API_URL} from '../Constants';
 
 import {
   AddLikeResponse,
@@ -20,10 +21,6 @@ import {
   PostItemType,
 } from '../models/Content';
 
-// TODO: Replace with api.trainingclubapp.com
-// const url: string = 'http://146.190.2.76:80/v1';
-const url: string = 'http://localhost:8080/v1';
-
 type CreatePostParams = {
   location?: string;
   text?: string;
@@ -41,7 +38,7 @@ type CreatePostParams = {
 export async function getPostByID(id: string): Promise<IPost> {
   return new Promise<IPost>(async (resolve, reject) => {
     try {
-      const result = await axios.get<IPost>(`${url}/post/id/${id}`);
+      const result = await axios.get<IPost>(`${API_URL}/post/id/${id}`);
       resolve(result.data);
     } catch (err) {
       reject(err);
@@ -67,7 +64,7 @@ export async function getPostsByQuery(
 
     try {
       const result = await axios.get<GetPostsByQueryResponse>(
-        `${url}/post/search${query}`,
+        `${API_URL}/post/search${query}`,
         {headers: {Authorization: `Bearer ${token}`}},
       );
 
@@ -95,7 +92,7 @@ export async function createPost(
 
     try {
       const result = await axios.post<CreatePostResponse>(
-        `${url}/post/`,
+        `${API_URL}/post/`,
         {...params},
         {headers: {Authorization: `Bearer ${params.token}`}},
       );
@@ -140,7 +137,7 @@ export async function uploadFiles(
 
     try {
       const result = await axios.post<FileUploadResponse>(
-        `${url}/fileupload/upload`,
+        `${API_URL}/fileupload/upload`,
         formData,
         {
           onUploadProgress: e => console.log(e),
@@ -214,7 +211,7 @@ export async function createPostWithFiles(
 
     try {
       const createResult = await axios.post<CreatePostResponse>(
-        `${url}/content/post`,
+        `${API_URL}/content/post`,
         {
           session: trainingSessionId,
           location: locationId,
@@ -247,7 +244,7 @@ export async function getLike(postId: string, token?: string): Promise<ILike> {
     try {
       // /content/post/id/:postId/liked
       const result = await axios.get<ILike>(
-        `${url}/content/post/id/${postId}/liked`,
+        `${API_URL}/content/post/id/${postId}/liked`,
         {
           headers: {Authorization: `Bearer ${token}`},
         },
@@ -276,7 +273,7 @@ export async function createLike(
   return new Promise<AddLikeResponse>(async (resolve, reject) => {
     try {
       const result = await axios.post<AddLikeResponse>(
-        `${url}/content/like`,
+        `${API_URL}/content/like`,
         {post: postId, type: postType},
         {
           headers: {Authorization: `Bearer ${token}`},
@@ -305,7 +302,7 @@ export async function removePostLike(
   return new Promise<RemoveLikeResponse>(async (resolve, reject) => {
     try {
       const result = await axios.delete<RemoveLikeResponse>(
-        `${url}/content/like/post/${postId}`,
+        `${API_URL}/content/like/post/${postId}`,
         {
           headers: {Authorization: `Bearer ${token}`},
         },
@@ -317,11 +314,3 @@ export async function removePostLike(
     }
   });
 }
-
-// TODO: Implement attempt like post function
-/* export async function attemptLikePost(postId: string, token?: string): Promise<AddLikeResponse> {
-  return new Promise<AddLikeResponse>(async (resolve, reject) => {
-
-  });
-}
-*/

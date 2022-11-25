@@ -13,14 +13,15 @@ import {HStack, ScrollView, View, useColorModeValue} from 'native-base';
 const FeedScreen = () => {
   const account = useAccountStore(state => state.account);
   const accessToken = useAccountStore(state => state.accessToken);
-  const navigation = useNavigation();
-  const {setPushdownConfig} = usePushdownContext();
 
   const [content, setContent] = React.useState<IFeedData[]>([]);
   const [currentPostPosition, setCurrentPostPosition] = React.useState(0);
   const [currentIndexPosition, setCurrentIndexPosition] = React.useState(0);
   const [isSuspended, setSuspended] = React.useState(false);
-  const [isRefreshing, setRefreshing] = React.useState(false);
+  const [isRefreshing] = React.useState(false);
+
+  const navigation = useNavigation();
+  const {setPushdownConfig} = usePushdownContext();
 
   const feedOffset = 100.0;
   const feedCardHeight = Dimensions.get('screen').width * 1.33;
@@ -94,21 +95,24 @@ const FeedScreen = () => {
   /**
    * Populate feed with content
    */
-  const getContent = React.useCallback((page?: number) => {
-    getFeedContent(page ?? 0, accessToken)
-      .then(data => {
-        setContent(data);
-      })
-      .catch(() => {
-        setPushdownConfig({
-          status: 'error',
-          title: 'An error has occurred',
-          body: 'We were unable to fetch your feed content',
-          duration: 5000,
-          show: true,
+  const getContent = React.useCallback(
+    (page?: number) => {
+      getFeedContent(page ?? 0, accessToken)
+        .then(data => {
+          setContent(data);
+        })
+        .catch(() => {
+          setPushdownConfig({
+            status: 'error',
+            title: 'An error has occurred',
+            body: 'We were unable to fetch your feed content',
+            duration: 5000,
+            show: true,
+          });
         });
-      });
-  }, []);
+    },
+    [accessToken, setPushdownConfig],
+  );
 
   /**
    * Suspend content when screen is unfocused

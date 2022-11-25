@@ -1,11 +1,8 @@
+import axios, {AxiosError} from 'axios';
+import {API_URL} from "../Constants";
 import {ExerciseInfo, ITrainingSession} from '../models/Training';
 import {ExerciseInfoQueryResponse} from './responses/ExerciseInfo';
-import axios, {AxiosError} from 'axios';
 import {TrainingSessionQueryResponse} from './responses/Training';
-
-// TODO: Replace with api.trainingclubapp.com
-// const url: string = 'http://146.190.2.76:80/v1';
-const url: string = 'http://localhost:8080/v1';
 
 /**
  * Returns exercise data matching a similar name to the provided query string
@@ -23,7 +20,7 @@ export async function getExerciseSearchResults(
 
     try {
       const result = await axios.get<ExerciseInfoQueryResponse>(
-        `${url}/exercise-info/query${query}`,
+        `${API_URL}/exercise-info/query${query}`,
         {
           headers: {Authorization: `Bearer ${token}`},
         },
@@ -57,7 +54,7 @@ export async function getTrainingSessions(
 
     try {
       const result = await axios.get<TrainingSessionQueryResponse>(
-        `${url}/exercise-session/search${query}`,
+        `${API_URL}/exercise-session/search${query}`,
         {
           headers: {Authorization: `Bearer ${token}`},
         },

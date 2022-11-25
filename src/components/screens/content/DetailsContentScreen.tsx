@@ -4,9 +4,20 @@ import {getTrainingSessions} from '../../../requests/Training';
 import {usePushdownContext} from '../../../context/pushdown/PushdownContext';
 import {useContentDraftContext} from '../../../context/content/ContentDraftContext';
 import {createPostWithFiles} from '../../../requests/Content';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {PrivacyLevel} from '../../../models/Privacy';
 import CloseableHeader from '../../molecules/design/CloseableHeader';
 import useAccountStore from '../../../store/AccountStore';
+import {default as MaterialIcons} from 'react-native-vector-icons/MaterialIcons';
+
+import Animated, {
+  SequencedTransition,
+  FadeOut,
+  SlideInRight,
+} from 'react-native-reanimated';
+
+import {ILocation, LocationType} from '../../../models/Location';
 
 import {
   ITrainingSession,
@@ -20,8 +31,14 @@ import {
   ScrollView,
   Select,
   TextArea,
+  Text,
   View,
+  Square,
+  Pressable,
+  HStack,
+  Icon,
   useColorModeValue,
+  Input,
 } from 'native-base';
 
 const DetailsContentScreen = (): JSX.Element => {
@@ -30,8 +47,10 @@ const DetailsContentScreen = (): JSX.Element => {
   const {content} = useContentDraftContext();
   const {setPushdownConfig} = usePushdownContext();
 
+  const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const [caption, setCaption] = React.useState('');
   const [tags, setTags] = React.useState<string[]>([]);
+
   const [trainingSessions, setTrainingSessions] = React.useState<
     ITrainingSession[]
   >([
@@ -44,6 +63,16 @@ const DetailsContentScreen = (): JSX.Element => {
     },
   ]);
 
+  const [locations, setLocations] = React.useState<ILocation[]>([
+    {
+      id: '',
+      author: '',
+      name: 'PROTOGYM',
+      description: 'Gym in Henderson, NV',
+      type: LocationType.GYM,
+    },
+  ]);
+
   const textColor = useColorModeValue('core.text.light', 'core.text.dark');
 
   const mutedTextColor = useColorModeValue(
@@ -52,6 +81,21 @@ const DetailsContentScreen = (): JSX.Element => {
   );
 
   const inputBgColor = useColorModeValue('apple.gray.50', 'apple.gray.900');
+
+  const onTagAdd = React.useCallback(
+    (tag: string) => {
+      if (tags.find(t => t === tag)) {
+        return;
+      }
+
+      setTags(prevState => [...prevState, tag]);
+    },
+    [tags],
+  );
+
+  const onTagRemove = React.useCallback((tag: string) => {
+    setTags(prevState => prevState.filter(t => t !== tag));
+  }, []);
 
   const onSubmit = React.useCallback(() => {
     createPostWithFiles(
@@ -65,11 +109,12 @@ const DetailsContentScreen = (): JSX.Element => {
     )
       .then(response => {
         console.log(response);
+        navigation.navigate('Main', {screen: 'Feed'});
       })
       .catch(err => {
         console.error(err);
       });
-  }, [accessToken, caption, content, tags]);
+  }, [accessToken, caption, content, navigation, tags]);
 
   React.useEffect(() => {
     if (!account) {
@@ -91,11 +136,13 @@ const DetailsContentScreen = (): JSX.Element => {
     getTrainingSessions(queryString, accessToken)
       .then(sessions => {
         setTrainingSessions(sessions);
+        console.log(sessions);
       })
       .catch(err => {
         if (err.response.status === 404) {
           if (trainingSessions && trainingSessions.length > 0) {
             setTrainingSessions([]);
+            console.log('no sessions found');
             return;
           }
 
@@ -155,6 +202,65 @@ const DetailsContentScreen = (): JSX.Element => {
                   />
                 ))}
             </Select>
+          </FormControl>
+
+          <FormControl mt={4}>
+            <FormControl.Label color={mutedTextColor}>
+              Location
+            </FormControl.Label>
+
+            <Select>
+              {locations &&
+                locations.map(location => (
+                  <Select.Item
+                    key={location.id}
+                    label={location.name ?? ''}
+                    value={location.id}
+                  />
+                ))}
+            </Select>
+          </FormControl>
+
+          <FormControl mt={4}>
+            <FormControl.Label color={mutedTextColor}>Tags</FormControl.Label>
+
+            <Input onSubmitEditing={e => onTagAdd(e.nativeEvent.text)} />
+
+            {tags && (
+              <HStack space={2} mt={2} flexWrap={'wrap'}>
+                {tags.map(tag => (
+                  <Animated.View
+                    entering={SlideInRight}
+                    layout={SequencedTransition.delay(300)}
+                    exiting={FadeOut.duration(250)}>
+                    <Pressable onPress={() => onTagRemove(tag)}>
+                      <Square
+                        bgColor={'black'}
+                        mt={2}
+                        p={1}
+                        minW={16}
+                        borderRadius={'full'}>
+                        <HStack
+                          space={1}
+                          justifyContent={'center'}
+                          alignItems={'center'}>
+                          <Text fontSize={'xs'} color={'white'}>
+                            {tag}
+                          </Text>
+
+                          <Icon
+                            as={MaterialIcons}
+                            name={'close'}
+                            size={4}
+                            color={'white'}
+                          />
+                        </HStack>
+                      </Square>
+                    </Pressable>
+                  </Animated.View>
+                ))}
+              </HStack>
+            )}
           </FormControl>
         </ScrollView>
       </Box>

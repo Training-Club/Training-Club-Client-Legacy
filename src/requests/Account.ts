@@ -1,5 +1,7 @@
 import axios from 'axios';
+import {API_URL} from '../Constants';
 import {IAccount} from '../models/Account';
+
 import {
   CreateStandardAccountResponse,
   GetProfileResponse,
@@ -9,10 +11,6 @@ import {
   AuthenticateStandardCredentialsResponse,
   RefreshTokenResponse,
 } from './responses/Auth';
-
-// TODO: Replace with api.trainingclubapp.com
-// const url: string = 'http://146.190.2.76:80/v1';
-const url: string = 'http://localhost:8080/v1';
 
 /**
  * Accepts an auth token as a param and attempts to obtain an account authorized
@@ -25,7 +23,7 @@ const url: string = 'http://localhost:8080/v1';
 export async function attemptLoginWithToken(token: string): Promise<IAccount> {
   return new Promise<IAccount>(async (resolve, reject) => {
     try {
-      const result = await axios.get<IAccount>(`${url}/auth/`, {
+      const result = await axios.get<IAccount>(`${API_URL}/auth/`, {
         headers: {Authorization: `Bearer ${token}`},
       });
 
@@ -59,7 +57,7 @@ export async function attemptStandardLogin(
       try {
         const result =
           await axios.post<AuthenticateStandardCredentialsResponse>(
-            `${url}/auth/`,
+            `${API_URL}/auth/`,
             {
               email: email,
               password: password,
@@ -90,7 +88,7 @@ export async function attemptStandardAccountCreate(
   return new Promise<CreateStandardAccountResponse>(async (resolve, reject) => {
     try {
       const result = await axios.post<CreateStandardAccountResponse>(
-        `${url}/account/recipe/standard`,
+        `${API_URL}/account/recipe/standard`,
         {
           username: username,
           email: email,
@@ -119,7 +117,7 @@ export async function checkAccountAvailability(
   return new Promise<boolean>(async (resolve, reject) => {
     try {
       const result = await axios.get(
-        `${url}/account/availability/${key}/${value}`,
+        `${API_URL}/account/availability/${key}/${value}`,
       );
 
       if (result.status !== 200) {
@@ -142,7 +140,7 @@ export async function requestRefreshedToken(
   return new Promise<string>(async (resolve, reject) => {
     try {
       const result = await axios.get<RefreshTokenResponse>(
-        `${url}/auth/refresh/${refreshToken}`,
+        `${API_URL}/auth/refresh/${refreshToken}`,
       );
 
       resolve(result.data.access_token);
@@ -165,7 +163,7 @@ export async function getProfile(
   return new Promise<GetProfileResponse>(async (resolve, reject) => {
     try {
       const result = await axios.get<GetProfileResponse>(
-        `${url}/account/profile/id/${accountId}`,
+        `${API_URL}/account/profile/id/${accountId}`,
         {headers: {Authorization: `Bearer ${token}`}},
       );
 

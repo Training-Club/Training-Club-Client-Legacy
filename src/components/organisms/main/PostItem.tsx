@@ -1,16 +1,15 @@
 import React from 'react';
 import {Dimensions} from 'react-native';
+import {useDebouncedCallback} from 'use-debounce';
 import {PostActionStack} from '../../molecules/main/post/PostActionStack';
 import {PostAuthorDetails} from '../../atoms/main/home/post/PostAuthorDetails';
 import {PostCarousel} from '../../molecules/main/post/PostCarousel';
 import {PostScrollIndicator} from '../../molecules/main/post/PostScrollIndicator';
 import {PostContentWrapper} from '../../atoms/main/home/post/PostContentWrapper';
-import {usePushdownContext} from '../../../context/pushdown/PushdownContext';
 import {createLike, removePostLike} from '../../../requests/Content';
 import {ITrainingSession} from '../../../models/Training';
 import {ILocation} from '../../../models/Location';
 import {IContentItem, PostItemType} from '../../../models/Content';
-import {AxiosError} from 'axios';
 import {Box, IBoxProps} from 'native-base';
 import useAccountStore from '../../../store/AccountStore';
 
@@ -57,13 +56,31 @@ export const PostItem = ({
   style,
 }: IPostItemProps): JSX.Element => {
   const accessToken = useAccountStore(state => state.accessToken);
-  const {setPushdownConfig} = usePushdownContext();
   const [index, setIndex] = React.useState(1);
 
   const [likes, setLikes] = React.useState(attributes?.likeCount ?? 0);
   const [isLiked, setLiked] = React.useState(attributes?.liked ?? false);
 
   const {width} = Dimensions.get('screen');
+
+  /**
+   * Handles performing the HTTP request to add/remove a like
+   *
+   * Request performs on a 1sec debounce to prevent spammed requests
+   */
+  const handleLikeProcessing = useDebouncedCallback(isLikedDebounced => {
+    if (isLikedDebounced) {
+      createLike(postId, PostItemType.POST, accessToken).catch(err => {
+        console.error('failed to create like: ' + err);
+      });
+
+      return;
+    }
+
+    removePostLike(postId, accessToken).catch(err => {
+      console.error('failed to remove like: ' + err);
+    });
+  }, 1000);
 
   /**
    * Returns true if this post is an album
@@ -76,42 +93,11 @@ export const PostItem = ({
    * Callback when the post like button is pressed
    */
   const onLike = React.useCallback(async () => {
-    if (isLiked) {
-      try {
-        await removePostLike(postId, accessToken);
-
-        setLiked(false);
-        setLikes(prevState => prevState - 1);
-      } catch (err) {
-        setPushdownConfig({
-          status: 'error',
-          title: 'An error occurred',
-          body: 'Failed to remove your like from this post',
-          duration: 5000,
-          show: true,
-        });
-
-        console.error('failed to remove post like: ' + err);
-      }
-
-      return;
-    }
-
-    try {
-      await createLike(postId, PostItemType.POST, accessToken);
-
-      setLiked(true);
-      setLikes(prevState => prevState + 1);
-    } catch (err) {
-      setPushdownConfig({
-        status: 'error',
-        title: 'An error occurred',
-        body: 'Failed to add your like to this post',
-        duration: 5000,
-        show: true,
-      });
-    }
-  }, [accessToken, isLiked, postId, setPushdownConfig]);
+    const prev = isLiked;
+    setLiked(!prev);
+    setLikes(prevState => (prev ? prevState - 1 : prevState + 1));
+    handleLikeProcessing(!prev);
+  }, [handleLikeProcessing, isLiked]);
 
   /**
    * Callback when the post comment button is pressed

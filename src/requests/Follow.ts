@@ -1,13 +1,10 @@
 import axios, {AxiosError} from 'axios';
+import {API_URL} from '../Constants';
 
 import {
   GetBothConnectionCountsResponse,
   GetConnectionCountResponse,
 } from './responses/Follow';
-
-// TODO: Replace with api.trainingclubapp.com
-// const url: string = 'http://146.190.2.76:80/v1';
-const url: string = 'http://localhost:8080/v1';
 
 /**
  * Queries both connection accounts for the provided id
@@ -27,12 +24,12 @@ export async function getBothConnectionCounts(
 
       try {
         const followerCount = await axios.get<GetConnectionCountResponse>(
-          `${url}/connections/follower-count/${accountId}`,
+          `${API_URL}/connections/follower-count/${accountId}`,
           {headers: {Authorization: `Bearer ${token}`}},
         );
 
         const followingCount = await axios.get<GetConnectionCountResponse>(
-          `${url}/connections/following-count/${accountId}`,
+          `${API_URL}/connections/following-count/${accountId}`,
           {headers: {Authorization: `Bearer ${token}`}},
         );
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import {IFeedData} from '../../../models/Content';
-import {Dimensions} from 'react-native';
+import {Dimensions, RefreshControl} from 'react-native';
 import GreetingText from '../../atoms/main/home/GreetingText';
 import useAccountStore from '../../../store/AccountStore';
 import {getFeedContent} from '../../../requests/Discovery';
@@ -13,12 +13,15 @@ import {HStack, ScrollView, View, useColorModeValue} from 'native-base';
 const FeedScreen = () => {
   const account = useAccountStore(state => state.account);
   const accessToken = useAccountStore(state => state.accessToken);
-  const navigation = useNavigation();
-  const {setPushdownConfig} = usePushdownContext();
+
   const [content, setContent] = React.useState<IFeedData[]>([]);
   const [currentPostPosition, setCurrentPostPosition] = React.useState(0);
   const [currentIndexPosition, setCurrentIndexPosition] = React.useState(0);
   const [isSuspended, setSuspended] = React.useState(false);
+  const [isRefreshing] = React.useState(false);
+
+  const navigation = useNavigation();
+  const {setPushdownConfig} = usePushdownContext();
 
   const feedOffset = 100.0;
   const feedCardHeight = Dimensions.get('screen').width * 1.33;
@@ -90,6 +93,28 @@ const FeedScreen = () => {
   );
 
   /**
+   * Populate feed with content
+   */
+  const getContent = React.useCallback(
+    (page?: number) => {
+      getFeedContent(page ?? 0, accessToken)
+        .then(data => {
+          setContent(data);
+        })
+        .catch(() => {
+          setPushdownConfig({
+            status: 'error',
+            title: 'An error has occurred',
+            body: 'We were unable to fetch your feed content',
+            duration: 5000,
+            show: true,
+          });
+        });
+    },
+    [accessToken, setPushdownConfig],
+  );
+
+  /**
    * Suspend content when screen is unfocused
    */
   React.useEffect(() => {
@@ -112,23 +137,11 @@ const FeedScreen = () => {
   }, [navigation]);
 
   /**
-   * Queries initial feed content in to state
+   * Performs initial content load
    */
   React.useEffect(() => {
-    getFeedContent(0, accessToken)
-      .then(data => {
-        setContent(data);
-      })
-      .catch(() => {
-        setPushdownConfig({
-          status: 'error',
-          title: 'An error has occurred',
-          body: 'We were unable to fetch your feed content',
-          duration: 5000,
-          show: true,
-        });
-      });
-  }, [accessToken, setPushdownConfig]);
+    getContent();
+  }, [accessToken, getContent, setPushdownConfig]);
 
   // TODO: Handle this properly
   if (!account) {
@@ -139,6 +152,13 @@ const FeedScreen = () => {
     <AccountDrawer account={account} onTranslate={onAccountDrawerTranslate}>
       <View px={2} w={'100%'}>
         <ScrollView
+          refreshControl={
+            <RefreshControl
+              onRefresh={() => getContent()}
+              refreshing={isRefreshing}
+              title={'Loading Content...'}
+            />
+          }
           scrollEnabled={!isSuspended}
           w={'100%'}
           h={'100%'}

@@ -82,21 +82,35 @@ const DetailsContentScreen = (): JSX.Element => {
 
   const inputBgColor = useColorModeValue('apple.gray.50', 'apple.gray.900');
 
+  /**
+   * Handles adding single or multiple tags to the current tags
+   */
   const onTagAdd = React.useCallback(
-    (tag: string) => {
-      if (tags.find(t => t === tag)) {
-        return;
-      }
+    (value: string) => {
+      const splitTags = value.split(/[, ]+/);
+      let tagsToAdd: string[] = [];
 
-      setTags(prevState => [...prevState, tag]);
+      splitTags.forEach(t => {
+        if (!tags.find(existingTag => t === existingTag)) {
+          tagsToAdd.push(t);
+        }
+      });
+
+      setTags(prevState => [...prevState, ...splitTags]);
     },
     [tags],
   );
 
+  /**
+   * Handles removing a specific tag from the tag array
+   */
   const onTagRemove = React.useCallback((tag: string) => {
     setTags(prevState => prevState.filter(t => t !== tag));
   }, []);
 
+  /**
+   * Handles submitting the POST request to the server to create the post
+   */
   const onSubmit = React.useCallback(() => {
     createPostWithFiles(
       caption,

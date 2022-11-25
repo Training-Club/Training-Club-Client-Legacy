@@ -65,6 +65,9 @@ const ContentEditorCard = ({
         cropping: true,
         width: draftItem.draft.cropRect?.width,
         height: draftItem.draft.cropRect?.height,
+        compressImageMaxHeight: draftItem.original.height,
+        compressImageMaxWidth: draftItem.original.width,
+        showCropGuidelines: true,
         compressImageQuality: 1,
       });
 

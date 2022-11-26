@@ -27,7 +27,10 @@ const CloseableHeader = ({
   const closeButtonStackName = closeButton?.stackName ?? 'Main';
   const closeButtonScreenName = closeButton?.screenName ?? 'Home';
 
-  const defaultTextColor = useColorModeValue('black', 'white');
+  const defaultTextColor = useColorModeValue(
+    'core.text.light',
+    'core.text.dark',
+  );
 
   const defaultCloseButtonBackgroundColor = useColorModeValue(
     'apple.gray.100',
@@ -54,6 +57,7 @@ const CloseableHeader = ({
         <IconButton
           testID={'closeable-header-btn'}
           position={'absolute'}
+          top={1}
           right={0}
           size={'sm'}
           rounded={'full'}

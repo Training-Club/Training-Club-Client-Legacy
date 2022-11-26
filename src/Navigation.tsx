@@ -13,6 +13,7 @@ import CurrentSessionScreen from './components/screens/training/CurrentSessionSc
 import ExerciseSearchScreen from './components/screens/training/ExerciseSearchScreen';
 import CreateExerciseScreen from './components/screens/training/CreateExerciseScreen';
 import ExerciseAdditionalSearchScreen from './components/screens/training/ExerciseAdditionalSearchScreen';
+import CurrentSessionSummaryScreen from './components/screens/training/CurrentSessionSummaryScreen';
 import SelectContentScreen from './components/screens/content/SelectContentScreen';
 import EditContentScreen from './components/screens/content/EditContentScreen';
 import DetailsContentScreen from './components/screens/content/DetailsContentScreen';
@@ -122,6 +123,12 @@ const Navigation = () => {
         <Stack.Screen
           name={'CreateExercise'}
           component={CreateExerciseScreen}
+          options={globalScreenOptions}
+        />
+
+        <Stack.Screen
+          name={'SessionSummary'}
+          component={CurrentSessionSummaryScreen}
           options={globalScreenOptions}
         />
       </Stack.Navigator>

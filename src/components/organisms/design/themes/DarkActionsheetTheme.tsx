@@ -11,6 +11,8 @@ const DarkActionsheetTheme: React.FC<BottomSheetBackgroundProps> = ({
 
   const containerAnimatedStyle = useAnimatedStyle(() => ({
     backgroundColor: backgroundColor,
+    borderTopRightRadius: 12,
+    borderTopLeftRadius: 12,
   }));
 
   const containerStyle = useMemo(

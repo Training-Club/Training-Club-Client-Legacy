@@ -1,9 +1,9 @@
 import React, {useCallback} from 'react';
 import {default as MaterialIcons} from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation} from '@react-navigation/core';
-import {Button, HStack, IconButton, useColorModeValue} from 'native-base';
 import {usePushdownContext} from '../../../context/pushdown/PushdownContext';
 import {AdditionalExerciseType} from '../../../models/Training';
+import {Button, HStack, IconButton, useColorModeValue} from 'native-base';
 
 interface ISessionButtonStackProps {
   hasIncompleteExercises: boolean;
@@ -73,7 +73,7 @@ const SessionButtonStack = ({
 
     navigation.navigate(
       'Training' as never,
-      {screen: 'TrainingSummary'} as never,
+      {screen: 'SessionSummary'} as never,
     );
   }, [hasIncompleteExercises, navigation, setPushdownConfig]);
 

@@ -1,18 +1,18 @@
 import React from 'react';
 import {useNavigation} from '@react-navigation/core';
-import {useContentDraftContext} from '../../../context/content/ContentDraftContext';
-import ImagePicker, {ImageOrVideo} from 'react-native-image-crop-picker';
 import {createDraftContent} from '../../../data/Content';
-import {IContentDraft} from '../../../models/Content';
 import {usePushdownContext} from '../../../context/pushdown/PushdownContext';
-import {Button, Heading, Square, View, Text} from 'native-base';
-import CloseableHeader from '../../molecules/design/CloseableHeader';
 import LoadingIndicator from '../../molecules/design/LoadingIndicator';
+import {IContentDraft} from '../../../models/Content';
+import ImagePicker, {ImageOrVideo} from 'react-native-image-crop-picker';
+import CloseableHeader from '../../molecules/design/CloseableHeader';
+import useContentDraftStore from '../../../store/ContentDraftStore';
+import {Button, Heading, Square, View, Text} from 'native-base';
 
 const SelectContentScreen = (): JSX.Element => {
+  const setContent = useContentDraftStore(state => state.setContent);
   const navigation = useNavigation();
   const [isRedirecting, setRedirecting] = React.useState(false);
-  const {setContent} = useContentDraftContext();
   const {setPushdownConfig} = usePushdownContext();
 
   /**

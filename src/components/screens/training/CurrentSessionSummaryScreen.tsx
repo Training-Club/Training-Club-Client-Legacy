@@ -5,8 +5,10 @@ import {SessionSummaryCard} from '../../molecules/training/SessionSummaryCard';
 import {useSessionContext} from '../../../context/session/SessionContext';
 import {Capitalize} from '../../../utils/StringUtil';
 import {Chip} from '../../atoms/design/Chip';
+import {useNavigation} from '@react-navigation/native';
 import {ILocation} from '../../../models/Location';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {PrivacyLevel} from '../../../models/Privacy';
 
 import {
@@ -25,6 +27,7 @@ import {
 
 const CurrentSessionSummaryScreen = (): JSX.Element => {
   const {draft} = useSessionContext();
+  const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const exercises = useExerciseStore(state => state.exercises);
   const [caption, setCaption] = React.useState<string>('');
   const [locations, setLocations] = React.useState<ILocation[]>([]);
@@ -71,6 +74,13 @@ const CurrentSessionSummaryScreen = (): JSX.Element => {
   const onTagRemove = React.useCallback((tag: string) => {
     setTags(prevState => prevState.filter(t => t !== tag));
   }, []);
+
+  /**
+   * Handles navigating the client to the content select screen
+   */
+  const onContentUploadPress = React.useCallback(() => {
+    navigation.navigate('Training', {screen: 'TrainingContentSelect'});
+  }, [navigation]);
 
   /**
    * Returns an array of the privacy levels in user-readable format
@@ -147,7 +157,10 @@ const CurrentSessionSummaryScreen = (): JSX.Element => {
       />
 
       <ScrollView showsVerticalScrollIndicator={false} pb={12}>
-        <SessionSummaryCard sessionName={draft?.sessionName} />
+        <SessionSummaryCard
+          sessionName={draft?.sessionName}
+          onContentUpload={() => onContentUploadPress()}
+        />
 
         <FormControl w={'100%'} mt={2}>
           <FormControl.Label>Post Privacy</FormControl.Label>

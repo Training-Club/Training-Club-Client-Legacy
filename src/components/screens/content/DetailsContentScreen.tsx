@@ -1,7 +1,6 @@
 import React from 'react';
 import {getTrainingSessions} from '../../../requests/Training';
 import {usePushdownContext} from '../../../context/pushdown/PushdownContext';
-import {useContentDraftContext} from '../../../context/content/ContentDraftContext';
 import {createPostWithFiles} from '../../../requests/Content';
 import {useNavigation} from '@react-navigation/native';
 import {Chip} from '../../atoms/design/Chip';
@@ -11,6 +10,7 @@ import {PrivacyLevel} from '../../../models/Privacy';
 import {ILocation, LocationType} from '../../../models/Location';
 import CloseableHeader from '../../molecules/design/CloseableHeader';
 import useAccountStore from '../../../store/AccountStore';
+import useContentDraftStore from '../../../store/ContentDraftStore';
 
 import {
   Capitalize,
@@ -39,9 +39,9 @@ import {
 const DetailsContentScreen = (): JSX.Element => {
   const account = useAccountStore(state => state.account);
   const accessToken = useAccountStore(state => state.accessToken);
-  const {content} = useContentDraftContext();
-  const {setPushdownConfig} = usePushdownContext();
+  const content = useContentDraftStore(state => state.content);
 
+  const {setPushdownConfig} = usePushdownContext();
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const [caption, setCaption] = React.useState('');
   const [tags, setTags] = React.useState<string[]>([]);

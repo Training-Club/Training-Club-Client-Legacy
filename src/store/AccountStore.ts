@@ -1,9 +1,9 @@
 import React from 'react';
 import create from 'zustand';
 import {IAccount} from '../models/Account';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {getRefreshToken, handleAccountLoad} from '../data/Account';
 import {useNavigation} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {requestRefreshedToken} from '../requests/Account';
 
 interface AccountStore {

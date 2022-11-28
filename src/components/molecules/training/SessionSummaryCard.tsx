@@ -13,10 +13,12 @@ import {
 
 interface ISessionSummaryCard {
   sessionName?: string;
+  onContentUpload?: () => void;
 }
 
 export const SessionSummaryCard = ({
   sessionName,
+  onContentUpload,
 }: ISessionSummaryCard): JSX.Element => {
   const textColor = useColorModeValue('core.text.light', 'core.text.dark');
 
@@ -39,9 +41,9 @@ export const SessionSummaryCard = ({
       mt={2}
       p={2}
       borderRadius={12}>
-      <Pressable onPress={() => console.log('upload image select')}>
+      <Pressable onPress={onContentUpload}>
         <Square w={16} h={16} borderRadius={12} bgColor={imageCardBgColor}>
-          <Icon as={MaterialIcons} name={'photo'} size={12} />
+          <Icon as={MaterialIcons} name={'photo'} size={10} />
         </Square>
       </Pressable>
 

@@ -3,11 +3,12 @@ import {IFeedData} from '../../../models/Content';
 import {Dimensions, RefreshControl} from 'react-native';
 import GreetingText from '../../atoms/main/home/GreetingText';
 import useAccountStore from '../../../store/AccountStore';
+import {ActionCardList} from '../../organisms/main/ActionCardList';
 import {getFeedContent} from '../../../requests/Discovery';
-import AccountDrawer from '../../organisms/main/AccountDrawer';
-import PostFeed from '../../organisms/main/PostFeed';
 import {useNavigation} from '@react-navigation/native';
 import {usePushdownContext} from '../../../context/pushdown/PushdownContext';
+import AccountDrawer from '../../organisms/main/AccountDrawer';
+import PostFeed from '../../organisms/main/PostFeed';
 import {HStack, ScrollView, View, useColorModeValue} from 'native-base';
 
 const FeedScreen = () => {
@@ -172,6 +173,8 @@ const FeedScreen = () => {
               <GreetingText name={name} time={time} />
             </HStack>
           )}
+
+          <ActionCardList />
 
           <PostFeed
             scrollEnabled={!isSuspended}

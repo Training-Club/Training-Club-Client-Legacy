@@ -1,35 +1,21 @@
 import React from 'react';
-import {getTrainingSessions} from '../../../requests/Training';
-import {usePushdownContext} from '../../../context/pushdown/PushdownContext';
 import {createPostWithFiles} from '../../../requests/Content';
 import {useNavigation} from '@react-navigation/native';
+import {NavigationHeader} from '../../molecules/design/NavigationHeader';
 import {Chip} from '../../atoms/design/Chip';
+import {Capitalize} from '../../../utils/StringUtil';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {PrivacyLevel} from '../../../models/Privacy';
 import {ILocation, LocationType} from '../../../models/Location';
-import CloseableHeader from '../../molecules/design/CloseableHeader';
 import useAccountStore from '../../../store/AccountStore';
 import useContentDraftStore from '../../../store/ContentDraftStore';
 
 import {
-  Capitalize,
-  FormatTrainingSessionQuery,
-} from '../../../utils/StringUtil';
-
-import {
-  ITrainingSession,
-  TrainingSessionStatus,
-} from '../../../models/Training';
-
-import {
-  Box,
-  Button,
   FormControl,
   ScrollView,
   Select,
   TextArea,
-  View,
   HStack,
   Center,
   useColorModeValue,
@@ -37,28 +23,13 @@ import {
 } from 'native-base';
 
 const DetailsContentScreen = (): JSX.Element => {
-  const account = useAccountStore(state => state.account);
   const accessToken = useAccountStore(state => state.accessToken);
   const content = useContentDraftStore(state => state.content);
 
-  const {setPushdownConfig} = usePushdownContext();
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const [caption, setCaption] = React.useState('');
   const [tags, setTags] = React.useState<string[]>([]);
   const [privacyLevel, setPrivacyLevel] = React.useState(PrivacyLevel.PUBLIC);
-
-  const [trainingSessions, setTrainingSessions] = React.useState<
-    ITrainingSession[]
-  >([
-    {
-      id: '',
-      sessionName: 'Example Session',
-      author: '',
-      status: TrainingSessionStatus.COMPLETED,
-      exercises: [],
-    },
-  ]);
-
   const [locations, setLocations] = React.useState<ILocation[]>([
     {
       id: '',
@@ -171,175 +142,101 @@ const DetailsContentScreen = (): JSX.Element => {
       });
   }, [accessToken, caption, content, navigation, tags]);
 
-  React.useEffect(() => {
-    if (!account) {
-      return;
-    }
-
-    const queryString = FormatTrainingSessionQuery(
-      undefined,
-      undefined,
-      account.id,
-      0,
-    );
-
-    if (!queryString) {
-      // TODO: Set error here
-      return;
-    }
-
-    getTrainingSessions(queryString, accessToken)
-      .then(sessions => {
-        setTrainingSessions(sessions);
-        console.log(sessions);
-      })
-      .catch(err => {
-        if (err.response.status === 404) {
-          if (trainingSessions && trainingSessions.length > 0) {
-            setTrainingSessions([]);
-            console.log('no sessions found');
-            return;
-          }
-
-          return;
-        }
-
-        setPushdownConfig({
-          status: 'error',
-          title: 'Failed to query Training Sessions',
-          body:
-            err.response.message ??
-            'We were unable to query your training sessions and you may be unable to select them.',
-          duration: 5000,
-          show: true,
-        });
-      });
-  }, [accessToken, account, setPushdownConfig, trainingSessions]);
-
   return (
-    <View>
-      <Box px={4}>
-        <CloseableHeader
-          pageTitle={'Edit Details'}
-          closeButton={{stackName: 'Content', screenName: 'ContentEdit'}}
-        />
+    <NavigationHeader
+      title={'Details'}
+      viewStyle={{px: 4}}
+      actionButton={{
+        text: 'Submit',
+        onPress: onSubmit,
+      }}
+      backButton={{
+        text: 'Edit',
+        navigationProps: {stackName: 'Content', screenName: 'ContentEdit'},
+      }}>
+      <ScrollView h={'100%'}>
+        <FormControl>
+          <FormControl.Label color={mutedTextColor}>Caption</FormControl.Label>
 
-        <ScrollView h={'100%'}>
-          <FormControl>
-            <FormControl.Label color={mutedTextColor}>
-              Caption
-            </FormControl.Label>
+          <TextArea
+            autoCompleteType={'none'}
+            placeholder={'Add a post description'}
+            minH={24}
+            w={'100%'}
+            borderRadius={'12px'}
+            color={textColor}
+            bg={inputBgColor}
+            onChange={e => setCaption(e.nativeEvent.text)}
+          />
+        </FormControl>
 
-            <TextArea
-              autoCompleteType={'none'}
-              placeholder={'Add a post description'}
-              minH={24}
-              w={'100%'}
-              borderRadius={'12px'}
-              color={textColor}
-              bg={inputBgColor}
-              onChange={e => setCaption(e.nativeEvent.text)}
-            />
-          </FormControl>
+        <FormControl w={'100%'} mt={8}>
+          <FormControl.Label>Post Privacy</FormControl.Label>
 
-          <FormControl w={'100%'} mt={8}>
-            <FormControl.Label>Post Privacy</FormControl.Label>
+          <SegmentedControl
+            values={getPrivacyLevels()}
+            selectedIndex={0}
+            onValueChange={value => handlePrivacyLevelChange(value)}
+            backgroundColor={segmentedBgColor}
+            fontStyle={{color: segmentedTextColor}}
+            activeFontStyle={{color: segmentedSelectedTextColor}}
+          />
 
-            <SegmentedControl
-              values={getPrivacyLevels()}
-              selectedIndex={0}
-              onValueChange={value => handlePrivacyLevelChange(value)}
-              backgroundColor={segmentedBgColor}
-              fontStyle={{color: segmentedTextColor}}
-              activeFontStyle={{color: segmentedSelectedTextColor}}
-            />
-
-            <Center>
-              {privacyLevel === PrivacyLevel.PUBLIC && (
-                <FormControl.HelperText>
-                  Your post will be visible to any member of Training Club.
-                </FormControl.HelperText>
-              )}
-
-              {privacyLevel === PrivacyLevel.FOLLOWERS_ONLY && (
-                <FormControl.HelperText>
-                  Your post will only be visible to those who follow you.
-                </FormControl.HelperText>
-              )}
-
-              {privacyLevel === PrivacyLevel.PRIVATE && (
-                <FormControl.HelperText>
-                  Your post will only be visble to you.
-                </FormControl.HelperText>
-              )}
-            </Center>
-          </FormControl>
-
-          <FormControl mt={4}>
-            <FormControl.Label color={mutedTextColor}>
-              Attach a Training Session
-            </FormControl.Label>
-
-            <Select bgColor={inputBgColor} borderRadius={12}>
-              {trainingSessions &&
-                trainingSessions.map(session => (
-                  <Select.Item
-                    key={session.id}
-                    label={session.sessionName ?? ''}
-                    value={session.id}
-                  />
-                ))}
-            </Select>
-          </FormControl>
-
-          <FormControl mt={4}>
-            <FormControl.Label color={mutedTextColor}>
-              Location
-            </FormControl.Label>
-
-            <Select bgColor={inputBgColor} borderRadius={12}>
-              {locations &&
-                locations.map(location => (
-                  <Select.Item
-                    key={location.id}
-                    label={location.name ?? ''}
-                    value={location.id}
-                  />
-                ))}
-            </Select>
-          </FormControl>
-
-          <FormControl mt={4}>
-            <FormControl.Label color={mutedTextColor}>Tags</FormControl.Label>
-
-            <Input
-              bgColor={inputBgColor}
-              borderRadius={12}
-              onSubmitEditing={e => onTagAdd(e.nativeEvent.text)}
-            />
-
-            {tags && (
-              <HStack space={2} mt={2} flexWrap={'wrap'}>
-                {tags.map(tag => (
-                  <Chip text={tag} onPress={() => onTagRemove(tag)} />
-                ))}
-              </HStack>
+          <Center>
+            {privacyLevel === PrivacyLevel.PUBLIC && (
+              <FormControl.HelperText>
+                Your post will be visible to any member of Training Club.
+              </FormControl.HelperText>
             )}
-          </FormControl>
-        </ScrollView>
-      </Box>
 
-      <Box position={'absolute'} left={0} bottom={8} px={4} w={'100%'}>
-        <Button
-          onPress={() => onSubmit()}
-          variant={'info'}
-          size={'lg'}
-          w={'100%'}
-          _text={{color: 'white'}}>
-          Submit
-        </Button>
-      </Box>
-    </View>
+            {privacyLevel === PrivacyLevel.FOLLOWERS_ONLY && (
+              <FormControl.HelperText>
+                Your post will only be visible to those who follow you.
+              </FormControl.HelperText>
+            )}
+
+            {privacyLevel === PrivacyLevel.PRIVATE && (
+              <FormControl.HelperText>
+                Your post will only be visble to you.
+              </FormControl.HelperText>
+            )}
+          </Center>
+        </FormControl>
+
+        <FormControl mt={4}>
+          <FormControl.Label color={mutedTextColor}>Location</FormControl.Label>
+
+          <Select bgColor={inputBgColor} borderRadius={12}>
+            {locations &&
+              locations.map(location => (
+                <Select.Item
+                  key={location.id}
+                  label={location.name ?? ''}
+                  value={location.id}
+                />
+              ))}
+          </Select>
+        </FormControl>
+
+        <FormControl mt={4}>
+          <FormControl.Label color={mutedTextColor}>Tags</FormControl.Label>
+
+          <Input
+            bgColor={inputBgColor}
+            borderRadius={12}
+            onSubmitEditing={e => onTagAdd(e.nativeEvent.text)}
+          />
+
+          {tags && (
+            <HStack space={2} mt={2} flexWrap={'wrap'}>
+              {tags.map(tag => (
+                <Chip text={tag} onPress={() => onTagRemove(tag)} />
+              ))}
+            </HStack>
+          )}
+        </FormControl>
+      </ScrollView>
+    </NavigationHeader>
   );
 };
 

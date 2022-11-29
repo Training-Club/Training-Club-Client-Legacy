@@ -1,10 +1,10 @@
 import React from 'react';
-import CloseableHeader from '../../molecules/design/CloseableHeader';
 import useExerciseStore from '../../../store/ExerciseStore';
 import {SessionSummaryCard} from '../../molecules/training/SessionSummaryCard';
 import {useSessionContext} from '../../../context/session/SessionContext';
 import {Capitalize} from '../../../utils/StringUtil';
 import {Chip} from '../../atoms/design/Chip';
+import {NavigationHeader} from '../../molecules/design/NavigationHeader';
 import {useNavigation} from '@react-navigation/native';
 import {ILocation} from '../../../models/Location';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
@@ -14,13 +14,10 @@ import {PrivacyLevel} from '../../../models/Privacy';
 import {
   Center,
   FormControl,
-  Select,
-  TextArea,
-  View,
-  Box,
-  Button,
   HStack,
   ScrollView,
+  Select,
+  TextArea,
   Input,
   useColorModeValue,
 } from 'native-base';
@@ -141,6 +138,11 @@ const CurrentSessionSummaryScreen = (): JSX.Element => {
     [privacyLevel],
   );
 
+  const onSubmit = React.useCallback(() => {
+    // TODO: Implement onSubmit for exercise sessions
+    console.log('onSubmit called');
+  }, []);
+
   /**
    * Handles initial data load
    */
@@ -150,13 +152,21 @@ const CurrentSessionSummaryScreen = (): JSX.Element => {
   }, [getInitialTags]);
 
   return (
-    <View px={4}>
-      <CloseableHeader
-        pageTitle={'Session Summary'}
-        closeButton={{stackName: 'Training', screenName: 'CurrentSession'}}
-      />
-
-      <ScrollView showsVerticalScrollIndicator={false} pb={12}>
+    <NavigationHeader
+      title={'Details'}
+      viewStyle={{px: 4}}
+      backButton={{
+        text: 'Session',
+        navigationProps: {
+          stackName: 'Training',
+          screenName: 'CurrentSession',
+        },
+      }}
+      actionButton={{
+        text: 'Submit',
+        onPress: onSubmit,
+      }}>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <SessionSummaryCard
           sessionName={draft?.sessionName}
           onContentUpload={() => onContentUploadPress()}
@@ -243,17 +253,7 @@ const CurrentSessionSummaryScreen = (): JSX.Element => {
           )}
         </FormControl>
       </ScrollView>
-
-      <Box position={'absolute'} left={4} bottom={8} w={'100%'}>
-        <Button
-          variant={'info'}
-          size={'lg'}
-          w={'100%'}
-          _text={{color: 'white'}}>
-          Submit
-        </Button>
-      </Box>
-    </View>
+    </NavigationHeader>
   );
 };
 

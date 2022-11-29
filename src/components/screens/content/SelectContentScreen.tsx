@@ -5,9 +5,9 @@ import {usePushdownContext} from '../../../context/pushdown/PushdownContext';
 import LoadingIndicator from '../../molecules/design/LoadingIndicator';
 import {IContentDraft} from '../../../models/Content';
 import ImagePicker, {ImageOrVideo} from 'react-native-image-crop-picker';
-import CloseableHeader from '../../molecules/design/CloseableHeader';
 import useContentDraftStore from '../../../store/ContentDraftStore';
-import {Button, Heading, Square, View, Text} from 'native-base';
+import {Button, Heading, Square, Text} from 'native-base';
+import {NavigationHeader} from '../../molecules/design/NavigationHeader';
 
 const SelectContentScreen = (): JSX.Element => {
   const setContent = useContentDraftStore(state => state.setContent);
@@ -76,12 +76,12 @@ const SelectContentScreen = (): JSX.Element => {
   }
 
   return (
-    <View px={4}>
-      <CloseableHeader
-        pageTitle={'Create Post'}
-        closeButton={{stackName: 'Main', screenName: 'Feed'}}
-      />
-
+    <NavigationHeader
+      title={'Select'}
+      backButton={{
+        text: 'Feed',
+        navigationProps: {stackName: 'Main', screenName: 'Feed'},
+      }}>
       <Square
         w={'100%'}
         h={'100%'}
@@ -100,7 +100,7 @@ const SelectContentScreen = (): JSX.Element => {
           Select Images/Videos
         </Button>
       </Square>
-    </View>
+    </NavigationHeader>
   );
 };
 

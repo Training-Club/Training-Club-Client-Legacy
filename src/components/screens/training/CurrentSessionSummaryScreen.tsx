@@ -1,4 +1,5 @@
 import React from 'react';
+import useAccountStore from '../../../store/AccountStore';
 import useExerciseStore from '../../../store/ExerciseStore';
 import {SessionSummaryCard} from '../../molecules/training/SessionSummaryCard';
 import {useSessionContext} from '../../../context/session/SessionContext';
@@ -6,6 +7,8 @@ import {Capitalize} from '../../../utils/StringUtil';
 import {Chip} from '../../atoms/design/Chip';
 import {NavigationHeader} from '../../molecules/design/NavigationHeader';
 import {useNavigation} from '@react-navigation/native';
+import {createTrainingSession} from '../../../requests/Training';
+import {createPost} from '../../../requests/Content';
 import {ILocation} from '../../../models/Location';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -23,9 +26,12 @@ import {
 } from 'native-base';
 
 const CurrentSessionSummaryScreen = (): JSX.Element => {
+  const exercises = useExerciseStore(state => state.exercises);
+  const account = useAccountStore(state => state.account);
+  const accessToken = useAccountStore(state => state.accessToken);
+
   const {draft} = useSessionContext();
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
-  const exercises = useExerciseStore(state => state.exercises);
   const [caption, setCaption] = React.useState<string>('');
   const [locations, setLocations] = React.useState<ILocation[]>([]);
   const [tags, setTags] = React.useState<string[]>([]);
@@ -138,10 +144,42 @@ const CurrentSessionSummaryScreen = (): JSX.Element => {
     [privacyLevel],
   );
 
-  const onSubmit = React.useCallback(() => {
-    // TODO: Implement onSubmit for exercise sessions
-    console.log('onSubmit called');
-  }, []);
+  const onSubmit = React.useCallback(async () => {
+    if (!account) {
+      console.error('account is undefined');
+      return;
+    }
+
+    let trainingSessionId: string;
+    let postId: string;
+
+    try {
+      const response = await createTrainingSession(
+        draft?.sessionName ?? 'My Workout',
+        account.id,
+        exercises,
+        accessToken,
+      );
+      trainingSessionId = response.message;
+    } catch (err) {
+      console.error(err);
+      return;
+    }
+
+    try {
+      const response = await createPost({
+        session: trainingSessionId,
+        token: accessToken,
+      });
+      postId = response.message;
+    } catch (err) {
+      console.error(err);
+      return;
+    }
+
+    console.log(postId);
+    navigation.navigate('Main', {screen: 'Feed'});
+  }, [accessToken, account, draft?.sessionName, exercises, navigation]);
 
   /**
    * Handles initial data load

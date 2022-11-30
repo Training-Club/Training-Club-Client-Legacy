@@ -10,6 +10,7 @@ import {
   GetLikeCountResponse,
   GetSignedContentResponse,
 } from './responses/Content';
+import {ITrainingSession} from '../models/Training';
 
 /**
  * Queries feed content
@@ -56,6 +57,7 @@ export async function getFeedContent(
       const tags = post.tags;
 
       let contentItems: IContentItem[] = [];
+      let trainingSession: ITrainingSession | undefined;
       let authorUsername: string;
       let avatarUri: string;
       let likes = 0;
@@ -94,22 +96,37 @@ export async function getFeedContent(
         comments = 0;
       }
 
-      // query image signing
-      try {
-        const signResult = await axios.get<GetSignedContentResponse>(
-          `${API_URL}/content/post/content/${id}`,
-          {headers: {Authorization: `Bearer ${token}`}},
-        );
+      if (post && post.session) {
+        try {
+          const trainingSessionResult = await axios.get<ITrainingSession>(
+            `${API_URL}/exercise-session/id/${post.session}`,
+            {headers: {Authorization: `Bearer ${token}`}},
+          );
 
-        // TODO: Update Ares to return content type
-        for (const signed of signResult.data.result) {
-          contentItems.push({
-            type: signed.type,
-            destination: signed.url,
-          });
+          trainingSession = trainingSessionResult.data;
+        } catch (err) {
+          trainingSession = undefined;
         }
-      } catch (err) {
-        return reject(err);
+      }
+
+      // query image signing
+      if (post && post.content && post.content.length) {
+        try {
+          const signResult = await axios.get<GetSignedContentResponse>(
+            `${API_URL}/content/post/content/${id}`,
+            {headers: {Authorization: `Bearer ${token}`}},
+          );
+
+          // TODO: Update Ares to return content type
+          for (const signed of signResult.data.result) {
+            contentItems.push({
+              type: signed.type,
+              destination: signed.url,
+            });
+          }
+        } catch (err) {
+          return reject(err);
+        }
       }
 
       // query isLiked
@@ -133,6 +150,7 @@ export async function getFeedContent(
           username: authorUsername,
           avatarUri: avatarUri,
         },
+        trainingSession: trainingSession,
         likes: likes,
         comments: comments,
         isLiked: liked,

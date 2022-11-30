@@ -1,5 +1,6 @@
 import React from 'react';
 import {IFeedData} from '../../../models/Content';
+import {AxiosError} from 'axios';
 import {Dimensions, RefreshControl} from 'react-native';
 import GreetingText from '../../atoms/main/home/GreetingText';
 import useAccountStore from '../../../store/AccountStore';
@@ -102,7 +103,10 @@ const FeedScreen = () => {
         .then(data => {
           setContent(data);
         })
-        .catch(() => {
+        .catch(err => {
+          const axiosError = err as AxiosError;
+          console.log(axiosError.response);
+
           setPushdownConfig({
             status: 'error',
             title: 'An error has occurred',

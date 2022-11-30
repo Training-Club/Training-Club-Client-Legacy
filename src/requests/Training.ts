@@ -1,8 +1,18 @@
 import axios, {AxiosError} from 'axios';
-import {API_URL} from "../Constants";
-import {ExerciseInfo, ITrainingSession} from '../models/Training';
+import {API_URL} from '../Constants';
 import {ExerciseInfoQueryResponse} from './responses/ExerciseInfo';
-import {TrainingSessionQueryResponse} from './responses/Training';
+
+import {
+  ExerciseInfo,
+  IExercise,
+  ITrainingSession,
+  TrainingSessionStatus,
+} from '../models/Training';
+
+import {
+  TrainingSessionCreateResponse,
+  TrainingSessionQueryResponse,
+} from './responses/Training';
 
 /**
  * Returns exercise data matching a similar name to the provided query string
@@ -67,6 +77,45 @@ export async function getTrainingSessions(
       resolve(result.data.result);
     } catch (err) {
       reject(err);
+    }
+  });
+}
+
+/**
+ * Creates a new completed training session
+ *
+ * @param sessionName Training Session Name
+ * @param authorId Author ID
+ * @param exercises Exercises Array
+ * @param token Json Web Token
+ */
+export async function createTrainingSession(
+  sessionName: string,
+  authorId: string,
+  exercises: IExercise[],
+  token?: string,
+): Promise<TrainingSessionCreateResponse> {
+  return new Promise<TrainingSessionCreateResponse>(async (resolve, reject) => {
+    if (!token) {
+      return reject('no token on this device');
+    }
+
+    try {
+      const trainingSession = await axios.post<TrainingSessionCreateResponse>(
+        `${API_URL}/exercise-session/`,
+        {
+          sessionName: sessionName,
+          author: authorId,
+          status: TrainingSessionStatus.COMPLETED,
+          timestamp: new Date(),
+          exercises: exercises,
+        },
+        {headers: {Authorization: `Bearer ${token}`}},
+      );
+
+      return resolve(trainingSession.data);
+    } catch (err) {
+      return reject(err);
     }
   });
 }

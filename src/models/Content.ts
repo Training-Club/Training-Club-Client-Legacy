@@ -24,6 +24,7 @@ export interface IContentDraft {
 export interface IPost {
   id: string;
   author: string;
+  session?: string;
   location?: string;
   text?: string;
   content: IContentItem[];
@@ -50,7 +51,7 @@ export interface IFeedData {
   trainingSession?: ITrainingSession;
   location?: ILocation;
 
-  content: IContentItem[];
+  content?: IContentItem[];
   createdAt: Date;
   editedAt?: Date;
   text?: string;

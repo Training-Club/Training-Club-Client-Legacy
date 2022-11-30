@@ -42,7 +42,7 @@ export const PostTrainingSessionCard = ({
         {groupedExercises &&
           groupedExercises.map(groupedExercise => (
             <PostTrainingSessionExercise
-              key={groupedExercise.name}
+              key={groupedExercise.exercises[0].id}
               groupedExercise={groupedExercise}
             />
           ))}

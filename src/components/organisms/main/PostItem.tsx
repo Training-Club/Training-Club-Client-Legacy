@@ -6,6 +6,7 @@ import {PostAuthorDetails} from '../../atoms/main/home/post/PostAuthorDetails';
 import {PostCarousel} from '../../molecules/main/post/PostCarousel';
 import {PostScrollIndicator} from '../../molecules/main/post/PostScrollIndicator';
 import {PostContentWrapper} from '../../atoms/main/home/post/PostContentWrapper';
+import {PostTrainingSessionCard} from '../../molecules/main/post/PostTrainingSessionCard';
 import {createLike, removePostLike} from '../../../requests/Content';
 import {ITrainingSession} from '../../../models/Training';
 import {ILocation} from '../../../models/Location';
@@ -17,7 +18,6 @@ interface IPostItemProps {
   scrollEnabled?: boolean;
 
   postId: string;
-  content: IContentItem[];
   username: string;
 
   currentPosition: {
@@ -29,6 +29,7 @@ interface IPostItemProps {
     post: number;
   };
 
+  content?: IContentItem[];
   trainingSession?: ITrainingSession;
   location?: ILocation;
   onIndexUpdate?: (page: number) => void;
@@ -86,8 +87,8 @@ export const PostItem = ({
    * Returns true if this post is an album
    */
   const isAlbum = React.useCallback(() => {
-    return content.length > 1;
-  }, [content.length]);
+    return content && content.length > 0;
+  }, [content]);
 
   /**
    * Callback when the post like button is pressed
@@ -158,7 +159,7 @@ export const PostItem = ({
         }}
       />
 
-      {isAlbum() && (
+      {content && isAlbum() && (
         <>
           <PostScrollIndicator
             index={index}
@@ -178,12 +179,19 @@ export const PostItem = ({
         </>
       )}
 
-      {!isAlbum() && (
+      {content && !isAlbum() && (
         <PostContentWrapper
           paused={!scrollEnabled}
           content={content[0]}
           currentPosition={currentPosition}
           position={{post: position.post, index: index}}
+        />
+      )}
+
+      {trainingSession && (
+        <PostTrainingSessionCard
+          key={trainingSession.id}
+          trainingSession={trainingSession}
         />
       )}
     </Box>

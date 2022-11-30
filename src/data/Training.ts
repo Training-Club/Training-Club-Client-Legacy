@@ -80,7 +80,9 @@ export function getAsGroupedExercises(
   const grouped: GroupedExercise[] = [];
   const copied: IExercise[] = [...exercises];
 
-  copied.sort((a, b) => a.addedAt.getDate() - b.addedAt.getDate());
+  copied.sort(
+    (a, b) => new Date(a.addedAt).getDate() - new Date(b.addedAt).getDate(),
+  );
 
   copied.map(exercise => {
     processedExercises.push(exercise.exerciseName);
@@ -97,7 +99,9 @@ export function getAsGroupedExercises(
         collection.push(match);
       });
 
-    collection.sort((a, b) => a.addedAt.getDate() - b.addedAt.getDate());
+    collection.sort(
+      (a, b) => new Date(a.addedAt).getDate() - new Date(b.addedAt).getDate(),
+    );
 
     const displayed: GroupedExercise = {
       name: currentName,

@@ -30,7 +30,7 @@ const PostFeed = ({
         {data &&
           data.map((entry, i) => (
             <PostItem
-              key={entry.content[0].destination}
+              key={entry.id}
               scrollEnabled={scrollEnabled}
               postId={entry.id}
               content={entry.content}

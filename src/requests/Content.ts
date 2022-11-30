@@ -22,9 +22,10 @@ import {
 } from '../models/Content';
 
 type CreatePostParams = {
+  session?: string;
   location?: string;
   text?: string;
-  content: IContentItem[];
+  content?: IContentItem[];
   tags?: string[];
   privacy?: PrivacyLevel;
   token?: string;
@@ -92,7 +93,7 @@ export async function createPost(
 
     try {
       const result = await axios.post<CreatePostResponse>(
-        `${API_URL}/post/`,
+        `${API_URL}/content/post`,
         {...params},
         {headers: {Authorization: `Bearer ${params.token}`}},
       );
@@ -225,8 +226,6 @@ export async function createPostWithFiles(
 
       return resolve(createResult.data);
     } catch (err) {
-      const axiosError = err as AxiosError;
-      console.log(axiosError.response);
       return reject(err);
     }
   });

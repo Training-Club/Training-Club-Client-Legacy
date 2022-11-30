@@ -27,7 +27,7 @@ export const PostActionStack = ({
   };
 
   return (
-    <VStack zIndex={1} space={4} position={'absolute'} bottom={2} right={2}>
+    <VStack zIndex={1} position={'absolute'} bottom={2} right={2} space={4}>
       <Pressable onPress={onLike}>
         <Square>
           <Icon

@@ -21,7 +21,10 @@ export const PostScrollIndicator = ({
       h={'24px'}>
       <HStack>
         {[...Array(size)].map((a, currentPos) => (
-          <PostScrollIndicatorItem key={currentPos} isSelected={currentPos === index - 1} />
+          <PostScrollIndicatorItem
+            key={currentPos}
+            isSelected={currentPos === index - 1}
+          />
         ))}
       </HStack>
     </Square>

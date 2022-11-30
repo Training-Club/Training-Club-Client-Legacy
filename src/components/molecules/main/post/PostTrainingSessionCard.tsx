@@ -31,7 +31,8 @@ export const PostTrainingSessionCard = ({
       borderRadius={'12px'}
       bgColor={bgColor}
       p={2}
-      pt={12}>
+      pt={12}
+      mt={8}>
       <PostTrainingSessionTitle
         sessionName={trainingSession.sessionName}
         location={location}

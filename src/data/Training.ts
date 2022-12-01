@@ -167,7 +167,7 @@ function decompressWeightValues(
   }
 
   const converted =
-    value.weightMeasurementSystem === MeasurementSystem.METRIC
+    value.weightMeasurementSystem === MeasurementSystem.IMPERIAL
       ? value.weightValue
       : getConvertedWeight(value.weightValue, value.weightMeasurementSystem);
 

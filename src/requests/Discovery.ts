@@ -2,15 +2,16 @@ import axios from 'axios';
 import {API_URL} from '../Constants';
 import {getProfile} from './Account';
 import {getLike} from './Content';
+import {createDecompressedSession} from '../data/Training';
 import {GetFeedContentResponse} from './responses/Discovery';
 import {IContentItem, IFeedData} from '../models/Content';
+import {ICompressedSession, ITrainingSession} from '../models/Training';
 
 import {
   GetCommentCountResponse,
   GetLikeCountResponse,
   GetSignedContentResponse,
 } from './responses/Content';
-import {ITrainingSession} from '../models/Training';
 
 /**
  * Queries feed content
@@ -98,12 +99,16 @@ export async function getFeedContent(
 
       if (post && post.session) {
         try {
-          const trainingSessionResult = await axios.get<ITrainingSession>(
+          const trainingSessionResult = await axios.get<ICompressedSession>(
             `${API_URL}/exercise-session/id/${post.session}`,
             {headers: {Authorization: `Bearer ${token}`}},
           );
 
-          trainingSession = trainingSessionResult.data;
+          const decompressed = createDecompressedSession(
+            trainingSessionResult.data,
+          );
+
+          trainingSession = decompressed;
         } catch (err) {
           trainingSession = undefined;
         }

@@ -1,5 +1,6 @@
 import axios, {AxiosError} from 'axios';
 import {API_URL} from '../Constants';
+import {compressExercises} from '../data/Training';
 import {ExerciseInfoQueryResponse} from './responses/ExerciseInfo';
 
 import {
@@ -100,6 +101,8 @@ export async function createTrainingSession(
       return reject('no token on this device');
     }
 
+    const compressedExercises = compressExercises(exercises);
+
     try {
       const trainingSession = await axios.post<TrainingSessionCreateResponse>(
         `${API_URL}/exercise-session/`,
@@ -108,7 +111,7 @@ export async function createTrainingSession(
           author: authorId,
           status: TrainingSessionStatus.COMPLETED,
           timestamp: new Date(),
-          exercises: exercises,
+          exercises: compressedExercises,
         },
         {headers: {Authorization: `Bearer ${token}`}},
       );

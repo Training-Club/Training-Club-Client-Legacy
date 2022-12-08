@@ -82,8 +82,8 @@ const CurrentSessionSummaryScreen = (): JSX.Element => {
    * Handles navigating the client to the content select screen
    */
   const onContentUploadPress = React.useCallback(() => {
-    navigation.navigate('Training', {screen: 'TrainingContentSelect'});
-  }, [navigation]);
+    console.log('onContentUploadPress called');
+  }, []);
 
   /**
    * Returns an array of the privacy levels in user-readable format
@@ -178,7 +178,7 @@ const CurrentSessionSummaryScreen = (): JSX.Element => {
     }
 
     console.log(postId);
-    navigation.navigate('Main', {screen: 'Feed'});
+    navigation.navigate('MainFeed');
   }, [accessToken, account, draft?.sessionName, exercises, navigation]);
 
   /**
@@ -196,8 +196,7 @@ const CurrentSessionSummaryScreen = (): JSX.Element => {
       backButton={{
         text: 'Session',
         navigationProps: {
-          stackName: 'Training',
-          screenName: 'CurrentSession',
+          screenName: 'TrainingCurrentSession',
         },
       }}
       actionButton={{

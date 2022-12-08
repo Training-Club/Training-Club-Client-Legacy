@@ -1,8 +1,9 @@
 import React, {useCallback} from 'react';
-import {default as MaterialIcons} from 'react-native-vector-icons/MaterialIcons';
+import {AdditionalExerciseType} from '../../../models/Training';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/core';
 import {usePushdownContext} from '../../../context/pushdown/PushdownContext';
-import {AdditionalExerciseType} from '../../../models/Training';
+import {default as MaterialIcons} from 'react-native-vector-icons/MaterialIcons';
 import {Button, HStack, IconButton, useColorModeValue} from 'native-base';
 
 interface ISessionButtonStackProps {
@@ -17,7 +18,7 @@ interface ISideButtonProps {
 const SessionButtonStack = ({
   hasIncompleteExercises,
 }: ISessionButtonStackProps): JSX.Element => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const {setPushdownConfig} = usePushdownContext();
 
   const grayButtonColor = useColorModeValue(
@@ -42,20 +43,11 @@ const SessionButtonStack = ({
   );
 
   const handleNewExercise = useCallback(() => {
-    navigation.navigate(
-      'Training' as never,
-      {screen: 'ExerciseSearch'} as never,
-    );
+    navigation.navigate('TrainingExerciseSearch');
   }, [navigation]);
 
   const handleAdditionalExercise = useCallback(() => {
-    navigation.navigate(
-      'Training' as never,
-      {
-        screen: 'AdditionalExerciseSearch',
-        params: {variant: AdditionalExerciseType.SUPERSET},
-      } as never,
-    );
+    navigation.navigate('TrainingAdditionalExerciseSearch');
   }, [navigation]);
 
   const handleCompleteSession = useCallback(() => {
@@ -71,10 +63,7 @@ const SessionButtonStack = ({
       return;
     }
 
-    navigation.navigate(
-      'Training' as never,
-      {screen: 'SessionSummary'} as never,
-    );
+    navigation.navigate('TrainingCurrentSessionSummary');
   }, [hasIncompleteExercises, navigation, setPushdownConfig]);
 
   const SideButton = ({text, onPress}: ISideButtonProps): JSX.Element => {

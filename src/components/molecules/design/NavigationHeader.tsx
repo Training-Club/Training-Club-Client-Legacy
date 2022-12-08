@@ -11,7 +11,6 @@ interface INavigationHeaderButtonProps {
   text: string;
   onPress?: () => void;
   navigationProps?: {
-    stackName: string;
     screenName: string;
   };
 }
@@ -105,10 +104,7 @@ export const NavigationHeader = ({
    */
   const performAction = React.useCallback(() => {
     if (actionButton?.navigationProps) {
-      navigation.navigate(actionButton.navigationProps.stackName, {
-        screen: actionButton.navigationProps.screenName,
-      });
-
+      navigation.navigate(actionButton.navigationProps.screenName);
       return;
     }
 
@@ -127,10 +123,7 @@ export const NavigationHeader = ({
    */
   const performBackAction = React.useCallback(() => {
     if (backButton?.navigationProps) {
-      navigation.navigate(backButton.navigationProps.stackName, {
-        screen: backButton.navigationProps.screenName,
-      });
-
+      navigation.navigate(backButton.navigationProps.screenName);
       return;
     }
 

@@ -10,11 +10,13 @@ import {
   useColorModeValue,
   VStack,
   Icon,
+  Box,
 } from 'native-base';
 
 interface IPostAuthorDetailsProps {
-  avatarUri?: string;
   username: string;
+  avatarUri?: string;
+  verified?: boolean;
   location?: ILocation;
   onPress: () => void;
 }
@@ -22,12 +24,23 @@ interface IPostAuthorDetailsProps {
 export const PostAuthorDetails = ({
   onPress,
   avatarUri,
+  verified,
   username,
   location,
 }: IPostAuthorDetailsProps): JSX.Element => {
   const avatarBgColor = useColorModeValue(
     'apple.mint.light',
     'apple.orange.dark',
+  );
+
+  const verifiedColor = useColorModeValue(
+    'apple.blue.light',
+    'apple.blue.dark',
+  );
+
+  const verifiedBgColor = useColorModeValue(
+    'core.backgroundHighlight.light',
+    'core.backgroundHighlight.dark',
   );
 
   const textColor = 'core.text.dark';
@@ -46,6 +59,23 @@ export const PostAuthorDetails = ({
       position={'absolute'}
       left={2}
       top={2}>
+      {verified && (
+        <Box
+          zIndex={2}
+          position={'absolute'}
+          bottom={0}
+          left={5}
+          bgColor={verifiedBgColor}
+          borderRadius={'full'}>
+          <Icon
+            as={MaterialIcons}
+            name={'verified'}
+            size={4}
+            color={verifiedColor}
+          />
+        </Box>
+      )}
+
       <HStack alignItems={'center'} space={2}>
         <Avatar
           testID={'post-author-avatar'}

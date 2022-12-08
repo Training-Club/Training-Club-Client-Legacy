@@ -1,7 +1,7 @@
 import React from 'react';
 import {IFeedData} from '../../../models/Content';
 import {AxiosError} from 'axios';
-import {Dimensions, RefreshControl} from 'react-native';
+import {Dimensions} from 'react-native';
 import GreetingText from '../../atoms/main/home/GreetingText';
 import useAccountStore from '../../../store/AccountStore';
 import {ActionCardList} from '../../organisms/main/ActionCardList';
@@ -9,8 +9,13 @@ import {getFeedContent} from '../../../requests/Discovery';
 import {useNavigation} from '@react-navigation/native';
 import {usePushdownContext} from '../../../context/pushdown/PushdownContext';
 import AccountDrawer from '../../organisms/main/AccountDrawer';
-import PostFeed from '../../organisms/main/PostFeed';
-import {HStack, ScrollView, View, useColorModeValue} from 'native-base';
+import {PostFeed} from '../../organisms/main/v2/PostFeed';
+
+import MainNavigation, {
+  MainNavigationScreen,
+} from '../../molecules/main/MainNavigation';
+
+import {HStack, View, useColorModeValue} from 'native-base';
 
 const FeedScreen = () => {
   const account = useAccountStore(state => state.account);
@@ -154,44 +159,23 @@ const FeedScreen = () => {
   }
 
   return (
-    <AccountDrawer account={account} onTranslate={onAccountDrawerTranslate}>
-      <View px={2} w={'100%'}>
-        <ScrollView
-          refreshControl={
-            <RefreshControl
-              onRefresh={() => getContent()}
-              refreshing={isRefreshing}
-              title={'Loading Content...'}
-            />
-          }
-          scrollEnabled={!isSuspended}
-          w={'100%'}
-          h={'100%'}
-          shadow={6}
-          bgColor={bgColor}
-          showsVerticalScrollIndicator={false}
-          onScroll={e => onScrollUpdate(e.nativeEvent.contentOffset.y)}
-          scrollEventThrottle={500}>
-          {name && (
-            <HStack w={'100%'} px={2} justifyContent={'space-between'}>
-              <GreetingText name={name} time={time} />
-            </HStack>
-          )}
+    <>
+      <MainNavigation current={MainNavigationScreen.FEED} />
 
-          <ActionCardList />
+      <AccountDrawer account={account} onTranslate={onAccountDrawerTranslate}>
+        <View px={2}>
+          <PostFeed>
+            {name && (
+              <HStack w={'100%'} px={2} justifyContent={'space-between'}>
+                <GreetingText name={name} time={time} />
+              </HStack>
+            )}
 
-          <PostFeed
-            scrollEnabled={!isSuspended}
-            currentPosition={{
-              post: currentPostPosition,
-              index: currentIndexPosition,
-            }}
-            data={content}
-            onIndexUpdate={onIndexUpdate}
-          />
-        </ScrollView>
-      </View>
-    </AccountDrawer>
+            <ActionCardList />
+          </PostFeed>
+        </View>
+      </AccountDrawer>
+    </>
   );
 };
 

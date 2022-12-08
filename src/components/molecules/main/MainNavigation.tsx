@@ -1,27 +1,29 @@
 import React from 'react';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import Handle from '../../organisms/design/themes/Handle';
 import {useNavigation} from '@react-navigation/native';
 import {useActionsheetContext} from '../../../context/actionsheet/ActionsheetContext';
 import DarkActionsheetTheme from '../../organisms/design/themes/DarkActionsheetTheme';
 import {isSmallScreen} from '../../../utils/DeviceUtil';
-import MainNavigationItem from '../../atoms/main/MainNavigationItem';
 import StartNewActionsheet from './StartNewActionsheet';
+import MainNavigationItem from '../../atoms/main/MainNavigationItem';
 import {Box, Center, HStack, useColorModeValue} from 'native-base';
 
-enum MainNavigationScreen {
-  FEED = 'Feed',
-  DISCOVERY = 'Discovery',
-  ANALYTICS = 'Analytics',
-  PROFILE = 'Profile',
+export enum MainNavigationScreen {
+  FEED = 'MainFeed',
+  DISCOVERY = 'MainDiscovery',
+  ANALYTICS = 'MainAnalytics',
+  PROFILE = 'MainProfile',
 }
 
-const MainNavigation = (): JSX.Element => {
-  const navigation = useNavigation();
+interface IMainNavigationProps {
+  current: MainNavigationScreen;
+}
+
+const MainNavigation = ({current}: IMainNavigationProps): JSX.Element => {
+  const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const {actionSheetRef, setActionSheetConfig} = useActionsheetContext();
   const smallDevice = isSmallScreen();
-
-  const [selectedScreen, setSelectedScreen] =
-    React.useState<MainNavigationScreen>(MainNavigationScreen.FEED);
 
   const snapPoints = React.useMemo(
     () => [smallDevice ? '65%' : '55%'],
@@ -39,12 +41,7 @@ const MainNavigation = (): JSX.Element => {
    * @param {MainNavigationScreen} newScreen Screen to update view to
    */
   function handleNavigationToggle(newScreen: MainNavigationScreen) {
-    if (newScreen === selectedScreen) {
-      return;
-    }
-
-    setSelectedScreen(newScreen);
-    navigation.navigate('Main' as never, {screen: newScreen} as never);
+    navigation.navigate(newScreen);
   }
 
   /**
@@ -73,7 +70,7 @@ const MainNavigation = (): JSX.Element => {
       left={0}
       pb={smallDevice ? 2 : 10}
       pt={2}
-      borderRadius={16}
+      borderTopRadius={16}
       bgColor={backgroundColor}
       w={'100%'}>
       <Center>
@@ -81,14 +78,14 @@ const MainNavigation = (): JSX.Element => {
           <MainNavigationItem
             text={'Home'}
             icon={{name: 'home', size: 8}}
-            selected={selectedScreen === MainNavigationScreen.FEED}
+            selected={current === MainNavigationScreen.FEED}
             onPress={() => handleNavigationToggle(MainNavigationScreen.FEED)}
           />
 
           <MainNavigationItem
             text={'Discover'}
             icon={{name: 'search', size: 8}}
-            selected={selectedScreen === MainNavigationScreen.DISCOVERY}
+            selected={current === MainNavigationScreen.DISCOVERY}
             onPress={() =>
               handleNavigationToggle(MainNavigationScreen.DISCOVERY)
             }
@@ -103,7 +100,7 @@ const MainNavigation = (): JSX.Element => {
           <MainNavigationItem
             text={'Analytics'}
             icon={{name: 'insights', size: 8}}
-            selected={selectedScreen === MainNavigationScreen.ANALYTICS}
+            selected={current === MainNavigationScreen.ANALYTICS}
             onPress={() =>
               handleNavigationToggle(MainNavigationScreen.ANALYTICS)
             }
@@ -111,7 +108,7 @@ const MainNavigation = (): JSX.Element => {
 
           <MainNavigationItem
             text={'Profile'}
-            selected={selectedScreen === MainNavigationScreen.PROFILE}
+            selected={current === MainNavigationScreen.PROFILE}
             avatar={{
               uri: 'https://source.unsplash.com/random/?strong,man',
               initial: 'JR',

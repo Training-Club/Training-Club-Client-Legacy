@@ -135,7 +135,7 @@ const DetailsContentScreen = (): JSX.Element => {
     )
       .then(response => {
         console.log(response);
-        navigation.navigate('Main', {screen: 'Feed'});
+        navigation.navigate('MainFeed');
       })
       .catch(err => {
         console.error(err);
@@ -152,7 +152,7 @@ const DetailsContentScreen = (): JSX.Element => {
       }}
       backButton={{
         text: 'Edit',
-        navigationProps: {stackName: 'Content', screenName: 'ContentEdit'},
+        navigationProps: {screenName: 'ContentEdit'},
       }}>
       <ScrollView h={'100%'}>
         <FormControl>

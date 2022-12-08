@@ -11,8 +11,9 @@ import {createLike, removePostLike} from '../../../requests/Content';
 import {ITrainingSession} from '../../../models/Training';
 import {ILocation} from '../../../models/Location';
 import {IContentItem, PostItemType} from '../../../models/Content';
-import {Box, IBoxProps} from 'native-base';
+import {Box, IBoxProps, Pressable} from 'native-base';
 import useAccountStore from '../../../store/AccountStore';
+import {SharedElement} from "react-navigation-shared-element";
 
 interface IPostItemProps {
   scrollEnabled?: boolean;
@@ -141,59 +142,61 @@ export const PostItem = ({
 
   return (
     <Box w={'100%'} h={width * 1.33} borderRadius={12} {...style}>
-      <PostAuthorDetails
-        username={username}
-        avatarUri={'https://source.unsplash.com/random/?strong,man'}
-        location={location}
-        onPress={onAuthorPress}
-      />
+      <Pressable onPress={() => console.log('pressed')}>
+        <PostAuthorDetails
+          username={username}
+          avatarUri={'https://source.unsplash.com/random/?strong,man'}
+          location={location}
+          onPress={onAuthorPress}
+        />
 
-      <PostActionStack
-        onLike={onLike}
-        onComment={onComment}
-        onMore={onMore}
-        attributes={{
-          likeCount: likes,
-          commentCount: attributes?.commentCount,
-          isLiked: isLiked,
-        }}
-      />
+        <PostActionStack
+          onLike={onLike}
+          onComment={onComment}
+          onMore={onMore}
+          attributes={{
+            likeCount: likes,
+            commentCount: attributes?.commentCount,
+            isLiked: isLiked,
+          }}
+        />
 
-      {content && isAlbum() && (
-        <>
-          <PostScrollIndicator
-            index={index}
-            size={trainingSession ? content.length + 1 : content.length}
-          />
+        {content && isAlbum() && (
+          <>
+            <PostScrollIndicator
+              index={index}
+              size={trainingSession ? content.length + 1 : content.length}
+            />
 
-          <PostCarousel
-            scrollEnabled={scrollEnabled}
+            <PostCarousel
+              scrollEnabled={scrollEnabled}
+              currentPosition={currentPosition}
+              position={{post: position.post, index: index}}
+              content={content}
+              trainingSession={trainingSession}
+              location={location}
+              contentWidth={width}
+              onIndexChange={onIndexChange}
+            />
+          </>
+        )}
+
+        {content && !isAlbum() && (
+          <PostContentWrapper
+            paused={!scrollEnabled}
+            content={content[0]}
             currentPosition={currentPosition}
             position={{post: position.post, index: index}}
-            content={content}
-            trainingSession={trainingSession}
-            location={location}
-            contentWidth={width}
-            onIndexChange={onIndexChange}
           />
-        </>
-      )}
+        )}
 
-      {content && !isAlbum() && (
-        <PostContentWrapper
-          paused={!scrollEnabled}
-          content={content[0]}
-          currentPosition={currentPosition}
-          position={{post: position.post, index: index}}
-        />
-      )}
-
-      {trainingSession && (
-        <PostTrainingSessionCard
-          key={trainingSession.id}
-          trainingSession={trainingSession}
-        />
-      )}
+        {trainingSession && (
+          <PostTrainingSessionCard
+            key={trainingSession.id}
+            trainingSession={trainingSession}
+          />
+        )}
+      </Pressable>
     </Box>
   );
 };

@@ -54,7 +54,7 @@ export const AccountComponentWrapper = ({children}: any) => {
 
     if (!refreshToken || typeof refreshToken !== 'string') {
       if (account) {
-        navigation.navigate('Auth', {screen: 'Login'});
+        navigation.navigate('AuthLogin');
         setAccount(undefined);
       }
 
@@ -70,7 +70,7 @@ export const AccountComponentWrapper = ({children}: any) => {
           return;
         }
 
-        navigation.navigate('Auth', {screen: 'Login'});
+        navigation.navigate('AuthLogin');
         setAccount(undefined);
       });
   }, [account, navigation, setAccessToken, setAccount]);
@@ -85,7 +85,7 @@ export const AccountComponentWrapper = ({children}: any) => {
 
           if (response.account && response.account.id !== account?.id) {
             setAccount(response.account);
-            navigation.navigate('Main', {screen: 'Feed'});
+            navigation.navigate('MainFeed');
           }
         })
         .catch(err => {

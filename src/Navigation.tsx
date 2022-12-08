@@ -23,7 +23,7 @@ import {
   SharedElementsConfig,
 } from 'react-navigation-shared-element';
 
-const Stack = createSharedElementStackNavigator({debug: true});
+const Stack = createSharedElementStackNavigator();
 
 const Navigation = () => {
   const account = useAccountStore(state => state.account);

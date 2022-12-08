@@ -8,10 +8,20 @@ import Video from 'react-native-video';
 import {Dimensions} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {default as MaterialIcons} from 'react-native-vector-icons/MaterialIcons';
+import {isSmallScreen} from '../../../utils/DeviceUtil';
 import {ExpandedPostAuthorDetails} from '../../atoms/main/home/post/details/ExpandedPostAuthorDetails';
 import {ExpandedPostHeader} from '../../atoms/main/home/post/details/ExpandedPostHeader';
 import {ExpandedPostActionStack} from '../../atoms/main/home/post/details/ExpandedPostActionStack';
 import {getMockExerciseData} from '../../../data/Training';
+import {ExerciseSummaryCard} from '../../molecules/training/ExerciseSummaryCard';
+
+import {
+  ExerciseInfo,
+  ExerciseType,
+  ITrainingSession,
+  TrainingSessionStatus,
+} from '../../../models/Training';
+
 import MainNavigation, {
   MainNavigationScreen,
 } from '../../molecules/main/MainNavigation';
@@ -25,22 +35,13 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import {
-  ExerciseInfo,
-  ExerciseType,
-  ITrainingSession,
-  TrainingSessionStatus,
-} from '../../../models/Training';
-
-import {
-  Box,
   HStack,
   IconButton,
   ScrollView,
   Text,
-  useColorModeValue,
   View,
+  useColorModeValue,
 } from 'native-base';
-import {isSmallScreen} from '../../../utils/DeviceUtil';
 
 // we use react navigation prop mapping here
 type PostDetailsScreenProps = {
@@ -65,33 +66,6 @@ export const PostDetailsScreen = ({route}: PostDetailsScreenProps) => {
     type: LocationType.GYM,
   };
 
-  const getMockTrainingSession = React.useCallback(() => {
-    const benchpressData: ExerciseInfo = {
-      id: '0',
-      name: 'Benchpress',
-      type: ExerciseType.WEIGHTED_REPS,
-      verified: true,
-    };
-
-    const squatData: ExerciseInfo = {
-      id: '1',
-      name: 'Squat',
-      type: ExerciseType.WEIGHTED_REPS,
-      verified: true,
-    };
-
-    const mockBench = getMockExerciseData([benchpressData]);
-    const mockSquat = getMockExerciseData([squatData]);
-    const result: ITrainingSession = {
-      id: '0',
-      author: '0',
-      status: TrainingSessionStatus.COMPLETED,
-      exercises: [mockBench, mockSquat],
-    };
-
-    return result;
-  }, []);
-
   const textColor = useColorModeValue('core.text.light', 'core.text.dark');
   const closeButtonBgColor = 'rgba(0,0,0,0.5)';
   const closeButtonPressedBgColor = 'rgba(0,0,0,0.75)';
@@ -107,6 +81,41 @@ export const PostDetailsScreen = ({route}: PostDetailsScreenProps) => {
       opacity: contentOpacity.value,
     };
   });
+
+  const getMockTrainingSession = React.useCallback(() => {
+    const benchpressData: ExerciseInfo = {
+      id: '0',
+      name: 'Benchpress',
+      type: ExerciseType.WEIGHTED_REPS,
+      verified: true,
+    };
+
+    const pullupData: ExerciseInfo = {
+      id: '1',
+      name: 'Pullups',
+      type: ExerciseType.REPS,
+      verified: true,
+    };
+
+    const sprintData: ExerciseInfo = {
+      id: '2',
+      name: '100m Sprint',
+      type: ExerciseType.DISTANCE_TIME,
+      verified: true,
+    };
+
+    const mockBench = getMockExerciseData([benchpressData, pullupData]);
+    const mockSprint = getMockExerciseData([sprintData]);
+
+    const result: ITrainingSession = {
+      id: '0',
+      author: '0',
+      status: TrainingSessionStatus.COMPLETED,
+      exercises: [mockBench, mockBench, mockBench, mockSprint],
+    };
+
+    return result;
+  }, []);
 
   const handleBack = React.useCallback(() => {
     navigation.navigate('MainFeed');
@@ -148,7 +157,7 @@ export const PostDetailsScreen = ({route}: PostDetailsScreenProps) => {
       <ScrollView
         showsVerticalScrollIndicator={false}
         overScrollMode={'never'}
-        bounces={false}>
+        mb={32}>
         <ScrollView
           ref={scrollRef}
           w={'100%'}
@@ -194,7 +203,9 @@ export const PostDetailsScreen = ({route}: PostDetailsScreenProps) => {
           </HStack>
         </ScrollView>
 
-        <Box px={4} mt={2}>
+        <Animated.View
+          entering={FadeIn.delay(250)}
+          style={{paddingHorizontal: 8, marginTop: 8}}>
           <HStack justifyContent={'space-between'}>
             <ExpandedPostAuthorDetails
               author={{...data.author, verified: true}}
@@ -226,14 +237,10 @@ export const PostDetailsScreen = ({route}: PostDetailsScreenProps) => {
               {data.text}
             </Text>
           )}
-        </Box>
-      </ScrollView>
 
-      {/*<Box m={0} p={0} px={2} pt={2}>
-        <Animated.View style={[animatedTextStyle]}>
-          <Heading color={textColor}>{data.text}</Heading>
+          <ExerciseSummaryCard session={getMockTrainingSession()} />
         </Animated.View>
-      </Box>*/}
+      </ScrollView>
     </View>
   );
 };

@@ -55,6 +55,53 @@ export interface IAdditionalExercise extends ITrainable {
   variant: AdditionalExerciseType;
 }
 
+export interface ICompressedSession {
+  id: string;
+  sessionName: string;
+  author: string;
+  status: TrainingSessionStatus;
+  timestamp: Date;
+  exercises: ICompressedExercise[];
+}
+
+export interface ICompressedExercise {
+  id: string;
+  exerciseName: string;
+  addedAt: Date;
+  type: ExerciseType;
+  values: ICompressedExerciseValues;
+  performed: boolean;
+  additionalExercises?: ICompressedAdditionalExercise[];
+}
+
+export interface ICompressedAdditionalExercise
+  extends Omit<ICompressedExercise, 'additionalExercises' | 'id'> {
+  variant: AdditionalExerciseType;
+}
+
+export interface ICompressedExerciseValueWeight {
+  weightValue: number;
+  weightMeasurementSystem: MeasurementSystem;
+  plateCounterEnabled: boolean;
+}
+
+export interface ICompressedExerciseValueDistance {
+  distanceValue: number;
+  distanceMeasurementSystem: DistanceMeasurement;
+}
+
+export interface ICompressedExerciseValueTime {
+  timeValue: number;
+  timeRenderMillis: boolean;
+}
+
+export interface ICompressedExerciseValues {
+  reps?: number;
+  weight?: ICompressedExerciseValueWeight;
+  distance?: ICompressedExerciseValueDistance;
+  time?: ICompressedExerciseValueTime;
+}
+
 /**
  * Returns true if the provided trainable is an additional exercise
  *
@@ -84,6 +131,13 @@ export type ExerciseValue = {
   weight?: IExerciseValueWeight;
   time?: IExerciseValueTime;
   distance?: IExerciseValueDistance;
+};
+
+export type PrettyTimeValue = {
+  hours?: string;
+  minutes: string;
+  seconds: string;
+  milliseconds?: string;
 };
 
 export enum ExerciseType {

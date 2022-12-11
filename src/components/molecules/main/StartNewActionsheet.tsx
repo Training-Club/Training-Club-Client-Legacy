@@ -1,4 +1,5 @@
 import React, {useCallback} from 'react';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {BottomSheetView} from '@gorhom/bottom-sheet';
 import useExerciseStore from '../../../store/ExerciseStore';
 import {default as MaterialCommunityIcons} from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -12,7 +13,7 @@ const StartNewActionsheet = (): JSX.Element => {
   const exercises = useExerciseStore(state => state.exercises);
   const clearExercises = useExerciseStore(state => state.clearExercises);
 
-  const navigation = useNavigation();
+  const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const {actionSheetRef} = useActionsheetContext();
 
   const bgColor = useColorModeValue(
@@ -35,10 +36,7 @@ const StartNewActionsheet = (): JSX.Element => {
    * Transitions to the current session screen and closes the actionsheet
    */
   const handleResumeSessionTransition = useCallback(() => {
-    navigation.navigate(
-      'Training' as never,
-      {screen: 'CurrentSession'} as never,
-    );
+    navigation.navigate('TrainingCurrentSession');
 
     if (actionSheetRef && actionSheetRef.current) {
       actionSheetRef.current.close();
@@ -51,10 +49,7 @@ const StartNewActionsheet = (): JSX.Element => {
   const handleNewSessionTransition = useCallback(() => {
     clearExercises();
 
-    navigation.navigate(
-      'Training' as never,
-      {screen: 'CurrentSession'} as never,
-    );
+    navigation.navigate('TrainingCurrentSession');
 
     if (actionSheetRef && actionSheetRef.current) {
       actionSheetRef.current.close();
@@ -65,7 +60,7 @@ const StartNewActionsheet = (): JSX.Element => {
    * Transitions to the content select screen and closes the actionsheet
    */
   const handleNewPostTransition = useCallback(() => {
-    navigation.navigate('Content' as never, {screen: 'ContentSelect'} as never);
+    navigation.navigate('ContentSelect');
 
     if (actionSheetRef && actionSheetRef.current) {
       actionSheetRef.current.close();

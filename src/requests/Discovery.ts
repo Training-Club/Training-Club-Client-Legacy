@@ -2,8 +2,10 @@ import axios from 'axios';
 import {API_URL} from '../Constants';
 import {getProfile} from './Account';
 import {getLike} from './Content';
+import {createDecompressedSession} from '../data/Training';
 import {GetFeedContentResponse} from './responses/Discovery';
 import {IContentItem, IFeedData} from '../models/Content';
+import {ICompressedSession, ITrainingSession} from '../models/Training';
 
 import {
   GetCommentCountResponse,
@@ -56,6 +58,7 @@ export async function getFeedContent(
       const tags = post.tags;
 
       let contentItems: IContentItem[] = [];
+      let trainingSession: ITrainingSession | undefined;
       let authorUsername: string;
       let avatarUri: string;
       let likes = 0;
@@ -94,22 +97,41 @@ export async function getFeedContent(
         comments = 0;
       }
 
-      // query image signing
-      try {
-        const signResult = await axios.get<GetSignedContentResponse>(
-          `${API_URL}/content/post/content/${id}`,
-          {headers: {Authorization: `Bearer ${token}`}},
-        );
+      if (post && post.session) {
+        try {
+          const trainingSessionResult = await axios.get<ICompressedSession>(
+            `${API_URL}/exercise-session/id/${post.session}`,
+            {headers: {Authorization: `Bearer ${token}`}},
+          );
 
-        // TODO: Update Ares to return content type
-        for (const signed of signResult.data.result) {
-          contentItems.push({
-            type: signed.type,
-            destination: signed.url,
-          });
+          const decompressed = createDecompressedSession(
+            trainingSessionResult.data,
+          );
+
+          trainingSession = decompressed;
+        } catch (err) {
+          trainingSession = undefined;
         }
-      } catch (err) {
-        return reject(err);
+      }
+
+      // query image signing
+      if (post && post.content && post.content.length) {
+        try {
+          const signResult = await axios.get<GetSignedContentResponse>(
+            `${API_URL}/content/post/content/${id}`,
+            {headers: {Authorization: `Bearer ${token}`}},
+          );
+
+          // TODO: Update Ares to return content type
+          for (const signed of signResult.data.result) {
+            contentItems.push({
+              type: signed.type,
+              destination: signed.url,
+            });
+          }
+        } catch (err) {
+          return reject(err);
+        }
       }
 
       // query isLiked
@@ -133,6 +155,7 @@ export async function getFeedContent(
           username: authorUsername,
           avatarUri: avatarUri,
         },
+        trainingSession: trainingSession,
         likes: likes,
         comments: comments,
         isLiked: liked,

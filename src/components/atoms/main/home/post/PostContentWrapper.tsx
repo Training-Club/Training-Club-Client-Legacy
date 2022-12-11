@@ -6,7 +6,7 @@ import Animated, {FadeIn, FadeOut} from 'react-native-reanimated';
 import {Box, Image, Spinner, Square, useColorModeValue} from 'native-base';
 
 interface IPostContentWrapperProps {
-  content: IContentItem;
+  content?: IContentItem;
   paused?: boolean;
 
   currentPosition: {
@@ -59,6 +59,16 @@ export const PostContentWrapper = ({
     playerRef.current.seek(0);
   }, [paused]);
 
+  /**
+   * Automatically sets the content as loaded if there is no
+   * content to query.
+   */
+  React.useEffect(() => {
+    if (!content) {
+      setLoaded(true);
+    }
+  }, [content]);
+
   return (
     <Box w={contentWidth ?? '100%'} h={'100%'}>
       {!loaded && (
@@ -73,7 +83,7 @@ export const PostContentWrapper = ({
         </Animated.View>
       )}
 
-      {content.type === ContentType.IMAGE && (
+      {content && content.type === ContentType.IMAGE && (
         <Image
           key={content.destination}
           source={{uri: content.destination}}
@@ -85,7 +95,7 @@ export const PostContentWrapper = ({
         />
       )}
 
-      {content.type === ContentType.VIDEO && (
+      {content && content.type === ContentType.VIDEO && (
         <>
           <PostContentAudioControl
             muted={muted}

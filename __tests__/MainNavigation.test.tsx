@@ -1,9 +1,12 @@
 import React from 'react';
 import theme from '../src/Theme';
 import {NativeBaseProvider} from 'native-base';
-import MainNavigation from '../src/components/molecules/main/MainNavigation';
 import {render} from '@testing-library/react-native';
 import {NavigationContainer} from '@react-navigation/native';
+
+import MainNavigation, {
+  MainNavigationScreen,
+} from '../src/components/molecules/main/MainNavigation';
 
 describe('Main Navigation ->', () => {
   const inset = {
@@ -15,7 +18,7 @@ describe('Main Navigation ->', () => {
     const {getByText} = render(
       <NativeBaseProvider initialWindowMetrics={inset} theme={theme()}>
         <NavigationContainer>
-          <MainNavigation />
+          <MainNavigation current={MainNavigationScreen.FEED} />
         </NavigationContainer>
       </NativeBaseProvider>,
     );

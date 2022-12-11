@@ -32,8 +32,7 @@ describe('Current Session Screen ->', () => {
               setText={jest.fn()}
               options={{maxLength: 36}}
               closeButton={{
-                stackName: 'Main',
-                screenName: 'Home',
+                screenName: 'MainFeed',
               }}
             />
           </View>

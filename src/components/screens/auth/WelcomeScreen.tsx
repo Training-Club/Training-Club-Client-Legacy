@@ -1,24 +1,25 @@
 import React from 'react';
-import {Button, Heading, useColorMode, View} from 'native-base';
-import WelcomeButtonStack from '../../molecules/auth/welcome/WelcomeButtonStack';
 import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import WelcomeButtonStack from '../../molecules/auth/welcome/WelcomeButtonStack';
+import {Button, Heading, useColorMode, View} from 'native-base';
 
 const WelcomeScreen = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const {colorMode, setColorMode} = useColorMode();
 
   const spacing = 4;
 
   function navigateToCreateAccount() {
-    navigation.navigate('Auth' as never, {screen: 'Register'} as never);
+    navigation.navigate('AuthRegister');
   }
 
   function navigateToApple() {
-    navigation.navigate('Auth' as never, {screen: 'Apple'} as never);
+    console.log('navigateToApple called');
   }
 
   function navigateToEmail() {
-    navigation.navigate('Auth' as never, {screen: 'Login'} as never);
+    navigation.navigate('AuthLogin');
   }
 
   return (

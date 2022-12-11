@@ -2,6 +2,7 @@ import React from 'react';
 import {default as MaterialIcons} from 'react-native-vector-icons/MaterialIcons';
 import {default as MaterialCommunityIcons} from 'react-native-vector-icons/MaterialCommunityIcons';
 import {ColorType} from 'native-base/lib/typescript/components/types';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/core';
 import {Box, Heading, HStack, IconButton, useColorModeValue} from 'native-base';
 
@@ -18,7 +19,6 @@ export interface ICloseableHeaderProps {
     backgroundColor?: ColorType;
     pressedBackgroundColor?: ColorType;
     iconColor?: ColorType;
-    stackName: string;
     screenName: string;
   };
 }
@@ -28,11 +28,10 @@ const CloseableHeader = ({
   textColor,
   closeButton,
 }: ICloseableHeaderProps): JSX.Element => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
   const title = pageTitle ?? 'Page Title';
-  const closeButtonStackName = closeButton?.stackName ?? 'Main';
-  const closeButtonScreenName = closeButton?.screenName ?? 'Home';
+  const closeButtonScreenName = closeButton?.screenName ?? 'MainFeed';
 
   const defaultTextColor = useColorModeValue(
     'core.text.light',
@@ -80,10 +79,7 @@ const CloseableHeader = ({
               color: closeButton.iconColor ?? defaultCloseButtonIconColor,
             }}
             onPress={() => {
-              navigation.navigate(
-                closeButtonStackName as never,
-                {screen: closeButtonScreenName} as never,
-              );
+              navigation.navigate(closeButtonScreenName);
             }}
           />
         )}
@@ -128,10 +124,7 @@ const CloseableHeader = ({
             color: closeButton.iconColor ?? defaultCloseButtonIconColor,
           }}
           onPress={() => {
-            navigation.navigate(
-              closeButtonStackName as never,
-              {screen: closeButtonScreenName} as never,
-            );
+            navigation.navigate(closeButtonScreenName);
           }}
         />
       )}

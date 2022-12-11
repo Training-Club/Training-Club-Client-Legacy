@@ -64,11 +64,11 @@ const EditContentScreen = (): JSX.Element => {
       title={'Edit'}
       actionButton={{
         text: 'Details',
-        navigationProps: {stackName: 'Content', screenName: 'ContentDetails'},
+        navigationProps: {screenName: 'ContentDetails'},
       }}
       backButton={{
         text: 'Select',
-        navigationProps: {stackName: 'Content', screenName: 'ContentSelect'},
+        navigationProps: {screenName: 'ContentSelect'},
       }}>
       <ScrollView
         horizontal={true}

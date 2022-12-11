@@ -15,8 +15,18 @@ export const PostTrainingSessionTitle = ({
   location,
   date,
 }: IPostTrainingSessionTitle): JSX.Element => {
-  const elapsedTime = date ? new Date().getTime() - date.getTime() : 0;
   const textColor = useColorModeValue('core.text.light', 'core.text.dark');
+
+  /**
+   * Returns the time (in ms) difference to convert to elapsed time
+   */
+  const getElapsedTime = React.useCallback(() => {
+    if (date === undefined) {
+      return 0;
+    }
+
+    return new Date().getTime() - new Date(date).getTime();
+  }, [date]);
 
   return (
     <Box w={'100%'}>
@@ -42,7 +52,7 @@ export const PostTrainingSessionTitle = ({
 
         {date && (
           <Text color={textColor} fontSize={'xs'}>
-            {FormatElapsedTime(elapsedTime) + ' ago'}
+            {FormatElapsedTime(getElapsedTime()) + ' ago'}
           </Text>
         )}
       </HStack>

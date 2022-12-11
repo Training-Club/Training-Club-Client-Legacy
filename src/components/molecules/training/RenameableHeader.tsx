@@ -2,6 +2,7 @@ import React from 'react';
 import {HStack, IconButton, Input, useColorModeValue} from 'native-base';
 import {default as MaterialCommunityIcons} from 'react-native-vector-icons/MaterialCommunityIcons';
 import {ColorType} from 'native-base/lib/typescript/components/types';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/core';
 
 interface IRenameableHeaderProps {
@@ -16,7 +17,6 @@ interface IRenameableHeaderProps {
     backgroundColor?: ColorType;
     pressedBackgroundColor?: ColorType;
     iconColor?: ColorType;
-    stackName: string;
     screenName: string;
   };
 }
@@ -27,11 +27,8 @@ const RenameableHeader = ({
   options,
   closeButton,
 }: IRenameableHeaderProps): JSX.Element => {
-  const navigation = useNavigation();
-
-  const closeButtonStackName = closeButton?.stackName ?? 'Main';
-  const closeButtonScreenName = closeButton?.screenName ?? 'Home';
-
+  const navigation = useNavigation<NativeStackNavigationProp<any>>();
+  const closeButtonScreenName = closeButton?.screenName ?? 'MainFeed';
   const textColor = useColorModeValue('core.text.light', 'core.text.dark');
 
   const defaultCloseButtonBackgroundColor = useColorModeValue(
@@ -89,10 +86,7 @@ const RenameableHeader = ({
             color: closeButton.iconColor ?? defaultCloseButtonIconColor,
           }}
           onPress={() => {
-            navigation.navigate(
-              closeButtonStackName as never,
-              {screen: closeButtonScreenName} as never,
-            );
+            navigation.navigate(closeButtonScreenName);
           }}
         />
       )}

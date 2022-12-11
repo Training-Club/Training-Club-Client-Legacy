@@ -1,13 +1,14 @@
 import React from 'react';
 import {MeasurementSystem} from '../../../../models/Measurement';
+import {FormatTimeField} from '../../../../utils/StringUtil';
 
 import {
   ExerciseType,
-  isAdditionalExercise,
   ITrainable,
+  isAdditionalExercise,
 } from '../../../../models/Training';
 
-import {Box, HStack, IBoxProps, Text, useColorModeValue} from 'native-base';
+import {Box, HStack, Text, IBoxProps, useColorModeValue} from 'native-base';
 
 interface ITrainingFieldProps {
   index: number;
@@ -86,12 +87,18 @@ export const TrainingField = ({
     }
 
     if (data.type === ExerciseType.DISTANCE_TIME) {
+      const prettyTime = FormatTimeField(
+        data.values.time ?? {
+          value: {hours: 0, minutes: 0, seconds: 0, milliseconds: 0},
+          timeRenderMillis: false,
+        },
+      );
+
       return (
         <HStack space={1}>
           <Text color={textColor} fontWeight={'semibold'}>
-            {data.values.time?.value.hours}:{data.values.time?.value.minutes}:
-            {data.values.time?.value.seconds}.
-            {data.values.time?.value.milliseconds}
+            {prettyTime.hours}:{prettyTime.minutes}:{prettyTime.seconds}.
+            {prettyTime.milliseconds}
           </Text>
         </HStack>
       );

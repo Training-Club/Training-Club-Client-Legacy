@@ -133,6 +133,13 @@ export type ExerciseValue = {
   distance?: IExerciseValueDistance;
 };
 
+export type PrettyTimeValue = {
+  hours?: string;
+  minutes: string;
+  seconds: string;
+  milliseconds?: string;
+};
+
 export enum ExerciseType {
   WEIGHTED_REPS = 'WEIGHTED_REPS',
   WEIGHTED_TIME = 'WEIGHTED_TIME',

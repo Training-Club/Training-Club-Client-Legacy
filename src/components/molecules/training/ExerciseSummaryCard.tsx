@@ -63,7 +63,11 @@ export const ExerciseSummaryCard = ({
   return (
     <VStack mt={4} space={4} borderRadius={12}>
       {groupedExercises.map(groupedExercise => (
-        <Box borderRadius={12} bgColor={cardBgColor} p={2}>
+        <Box
+          key={groupedExercise.name}
+          borderRadius={12}
+          bgColor={cardBgColor}
+          p={2}>
           <ExpandedPostTrainingCardSummaryActionStack />
 
           <Heading size={'md'} color={textColor}>
@@ -84,6 +88,7 @@ export const ExerciseSummaryCard = ({
 
           {groupedExercise.exercises.map((parentExercise, i) => (
             <Box
+              key={parentExercise.id}
               w={'100%'}
               borderBottomColor={borderColor}
               borderBottomWidth={
@@ -94,7 +99,7 @@ export const ExerciseSummaryCard = ({
               {parentExercise.additionalExercises &&
                 parentExercise.additionalExercises.map(
                   (additionalExercise, j) => (
-                    <Box w={'100%'}>
+                    <Box key={`${groupedExercise.name}-${additionalExercise.exerciseName}`} w={'100%'}>
                       {parentExercise.type !== additionalExercise.type && (
                         <TrainingFieldHeader
                           asAdditional={true}

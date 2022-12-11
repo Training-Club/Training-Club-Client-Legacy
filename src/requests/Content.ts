@@ -1,4 +1,4 @@
-import axios, {AxiosError} from 'axios';
+import axios from 'axios';
 import {PrivacyLevel} from '../models/Privacy';
 import {API_URL} from '../Constants';
 

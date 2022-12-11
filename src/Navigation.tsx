@@ -1,6 +1,6 @@
 import React from 'react';
 import {StackNavigationOptions} from '@react-navigation/stack';
-import {IContentItem} from './models/Content';
+import {ContentType, IContentItem} from './models/Content';
 import useAccountStore from './store/AccountStore';
 import FeedScreen from './components/screens/main/FeedScreen';
 import RegisterScreen from './components/screens/auth/RegisterScreen';
@@ -18,10 +18,7 @@ import SelectContentScreen from './components/screens/content/SelectContentScree
 import EditContentScreen from './components/screens/content/EditContentScreen';
 import DetailsContentScreen from './components/screens/content/DetailsContentScreen';
 import {PostDetailsScreen} from './components/screens/main/PostDetailsScreen';
-import {
-  createSharedElementStackNavigator,
-  SharedElementsConfig,
-} from 'react-navigation-shared-element';
+import {createSharedElementStackNavigator, SharedElementsConfig,} from 'react-navigation-shared-element';
 
 const Stack = createSharedElementStackNavigator();
 
@@ -103,6 +100,13 @@ const Navigation = () => {
                     id: `post-item-${data.id}-${index}`,
                     animation: 'move',
                   });
+
+                  if (entry.type === ContentType.VIDEO) {
+                    result.push({
+                      id: `post-item-volume-controller-${data.id}-${index}`,
+                      animation: 'fade-in',
+                    });
+                  }
                 });
               }
 

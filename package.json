@@ -23,6 +23,7 @@
     "@shopify/react-native-skia": "^0.1.146",
     "@types/react": "^18",
     "axios": "0.27.2",
+    "ffmpeg-kit-react-native": "^5.1.0",
     "nanoid": "4.0.0",
     "native-base": "3.4.17",
     "react": "18.1.0",
@@ -69,6 +70,7 @@
     "eslint": "8.19.0",
     "jest": "28.1.2",
     "metro-react-native-babel-preset": "0.71.3",
+    "react-native-fs": "^2.20.0",
     "react-test-renderer": "18.2.0",
     "typescript": "4.4.4"
   },

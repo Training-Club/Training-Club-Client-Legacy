@@ -1,10 +1,19 @@
-import {ExerciseInfo, ITrainingSession} from '../models/Training';
-import {ExerciseInfoQueryResponse} from './responses/ExerciseInfo';
 import axios, {AxiosError} from 'axios';
-import {TrainingSessionQueryResponse} from './responses/Training';
+import {API_URL} from '../Constants';
+import {compressExercises} from '../data/Training';
+import {ExerciseInfoQueryResponse} from './responses/ExerciseInfo';
 
-// TODO: Replace with api.trainingclubapp.com
-const url: string = 'http://146.190.2.76:80/v1';
+import {
+  ExerciseInfo,
+  IExercise,
+  ITrainingSession,
+  TrainingSessionStatus,
+} from '../models/Training';
+
+import {
+  TrainingSessionCreateResponse,
+  TrainingSessionQueryResponse,
+} from './responses/Training';
 
 /**
  * Returns exercise data matching a similar name to the provided query string
@@ -22,7 +31,7 @@ export async function getExerciseSearchResults(
 
     try {
       const result = await axios.get<ExerciseInfoQueryResponse>(
-        `${url}/exercise-info/query${query}`,
+        `${API_URL}/exercise-info/query${query}`,
         {
           headers: {Authorization: `Bearer ${token}`},
         },
@@ -56,7 +65,7 @@ export async function getTrainingSessions(
 
     try {
       const result = await axios.get<TrainingSessionQueryResponse>(
-        `${url}/exercise-session/search${query}`,
+        `${API_URL}/exercise-session/search${query}`,
         {
           headers: {Authorization: `Bearer ${token}`},
         },
@@ -69,6 +78,47 @@ export async function getTrainingSessions(
       resolve(result.data.result);
     } catch (err) {
       reject(err);
+    }
+  });
+}
+
+/**
+ * Creates a new completed training session
+ *
+ * @param sessionName Training Session Name
+ * @param authorId Author ID
+ * @param exercises Exercises Array
+ * @param token Json Web Token
+ */
+export async function createTrainingSession(
+  sessionName: string,
+  authorId: string,
+  exercises: IExercise[],
+  token?: string,
+): Promise<TrainingSessionCreateResponse> {
+  return new Promise<TrainingSessionCreateResponse>(async (resolve, reject) => {
+    if (!token) {
+      return reject('no token on this device');
+    }
+
+    const compressedExercises = compressExercises(exercises);
+
+    try {
+      const trainingSession = await axios.post<TrainingSessionCreateResponse>(
+        `${API_URL}/exercise-session/`,
+        {
+          sessionName: sessionName,
+          author: authorId,
+          status: TrainingSessionStatus.COMPLETED,
+          timestamp: new Date(),
+          exercises: compressedExercises,
+        },
+        {headers: {Authorization: `Bearer ${token}`}},
+      );
+
+      return resolve(trainingSession.data);
+    } catch (err) {
+      return reject(err);
     }
   });
 }

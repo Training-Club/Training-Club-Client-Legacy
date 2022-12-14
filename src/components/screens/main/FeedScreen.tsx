@@ -1,32 +1,34 @@
 import React from 'react';
+import {IFeedData} from '../../../models/Content';
+import {AxiosError} from 'axios';
 import {Dimensions} from 'react-native';
 import GreetingText from '../../atoms/main/home/GreetingText';
 import useAccountStore from '../../../store/AccountStore';
-import AccountDrawer from '../../organisms/main/AccountDrawer';
-import PostFeed, {PostFeedItem} from '../../organisms/main/PostFeed';
+import {ActionCardList} from '../../organisms/main/ActionCardList';
+import {getFeedContent} from '../../../requests/Discovery';
 import {useNavigation} from '@react-navigation/native';
-import {ILocation} from '../../../models/Location';
-import {ContentType, IContentItem} from '../../../models/Content';
-import {HStack, ScrollView, View, useColorModeValue} from 'native-base';
+import {usePushdownContext} from '../../../context/pushdown/PushdownContext';
+import AccountDrawer from '../../organisms/main/AccountDrawer';
+import {PostFeed} from '../../organisms/main/v2/PostFeed';
 
-import {
-  AdditionalExerciseType,
-  ExerciseType,
-  ITrainingSession,
-  TrainingSessionStatus,
-} from '../../../models/Training';
+import MainNavigation, {
+  MainNavigationScreen,
+} from '../../molecules/main/MainNavigation';
 
-import {
-  DistanceMeasurement,
-  MeasurementSystem,
-} from '../../../models/Measurement';
+import {HStack, View, useColorModeValue} from 'native-base';
 
 const FeedScreen = () => {
   const account = useAccountStore(state => state.account);
-  const navigation = useNavigation();
+  const accessToken = useAccountStore(state => state.accessToken);
+
+  const [content, setContent] = React.useState<IFeedData[]>([]);
   const [currentPostPosition, setCurrentPostPosition] = React.useState(0);
   const [currentIndexPosition, setCurrentIndexPosition] = React.useState(0);
   const [isSuspended, setSuspended] = React.useState(false);
+  const [isRefreshing] = React.useState(false);
+
+  const navigation = useNavigation();
+  const {setPushdownConfig} = usePushdownContext();
 
   const feedOffset = 100.0;
   const feedCardHeight = Dimensions.get('screen').width * 1.33;
@@ -37,136 +39,6 @@ const FeedScreen = () => {
     'core.background.light',
     'core.background.dark',
   );
-
-  // TODO: Sample data, remove this
-  const sampleLocation: ILocation = {
-    id: '#',
-    author: '',
-    name: 'PROTOGYM',
-    description: '',
-  };
-
-  const sampleContent: IContentItem[] = [
-    {
-      destination:
-        'https://media.discordapp.net/attachments/462762564133060621/1038164214994436176/IMG_0616.jpg?width=702&height=936',
-      type: ContentType.IMAGE,
-    },
-    {
-      destination:
-        'https://cdn.discordapp.com/attachments/481691188739702797/1035019561021481072/RPReplay_Final1663101410.mov',
-      type: ContentType.VIDEO,
-    },
-    {
-      destination:
-        'https://cdn.discordapp.com/attachments/462762564133060621/1035019135853281280/trim.8F5FB98A-FB19-4F11-B272-AED7BDAD0AAD.mov',
-      type: ContentType.VIDEO,
-    },
-  ];
-
-  const sampleTrainingSession: ITrainingSession = {
-    id: '0',
-    author: '0',
-    sessionName: 'Powerlifting D4W3',
-    timestamp: new Date('2021-10-29'),
-    status: TrainingSessionStatus.COMPLETED,
-    exercises: [
-      {
-        id: '0',
-        exerciseName: 'Benchpress',
-        addedAt: new Date(),
-        values: {
-          reps: 8,
-          weight: {
-            measurement: MeasurementSystem.IMPERIAL,
-            plateCounterEnabled: false,
-            value: 135,
-          },
-        },
-        performed: true,
-        type: ExerciseType.WEIGHTED_REPS,
-        additionalExercises: [
-          {
-            exerciseName: 'Incline Dumbbell Press',
-            addedAt: new Date(),
-            variant: AdditionalExerciseType.SUPERSET,
-            type: ExerciseType.WEIGHTED_REPS,
-            performed: true,
-            values: {
-              reps: 8,
-              weight: {
-                measurement: MeasurementSystem.IMPERIAL,
-                plateCounterEnabled: false,
-                value: 65,
-              },
-            },
-          },
-        ],
-      },
-      {
-        id: '1',
-        exerciseName: 'Benchpress',
-        addedAt: new Date(),
-        values: {
-          reps: 5,
-          weight: {
-            measurement: MeasurementSystem.IMPERIAL,
-            plateCounterEnabled: false,
-            value: 225,
-          },
-        },
-        additionalExercises: [
-          {
-            exerciseName: 'Incline Dumbbell Press',
-            addedAt: new Date(),
-            variant: AdditionalExerciseType.SUPERSET,
-            type: ExerciseType.WEIGHTED_REPS,
-            performed: true,
-            values: {
-              reps: 8,
-              weight: {
-                measurement: MeasurementSystem.IMPERIAL,
-                plateCounterEnabled: false,
-                value: 65,
-              },
-            },
-          },
-        ],
-        performed: true,
-        type: ExerciseType.WEIGHTED_REPS,
-      },
-      {
-        id: '2',
-        exerciseName: 'Run',
-        addedAt: new Date(),
-        values: {
-          distance: {
-            value: 3,
-            measurement: DistanceMeasurement.MILE,
-          },
-          time: {
-            value: {
-              hours: 0,
-              minutes: 10,
-              seconds: 30,
-              milliseconds: 0,
-            },
-            timeRenderMillis: false,
-          },
-        },
-        performed: true,
-        type: ExerciseType.DISTANCE_TIME,
-      },
-    ],
-  };
-
-  const samplePosts: PostFeedItem[] = [
-    {
-      content: sampleContent,
-      trainingSession: sampleTrainingSession,
-      location: sampleLocation,
-    },
-  ];
 
   /**
    * Reads on current scroll pos and determines which post the user
@@ -228,6 +100,31 @@ const FeedScreen = () => {
   );
 
   /**
+   * Populate feed with content
+   */
+  const getContent = React.useCallback(
+    (page?: number) => {
+      getFeedContent(page ?? 0, accessToken)
+        .then(data => {
+          setContent(data);
+        })
+        .catch(err => {
+          const axiosError = err as AxiosError;
+          console.log(axiosError.response);
+
+          setPushdownConfig({
+            status: 'error',
+            title: 'An error has occurred',
+            body: 'We were unable to fetch your feed content',
+            duration: 5000,
+            show: true,
+          });
+        });
+    },
+    [accessToken, setPushdownConfig],
+  );
+
+  /**
    * Suspend content when screen is unfocused
    */
   React.useEffect(() => {
@@ -249,41 +146,36 @@ const FeedScreen = () => {
     return listener;
   }, [navigation]);
 
+  /**
+   * Performs initial content load
+   */
+  React.useEffect(() => {
+    getContent();
+  }, [accessToken, getContent, setPushdownConfig]);
+
   // TODO: Handle this properly
   if (!account) {
     return null;
   }
 
   return (
-    <AccountDrawer account={account} onTranslate={onAccountDrawerTranslate}>
-      <View px={2} w={'100%'}>
-        <ScrollView
-          scrollEnabled={!isSuspended}
-          w={'100%'}
-          h={'100%'}
-          shadow={6}
-          bgColor={bgColor}
-          showsVerticalScrollIndicator={false}
-          onScroll={e => onScrollUpdate(e.nativeEvent.contentOffset.y)}
-          scrollEventThrottle={500}>
-          {name && (
-            <HStack w={'100%'} px={2} justifyContent={'space-between'}>
-              <GreetingText name={name} time={time} />
-            </HStack>
-          )}
+    <>
+      <MainNavigation current={MainNavigationScreen.FEED} />
 
-          <PostFeed
-            scrollEnabled={!isSuspended}
-            currentPosition={{
-              post: currentPostPosition,
-              index: currentIndexPosition,
-            }}
-            data={samplePosts}
-            onIndexUpdate={onIndexUpdate}
-          />
-        </ScrollView>
-      </View>
-    </AccountDrawer>
+      <AccountDrawer account={account} onTranslate={onAccountDrawerTranslate}>
+        <View px={2}>
+          <PostFeed>
+            {name && (
+              <HStack w={'100%'} px={2} justifyContent={'space-between'}>
+                <GreetingText name={name} time={time} />
+              </HStack>
+            )}
+
+            <ActionCardList />
+          </PostFeed>
+        </View>
+      </AccountDrawer>
+    </>
   );
 };
 

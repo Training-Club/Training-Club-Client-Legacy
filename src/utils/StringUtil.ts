@@ -1,3 +1,5 @@
+import {IExerciseValueTime, PrettyTimeValue} from '../models/Training';
+
 /**
  * Capitalizes the first character of the provided string
  *
@@ -150,15 +152,20 @@ export const FormatElapsedTime = (ms: number): string => {
     return years === 1 || months === 12 ? '1 year' : years + ' years';
   }
 
-  if (days >= 30) {
-    return months === 1 ? '1 month' : months + ' months';
-  }
-
   if (days > 0) {
+    if (days >= 30) {
+      return months === 1 ? '1 month' : months + ' months';
+    }
+
     return days === 1 ? '1 day' : days + ' days';
   }
 
   if (minutes > 0) {
+    if (minutes > 60) {
+      const hours = Math.floor(minutes / 60);
+      return hours === 1 ? '1 hour' : hours + ' hours';
+    }
+
     return minutes === 1 ? '1 minute' : minutes + ' minutes';
   }
 
@@ -167,4 +174,42 @@ export const FormatElapsedTime = (ms: number): string => {
   }
 
   return 'now';
+};
+
+/**
+ * Accepts an Exercise Value Time object and converts each field in to human-readable
+ * time formats for display.
+ *
+ * @param value Exercise Value Time object
+ * @constructor
+ */
+export const FormatTimeField = (value: IExerciseValueTime): PrettyTimeValue => {
+  const {hours, minutes, seconds, milliseconds} = value.value;
+  let formattedHours = '00';
+  let formattedMinutes = '00';
+  let formattedSeconds = '00';
+  let formattedMilliseconds = '000';
+
+  if (hours && hours > 0) {
+    formattedHours = hours > 9 ? hours.toString() : '0' + hours;
+  }
+
+  if (minutes && minutes > 0) {
+    formattedMinutes = minutes > 9 ? minutes.toString() : '0' + minutes;
+  }
+
+  if (seconds && seconds > 0) {
+    formattedSeconds = seconds > 9 ? seconds.toString() : '0' + seconds;
+  }
+
+  if (milliseconds && milliseconds > 0) {
+    formattedMilliseconds = milliseconds.toString();
+  }
+
+  return {
+    hours: formattedHours,
+    minutes: formattedMinutes,
+    seconds: formattedSeconds,
+    milliseconds: formattedMilliseconds,
+  };
 };

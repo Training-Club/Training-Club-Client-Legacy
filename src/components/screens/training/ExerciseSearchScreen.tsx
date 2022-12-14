@@ -5,20 +5,21 @@ import {useDebounce} from 'use-debounce';
 import {usePushdownContext} from '../../../context/pushdown/PushdownContext';
 import {useNavigation} from '@react-navigation/core';
 import {getMockExerciseData} from '../../../data/Training';
+import CloseableHeader from '../../molecules/design/CloseableHeader';
 import {AxiosError} from 'axios';
 import {ExerciseInfo, MuscleGroup} from '../../../models/Training';
-import CloseableHeader from '../../molecules/design/CloseableHeader';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import TogglePillRow from '../../molecules/design/TogglePillRow';
 import TogglePill from '../../atoms/design/TogglePill';
 import InputField from '../../atoms/design/InputField';
 import ExerciseSearchResultList from '../../organisms/training/ExerciseSearchResultList';
 import useExerciseStore from '../../../store/ExerciseStore';
+import useAccountStore from '../../../store/AccountStore';
 import {default as MaterialIcons} from 'react-native-vector-icons/MaterialIcons';
 import {Box, Icon, View, VStack} from 'native-base';
-import useAccountStore from '../../../store/AccountStore';
 
 const ExerciseSearchScreen = (): JSX.Element => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const accessToken = useAccountStore(state => state.accessToken);
   const addSet = useExerciseStore(state => state.addSet);
   const {setPushdownConfig} = usePushdownContext();
@@ -68,10 +69,7 @@ const ExerciseSearchScreen = (): JSX.Element => {
     (exerciseInfo: ExerciseInfo) => {
       addSet(getMockExerciseData([exerciseInfo]));
 
-      navigation.navigate(
-        'Training' as never,
-        {screen: 'CurrentSession'} as never,
-      );
+      navigation.navigate('TrainingCurrentSession');
     },
     [addSet, navigation],
   );
@@ -122,8 +120,7 @@ const ExerciseSearchScreen = (): JSX.Element => {
         <CloseableHeader
           pageTitle={'Add Exercise'}
           closeButton={{
-            stackName: 'Training',
-            screenName: 'CurrentSession',
+            screenName: 'TrainingCurrentSession',
           }}
         />
 

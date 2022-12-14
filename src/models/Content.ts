@@ -1,5 +1,7 @@
 import {PrivacyLevel} from './Privacy';
 import {CropRect} from 'react-native-image-crop-picker';
+import {ITrainingSession} from './Training';
+import {ILocation} from './Location';
 
 export interface IContentDraft {
   sortOrder: number;
@@ -22,6 +24,7 @@ export interface IContentDraft {
 export interface IPost {
   id: string;
   author: string;
+  session?: string;
   location?: string;
   text?: string;
   content: IContentItem[];
@@ -31,8 +34,38 @@ export interface IPost {
   privacy?: PrivacyLevel;
 }
 
+export interface IFeedData {
+  id: string;
+
+  author: {
+    id: string;
+    username: string;
+    avatarUri: string;
+  };
+
+  likes?: number;
+  comments?: number;
+
+  isLiked?: boolean;
+
+  trainingSession?: ITrainingSession;
+  location?: ILocation;
+
+  content?: IContentItem[];
+  createdAt: Date;
+  editedAt?: Date;
+  text?: string;
+  tags?: string[];
+}
+
 export interface IContentItem {
   destination: string;
+  type: ContentType;
+}
+
+export interface ISignedContentItem {
+  key: string;
+  url: string;
   type: ContentType;
 }
 

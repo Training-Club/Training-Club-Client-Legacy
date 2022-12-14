@@ -1,18 +1,25 @@
 import React from 'react';
 import {Dimensions} from 'react-native';
+import {useDebouncedCallback} from 'use-debounce';
 import {PostActionStack} from '../../molecules/main/post/PostActionStack';
 import {PostAuthorDetails} from '../../atoms/main/home/post/PostAuthorDetails';
 import {PostCarousel} from '../../molecules/main/post/PostCarousel';
 import {PostScrollIndicator} from '../../molecules/main/post/PostScrollIndicator';
 import {PostContentWrapper} from '../../atoms/main/home/post/PostContentWrapper';
+import {PostTrainingSessionCard} from '../../molecules/main/post/PostTrainingSessionCard';
+import {createLike, removePostLike} from '../../../requests/Content';
 import {ITrainingSession} from '../../../models/Training';
 import {ILocation} from '../../../models/Location';
-import {IContentItem} from '../../../models/Content';
-import {Box, IBoxProps} from 'native-base';
+import {IContentItem, PostItemType} from '../../../models/Content';
+import {Box, IBoxProps, Pressable} from 'native-base';
+import useAccountStore from '../../../store/AccountStore';
+import {SharedElement} from "react-navigation-shared-element";
 
 interface IPostItemProps {
   scrollEnabled?: boolean;
-  content: IContentItem[];
+
+  postId: string;
+  username: string;
 
   currentPosition: {
     post: number;
@@ -23,6 +30,7 @@ interface IPostItemProps {
     post: number;
   };
 
+  content?: IContentItem[];
   trainingSession?: ITrainingSession;
   location?: ILocation;
   onIndexUpdate?: (page: number) => void;
@@ -38,6 +46,8 @@ interface IPostItemProps {
 
 export const PostItem = ({
   scrollEnabled,
+  postId,
+  username,
   content,
   currentPosition,
   position,
@@ -47,22 +57,49 @@ export const PostItem = ({
   attributes,
   style,
 }: IPostItemProps): JSX.Element => {
-  const {width} = Dimensions.get('screen');
+  const accessToken = useAccountStore(state => state.accessToken);
   const [index, setIndex] = React.useState(1);
+
+  const [likes, setLikes] = React.useState(attributes?.likeCount ?? 0);
+  const [isLiked, setLiked] = React.useState(attributes?.liked ?? false);
+
+  const {width} = Dimensions.get('screen');
+
+  /**
+   * Handles performing the HTTP request to add/remove a like
+   *
+   * Request performs on a 1sec debounce to prevent spammed requests
+   */
+  const handleLikeProcessing = useDebouncedCallback(isLikedDebounced => {
+    if (isLikedDebounced) {
+      createLike(postId, PostItemType.POST, accessToken).catch(err => {
+        console.error('failed to create like: ' + err);
+      });
+
+      return;
+    }
+
+    removePostLike(postId, accessToken).catch(err => {
+      console.error('failed to remove like: ' + err);
+    });
+  }, 1000);
 
   /**
    * Returns true if this post is an album
    */
   const isAlbum = React.useCallback(() => {
-    return content.length > 1;
-  }, [content.length]);
+    return content && content.length > 0;
+  }, [content]);
 
   /**
    * Callback when the post like button is pressed
    */
-  const onLike = React.useCallback(() => {
-    console.log('onLike called');
-  }, []);
+  const onLike = React.useCallback(async () => {
+    const prev = isLiked;
+    setLiked(!prev);
+    setLikes(prevState => (prev ? prevState - 1 : prevState + 1));
+    handleLikeProcessing(!prev);
+  }, [handleLikeProcessing, isLiked]);
 
   /**
    * Callback when the post comment button is pressed
@@ -105,52 +142,61 @@ export const PostItem = ({
 
   return (
     <Box w={'100%'} h={width * 1.33} borderRadius={12} {...style}>
-      <PostAuthorDetails
-        username={'john'}
-        avatarUri={'https://source.unsplash.com/random/?strong,man'}
-        location={location}
-        onPress={onAuthorPress}
-      />
+      <Pressable onPress={() => console.log('pressed')}>
+        <PostAuthorDetails
+          username={username}
+          avatarUri={'https://source.unsplash.com/random/?strong,man'}
+          location={location}
+          onPress={onAuthorPress}
+        />
 
-      <PostActionStack
-        onLike={onLike}
-        onComment={onComment}
-        onMore={onMore}
-        attributes={{
-          likeCount: attributes?.likeCount,
-          commentCount: attributes?.commentCount,
-          isLiked: attributes?.liked,
-        }}
-      />
+        <PostActionStack
+          onLike={onLike}
+          onComment={onComment}
+          onMore={onMore}
+          attributes={{
+            likeCount: likes,
+            commentCount: attributes?.commentCount,
+            isLiked: isLiked,
+          }}
+        />
 
-      {isAlbum() && (
-        <>
-          <PostScrollIndicator
-            index={index}
-            size={trainingSession ? content.length + 1 : content.length}
-          />
+        {content && isAlbum() && (
+          <>
+            <PostScrollIndicator
+              index={index}
+              size={trainingSession ? content.length + 1 : content.length}
+            />
 
-          <PostCarousel
-            scrollEnabled={scrollEnabled}
+            <PostCarousel
+              scrollEnabled={scrollEnabled}
+              currentPosition={currentPosition}
+              position={{post: position.post, index: index}}
+              content={content}
+              trainingSession={trainingSession}
+              location={location}
+              contentWidth={width}
+              onIndexChange={onIndexChange}
+            />
+          </>
+        )}
+
+        {content && !isAlbum() && (
+          <PostContentWrapper
+            paused={!scrollEnabled}
+            content={content[0]}
             currentPosition={currentPosition}
             position={{post: position.post, index: index}}
-            content={content}
-            trainingSession={trainingSession}
-            location={location}
-            contentWidth={width}
-            onIndexChange={onIndexChange}
           />
-        </>
-      )}
+        )}
 
-      {!isAlbum() && (
-        <PostContentWrapper
-          paused={!scrollEnabled}
-          content={content[0]}
-          currentPosition={currentPosition}
-          position={{post: position.post, index: index}}
-        />
-      )}
+        {trainingSession && (
+          <PostTrainingSessionCard
+            key={trainingSession.id}
+            trainingSession={trainingSession}
+          />
+        )}
+      </Pressable>
     </Box>
   );
 };

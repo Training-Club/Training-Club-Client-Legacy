@@ -1,6 +1,7 @@
 import React from 'react';
 import {View} from 'native-base';
 import StandardLoginInput from '../../organisms/auth/StandardLoginInput';
+import useAccountStore from '../../../store/AccountStore';
 import CloseableHeader from '../../molecules/design/CloseableHeader';
 import {usePushdownContext} from '../../../context/pushdown/PushdownContext';
 import LoadingIndicator from '../../molecules/design/LoadingIndicator';
@@ -9,7 +10,6 @@ import {setRefreshToken} from '../../../data/Account';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated';
-import useAccountStore from '../../../store/AccountStore';
 
 const LoginScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -34,7 +34,7 @@ const LoginScreen = () => {
 
         setRefreshToken(response.refresh_token)
           .then(() => {
-            navigation.navigate('Main', {screen: 'Feed'});
+            navigation.navigate('MainFeed');
             setInitialLoad(false);
           })
           .catch(() => {
@@ -93,7 +93,7 @@ const LoginScreen = () => {
    * Handles navigation towards the forgot password screen
    */
   function onForgotPassword() {
-    navigation.navigate('Auth' as never, {screen: 'ForgotPassword'} as never);
+    console.log('onForgotPassword called');
   }
 
   return (
@@ -116,8 +116,7 @@ const LoginScreen = () => {
         <CloseableHeader
           pageTitle={'Sign in'}
           closeButton={{
-            stackName: 'Auth',
-            screenName: 'Welcome',
+            screenName: 'AuthWelcome',
           }}
         />
 
@@ -130,9 +129,7 @@ const LoginScreen = () => {
           setVisible={setVisible}
           onSubmit={onSubmit}
           onForgotPassword={onForgotPassword}
-          onBack={() =>
-            navigation.navigate('Auth' as never, {screen: 'Welcome'} as never)
-          }
+          onBack={() => navigation.navigate('AuthWelcome')}
         />
       </View>
     </>

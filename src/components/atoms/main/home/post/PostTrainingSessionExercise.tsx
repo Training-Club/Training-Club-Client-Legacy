@@ -20,7 +20,10 @@ export const PostTrainingSessionExercise = ({
   groupedExercise,
 }: IPostTrainingSessionExercise): JSX.Element => {
   const textColor = useColorModeValue('core.text.light', 'core.text.dark');
-  const bgColor = useColorModeValue('white', 'core.backgroundAccent.dark');
+  const bgColor = useColorModeValue(
+    'core.backgroundAccent.light',
+    'core.backgroundAccent.dark',
+  );
 
   const valueStyling = {
     fontWeight: 'semibold',

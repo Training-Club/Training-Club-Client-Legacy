@@ -31,7 +31,8 @@ export const PostTrainingSessionCard = ({
       borderRadius={'12px'}
       bgColor={bgColor}
       p={2}
-      pt={12}>
+      pt={12}
+      mt={8}>
       <PostTrainingSessionTitle
         sessionName={trainingSession.sessionName}
         location={location}
@@ -42,7 +43,7 @@ export const PostTrainingSessionCard = ({
         {groupedExercises &&
           groupedExercises.map(groupedExercise => (
             <PostTrainingSessionExercise
-              key={groupedExercise.name}
+              key={groupedExercise.exercises[0].id}
               groupedExercise={groupedExercise}
             />
           ))}

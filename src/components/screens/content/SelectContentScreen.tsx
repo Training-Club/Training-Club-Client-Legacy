@@ -1,18 +1,19 @@
 import React from 'react';
 import {useNavigation} from '@react-navigation/core';
-import {useContentDraftContext} from '../../../context/content/ContentDraftContext';
-import ImagePicker, {ImageOrVideo} from 'react-native-image-crop-picker';
 import {createDraftContent} from '../../../data/Content';
-import {IContentDraft} from '../../../models/Content';
 import {usePushdownContext} from '../../../context/pushdown/PushdownContext';
-import {Button, Heading, Square, View, Text} from 'native-base';
-import CloseableHeader from '../../molecules/design/CloseableHeader';
 import LoadingIndicator from '../../molecules/design/LoadingIndicator';
+import {IContentDraft} from '../../../models/Content';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import ImagePicker, {ImageOrVideo} from 'react-native-image-crop-picker';
+import useContentDraftStore from '../../../store/ContentDraftStore';
+import {Button, Heading, Square, Text} from 'native-base';
+import {NavigationHeader} from '../../molecules/design/NavigationHeader';
 
 const SelectContentScreen = (): JSX.Element => {
-  const navigation = useNavigation();
+  const setContent = useContentDraftStore(state => state.setContent);
+  const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const [isRedirecting, setRedirecting] = React.useState(false);
-  const {setContent} = useContentDraftContext();
   const {setPushdownConfig} = usePushdownContext();
 
   /**
@@ -43,14 +44,14 @@ const SelectContentScreen = (): JSX.Element => {
         cropperCancelText: undefined,
       });
     } catch (err) {
-      navigation.navigate('Main' as never, {screen: 'Feed'} as never);
+      navigation.navigate('MainFeed');
       return;
     }
 
     try {
       draftData = await createDraftContent(data);
     } catch (err) {
-      navigation.navigate('Main' as never, {screen: 'Feed'} as never);
+      navigation.navigate('MainFeed');
 
       setPushdownConfig({
         title: 'Failed to upload content',
@@ -66,7 +67,7 @@ const SelectContentScreen = (): JSX.Element => {
     setRedirecting(false);
     setContent(draftData);
 
-    navigation.navigate('Content' as never, {screen: 'ContentEdit'} as never);
+    navigation.navigate('ContentEdit');
   }, [navigation, setContent, setPushdownConfig]);
 
   if (isRedirecting) {
@@ -76,12 +77,12 @@ const SelectContentScreen = (): JSX.Element => {
   }
 
   return (
-    <View px={4}>
-      <CloseableHeader
-        pageTitle={'Create Post'}
-        closeButton={{stackName: 'Main', screenName: 'Feed'}}
-      />
-
+    <NavigationHeader
+      title={'Select'}
+      backButton={{
+        text: 'Feed',
+        navigationProps: {screenName: 'MainFeed'},
+      }}>
       <Square
         w={'100%'}
         h={'100%'}
@@ -100,7 +101,7 @@ const SelectContentScreen = (): JSX.Element => {
           Select Images/Videos
         </Button>
       </Square>
-    </View>
+    </NavigationHeader>
   );
 };
 

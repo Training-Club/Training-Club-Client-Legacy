@@ -18,6 +18,7 @@ import {
 
 interface ExerciseState {
   exercises: IExercise[];
+  clearExercises: () => void;
   addSet: (exercise: IExercise) => void;
   duplicateSet: (exercise: IExercise) => void;
   removeSet: (exercise: IExercise) => void;
@@ -47,6 +48,7 @@ interface ExerciseState {
 
 const useExerciseStore = create<ExerciseState>()(set => ({
   exercises: [],
+  clearExercises: () => set(() => ({exercises: []})),
   addSet: e => set(state => ({exercises: [...state.exercises, e]})),
   duplicateSet: e =>
     set(state => ({

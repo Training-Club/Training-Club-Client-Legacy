@@ -164,11 +164,8 @@ const ExerciseAdditionalSearchScreen = ({
     <View>
       <VStack px={spacing} space={spacing}>
         <CloseableHeader
-          pageTitle={`Create ${Capitalize(route.params.variant)}`}
-          closeButton={{
-            stackName: 'Training',
-            screenName: 'CurrentSession',
-          }}
+          pageTitle={`Add Exercise`}
+          closeButton={{screenName: 'TrainingCurrentSession'}}
         />
 
         <InputField

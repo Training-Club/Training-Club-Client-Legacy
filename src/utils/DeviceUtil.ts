@@ -1,4 +1,4 @@
-import {Dimensions} from 'react-native';
+import {Dimensions, Platform} from 'react-native';
 import {getDeviceId} from 'react-native-device-info';
 
 /**
@@ -16,6 +16,10 @@ export function isSmallScreen() {
 
   if (exemptDevices.find(device => device === deviceInfo)) {
     return false;
+  }
+
+  if (Platform.OS === 'android') {
+    return true;
   }
 
   if (width <= 375) {

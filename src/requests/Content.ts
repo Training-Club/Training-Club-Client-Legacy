@@ -1,28 +1,31 @@
-import axios, {AxiosError} from 'axios';
+import axios from 'axios';
 import {PrivacyLevel} from '../models/Privacy';
+import {API_URL} from '../Constants';
 
 import {
+  AddLikeResponse,
   CreatePostResponse,
   FileUploadResponse,
   GetPostsByQueryResponse,
+  RemoveLikeResponse,
 } from './responses/Content';
 
 import {
   ContentType,
   IContentDraft,
   IContentItem,
+  ILike,
   IPost,
   IUploadFile,
   IUploadFileResult,
+  PostItemType,
 } from '../models/Content';
 
-// TODO: Replace with api.trainingclubapp.com
-const url: string = 'http://146.190.2.76:80/v1';
-
 type CreatePostParams = {
+  session?: string;
   location?: string;
   text?: string;
-  content: IContentItem[];
+  content?: IContentItem[];
   tags?: string[];
   privacy?: PrivacyLevel;
   token?: string;
@@ -36,7 +39,7 @@ type CreatePostParams = {
 export async function getPostByID(id: string): Promise<IPost> {
   return new Promise<IPost>(async (resolve, reject) => {
     try {
-      const result = await axios.get<IPost>(`${url}/post/id/${id}`);
+      const result = await axios.get<IPost>(`${API_URL}/post/id/${id}`);
       resolve(result.data);
     } catch (err) {
       reject(err);
@@ -62,7 +65,7 @@ export async function getPostsByQuery(
 
     try {
       const result = await axios.get<GetPostsByQueryResponse>(
-        `${url}/post/search${query}`,
+        `${API_URL}/post/search${query}`,
         {headers: {Authorization: `Bearer ${token}`}},
       );
 
@@ -90,7 +93,7 @@ export async function createPost(
 
     try {
       const result = await axios.post<CreatePostResponse>(
-        `${url}/post/`,
+        `${API_URL}/content/post`,
         {...params},
         {headers: {Authorization: `Bearer ${params.token}`}},
       );
@@ -135,7 +138,7 @@ export async function uploadFiles(
 
     try {
       const result = await axios.post<FileUploadResponse>(
-        `${url}/fileupload/upload`,
+        `${API_URL}/fileupload/upload`,
         formData,
         {
           onUploadProgress: e => console.log(e),
@@ -209,7 +212,7 @@ export async function createPostWithFiles(
 
     try {
       const createResult = await axios.post<CreatePostResponse>(
-        `${url}/content/post`,
+        `${API_URL}/content/post`,
         {
           session: trainingSessionId,
           location: locationId,
@@ -223,9 +226,90 @@ export async function createPostWithFiles(
 
       return resolve(createResult.data);
     } catch (err) {
-      const axiosError = err as AxiosError;
-      console.log(axiosError.response?.data);
       return reject(err);
+    }
+  });
+}
+
+/**
+ * Retrieves a like document matching the provided post ID
+ * attached to the request account ID
+ *
+ * @param postId Post ID to query (can be a post or comment)
+ * @param token Access Token
+ */
+export async function getLike(postId: string, token?: string): Promise<ILike> {
+  return new Promise<ILike>(async (resolve, reject) => {
+    try {
+      // /content/post/id/:postId/liked
+      const result = await axios.get<ILike>(
+        `${API_URL}/content/post/id/${postId}/liked`,
+        {
+          headers: {Authorization: `Bearer ${token}`},
+        },
+      );
+
+      resolve(result.data);
+    } catch (err) {
+      reject(err);
+    }
+  });
+}
+
+/**
+ * Creates a new like entry in the database for the provided
+ * post ID and post type.
+ *
+ * @param postId Post ID to query
+ * @param postType Post type (backend must know if it is a post or comment)
+ * @param token Access Token
+ */
+export async function createLike(
+  postId: string,
+  postType: PostItemType,
+  token?: string,
+): Promise<AddLikeResponse> {
+  return new Promise<AddLikeResponse>(async (resolve, reject) => {
+    try {
+      const result = await axios.post<AddLikeResponse>(
+        `${API_URL}/content/like`,
+        {post: postId, type: postType},
+        {
+          headers: {Authorization: `Bearer ${token}`},
+        },
+      );
+
+      return resolve(result.data);
+    } catch (err) {
+      return reject(err);
+    }
+  });
+}
+
+/**
+ * Removes an existing like entry from the database
+ *
+ * This function will only query against the post collection in the database.
+ *
+ * @param postId Post ID to query
+ * @param token Access Token
+ */
+export async function removePostLike(
+  postId: string,
+  token?: string,
+): Promise<RemoveLikeResponse> {
+  return new Promise<RemoveLikeResponse>(async (resolve, reject) => {
+    try {
+      const result = await axios.delete<RemoveLikeResponse>(
+        `${API_URL}/content/like/post/${postId}`,
+        {
+          headers: {Authorization: `Bearer ${token}`},
+        },
+      );
+
+      return resolve(result);
+    } catch (err) {
+      reject(err);
     }
   });
 }

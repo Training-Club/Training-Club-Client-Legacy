@@ -27,7 +27,7 @@ export const PostActionStack = ({
   };
 
   return (
-    <VStack zIndex={1} space={4} position={'absolute'} bottom={2} right={2}>
+    <VStack zIndex={1} position={'absolute'} bottom={2} right={2} space={4}>
       <Pressable onPress={onLike}>
         <Square>
           <Icon
@@ -39,9 +39,7 @@ export const PostActionStack = ({
             size={6}
           />
 
-          {attributes && attributes.likeCount && (
-            <Text {...textStyling}>{attributes.likeCount}</Text>
-          )}
+          <Text {...textStyling}>{attributes?.likeCount}</Text>
         </Square>
       </Pressable>
 
@@ -54,9 +52,7 @@ export const PostActionStack = ({
             size={6}
           />
 
-          {attributes && attributes.commentCount && (
-            <Text {...textStyling}>{attributes.commentCount}</Text>
-          )}
+          <Text {...textStyling}>{attributes?.commentCount}</Text>
         </Square>
       </Pressable>
 

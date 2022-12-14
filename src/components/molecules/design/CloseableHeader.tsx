@@ -1,17 +1,24 @@
 import React from 'react';
-import {Box, Heading, IconButton, useColorModeValue} from 'native-base';
+import {default as MaterialIcons} from 'react-native-vector-icons/MaterialIcons';
 import {default as MaterialCommunityIcons} from 'react-native-vector-icons/MaterialCommunityIcons';
 import {ColorType} from 'native-base/lib/typescript/components/types';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/core';
+import {Box, Heading, HStack, IconButton, useColorModeValue} from 'native-base';
+
+export enum CloseButtonPosition {
+  LEFT,
+  RIGHT,
+}
 
 export interface ICloseableHeaderProps {
   pageTitle?: string;
   textColor?: ColorType;
   closeButton?: {
+    position?: CloseButtonPosition;
     backgroundColor?: ColorType;
     pressedBackgroundColor?: ColorType;
     iconColor?: ColorType;
-    stackName: string;
     screenName: string;
   };
 }
@@ -21,13 +28,15 @@ const CloseableHeader = ({
   textColor,
   closeButton,
 }: ICloseableHeaderProps): JSX.Element => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
   const title = pageTitle ?? 'Page Title';
-  const closeButtonStackName = closeButton?.stackName ?? 'Main';
-  const closeButtonScreenName = closeButton?.screenName ?? 'Home';
+  const closeButtonScreenName = closeButton?.screenName ?? 'MainFeed';
 
-  const defaultTextColor = useColorModeValue('black', 'white');
+  const defaultTextColor = useColorModeValue(
+    'core.text.light',
+    'core.text.dark',
+  );
 
   const defaultCloseButtonBackgroundColor = useColorModeValue(
     'apple.gray.100',
@@ -44,6 +53,48 @@ const CloseableHeader = ({
     'apple.gray.100',
   );
 
+  if (closeButton?.position === CloseButtonPosition.LEFT) {
+    return (
+      <HStack testID={'closeable-header'} w={'100%'} mt={4} zIndex={10}>
+        {closeButton && (
+          <IconButton
+            testID={'closeable-header-btn'}
+            position={'absolute'}
+            top={1}
+            left={0}
+            size={'sm'}
+            rounded={'full'}
+            variant={'solid'}
+            bgColor={
+              closeButton.backgroundColor ?? defaultCloseButtonBackgroundColor
+            }
+            _pressed={{
+              bgColor:
+                closeButton.pressedBackgroundColor ??
+                defaultCloseButtonPressedBackgroundColor,
+            }}
+            _icon={{
+              as: MaterialIcons,
+              name: 'arrow-back',
+              color: closeButton.iconColor ?? defaultCloseButtonIconColor,
+            }}
+            onPress={() => {
+              navigation.navigate(closeButtonScreenName);
+            }}
+          />
+        )}
+
+        <Heading
+          size={'lg'}
+          color={textColor ?? defaultTextColor}
+          ml={12}
+          mt={1}>
+          {title}
+        </Heading>
+      </HStack>
+    );
+  }
+
   return (
     <Box testID={'closeable-header'} w={'100%'} mt={4} zIndex={10}>
       <Heading size={'xl'} color={textColor ?? defaultTextColor}>
@@ -54,6 +105,7 @@ const CloseableHeader = ({
         <IconButton
           testID={'closeable-header-btn'}
           position={'absolute'}
+          top={1}
           right={0}
           size={'sm'}
           rounded={'full'}
@@ -72,10 +124,7 @@ const CloseableHeader = ({
             color: closeButton.iconColor ?? defaultCloseButtonIconColor,
           }}
           onPress={() => {
-            navigation.navigate(
-              closeButtonStackName as never,
-              {screen: closeButtonScreenName} as never,
-            );
+            navigation.navigate(closeButtonScreenName);
           }}
         />
       )}
@@ -83,4 +132,4 @@ const CloseableHeader = ({
   );
 };
 
-export default React.memo(CloseableHeader);
+export default CloseableHeader;

@@ -11,6 +11,7 @@ import {createExerciseInfo} from '../../../requests/ExerciseInfo';
 import {useNavigation} from '@react-navigation/core';
 import {nanoid} from 'nanoid/non-secure';
 import {MeasurementSystem} from '../../../models/Measurement';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
 import {
   ExerciseEquipment,
@@ -21,7 +22,7 @@ import {
 import {Box, Button, ScrollView, View, useColorModeValue} from 'native-base';
 
 const CreateExerciseScreen = (): JSX.Element => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const accessToken = useAccountStore(state => state.accessToken);
   const addSet = useExerciseStore(state => state.addSet);
   const {setPushdownConfig} = usePushdownContext();
@@ -117,10 +118,7 @@ const CreateExerciseScreen = (): JSX.Element => {
           },
         });
 
-        navigation.navigate(
-          'Training' as never,
-          {screen: 'CurrentSession'} as never,
-        );
+        navigation.navigate('TrainingCurrentSession');
 
         setPushdownConfig({
           title: 'Exercise Created',
@@ -154,10 +152,7 @@ const CreateExerciseScreen = (): JSX.Element => {
     <View px={spacing}>
       <CloseableHeader
         pageTitle={'Create Exercise'}
-        closeButton={{
-          stackName: 'Training',
-          screenName: 'ExerciseSearch',
-        }}
+        closeButton={{screenName: 'TrainingExerciseSearch'}}
       />
 
       <Box w={'100%'} mt={2} pb={4}>

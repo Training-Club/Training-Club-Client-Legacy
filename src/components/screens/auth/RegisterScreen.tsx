@@ -213,10 +213,7 @@ const RegisterScreen = () => {
     <View px={spacing}>
       <CloseableHeader
         pageTitle={'Join Training Club'}
-        closeButton={{
-          stackName: 'Auth',
-          screenName: 'Welcome',
-        }}
+        closeButton={{screenName: 'AuthWelcome'}}
       />
 
       {submitting && (

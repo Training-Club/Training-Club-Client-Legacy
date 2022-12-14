@@ -2,17 +2,21 @@ import React from 'react';
 import {IContentDraft} from '../../../models/Content';
 import {CropRect} from 'react-native-image-crop-picker';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {useContentDraftContext} from '../../../context/content/ContentDraftContext';
 import {useNavigation} from '@react-navigation/native';
 import ContentEditorCard from '../../atoms/content/ContentEditorCard';
-import CloseableHeader from '../../molecules/design/CloseableHeader';
-import {Box, Button, HStack, ScrollView, View} from 'native-base';
+import {NavigationHeader} from '../../molecules/design/NavigationHeader';
+import useContentDraftStore from '../../../store/ContentDraftStore';
+import {HStack, ScrollView} from 'native-base';
 
 const EditContentScreen = (): JSX.Element => {
-  const navigation = useNavigation<NativeStackNavigationProp<any>>();
+  const content = useContentDraftStore(state => state.content);
+  const selectedContent = useContentDraftStore(state => state.selectedContent);
+  const updateContent = useContentDraftStore(state => state.updateContent);
+  const setSelectedContent = useContentDraftStore(
+    state => state.setSelectedContent,
+  );
 
-  const {content, selectedContent, setSelectedContent, updateContent} =
-    useContentDraftContext();
+  const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
   /**
    * Handles toggling the selected content value
@@ -56,18 +60,19 @@ const EditContentScreen = (): JSX.Element => {
   }, [content]);
 
   return (
-    <View>
-      <Box px={4}>
-        <CloseableHeader
-          pageTitle={'Edit Post'}
-          closeButton={{stackName: 'Content', screenName: 'ContentSelect'}}
-        />
-      </Box>
-
+    <NavigationHeader
+      title={'Edit'}
+      actionButton={{
+        text: 'Details',
+        navigationProps: {screenName: 'ContentDetails'},
+      }}
+      backButton={{
+        text: 'Select',
+        navigationProps: {screenName: 'ContentSelect'},
+      }}>
       <ScrollView
         horizontal={true}
-        showsHorizontalScrollIndicator={false}
-        mt={4}>
+        showsHorizontalScrollIndicator={false}>
         <HStack w={'100%'} px={4} space={2}>
           {getContentSorted().map(draft => {
             return (
@@ -81,18 +86,7 @@ const EditContentScreen = (): JSX.Element => {
           })}
         </HStack>
       </ScrollView>
-
-      <Box w={'100%'} position={'absolute'} bottom={0} left={0} mb={8} px={4}>
-        <Button
-          variant={'info'}
-          _text={{color: 'white'}}
-          onPress={() =>
-            navigation.navigate('Content', {screen: 'ContentDetails'})
-          }>
-          Complete
-        </Button>
-      </Box>
-    </View>
+    </NavigationHeader>
   );
 };
 

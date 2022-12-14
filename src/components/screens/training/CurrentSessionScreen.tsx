@@ -49,8 +49,7 @@ const CurrentSessionScreen = (): JSX.Element => {
           setText={handleSessionNameChange}
           options={{maxLength: 24}}
           closeButton={{
-            stackName: 'Main',
-            screenName: 'Home',
+            screenName: 'MainFeed',
           }}
         />
       </Box>

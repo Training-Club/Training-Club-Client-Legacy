@@ -72,7 +72,7 @@ const ExerciseCardInput = ({
 
   const swipeListThreshold = options?.swipeListThreshold ?? -100.0;
   const springConfig = React.useMemo(() => {
-    return {stiffness: 100, overshootClamping: true, mass: 0.8};
+    return {stiffness: 200, overshootClamping: true, mass: 0.8};
   }, []);
 
   /**

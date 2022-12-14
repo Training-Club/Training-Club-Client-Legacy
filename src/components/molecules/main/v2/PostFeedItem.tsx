@@ -9,6 +9,7 @@ import {PostActionStack} from '../post/PostActionStack';
 import {PostContentAudioControl} from '../../../atoms/main/home/post/PostContentAudioControl';
 import {PostScrollIndicator} from '../post/PostScrollIndicator';
 import {getCurrentContentCarouselIndex} from '../../../../data/Content';
+import {ExerciseSummaryCard} from '../../training/ExerciseSummaryCard';
 import FastImage from 'react-native-fast-image';
 import {Dimensions} from 'react-native';
 import {HStack, Pressable, ScrollView, View} from 'native-base';
@@ -111,6 +112,10 @@ const PostFeedItem = ({
 
       {data.content && data.content.length > 1 && (
         <PostScrollIndicator index={carouselIndex} size={data.content.length} />
+      )}
+
+      {data.trainingSession && (
+        <ExerciseSummaryCard session={data.trainingSession} />
       )}
 
       {data.content && data.content.length > 0 && (

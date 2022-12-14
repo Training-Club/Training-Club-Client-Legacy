@@ -1,6 +1,4 @@
 import React from 'react';
-import {StackNavigationOptions} from '@react-navigation/stack';
-import {ContentType, IContentItem} from './models/Content';
 import useAccountStore from './store/AccountStore';
 import FeedScreen from './components/screens/main/FeedScreen';
 import RegisterScreen from './components/screens/auth/RegisterScreen';
@@ -18,12 +16,22 @@ import SelectContentScreen from './components/screens/content/SelectContentScree
 import EditContentScreen from './components/screens/content/EditContentScreen';
 import DetailsContentScreen from './components/screens/content/DetailsContentScreen';
 import {PostDetailsScreen} from './components/screens/main/PostDetailsScreen';
-import {createSharedElementStackNavigator, SharedElementsConfig,} from 'react-navigation-shared-element';
+
+import {
+  createSharedElementStackNavigator,
+  SharedElementsConfig,
+} from 'react-navigation-shared-element';
+
+import {StackNavigationOptions} from '@react-navigation/stack';
+import {ContentType, IContentItem} from './models/Content';
+
+import {StatusBar, useColorMode} from 'native-base';
 
 const Stack = createSharedElementStackNavigator();
 
 const Navigation = () => {
   const account = useAccountStore(state => state.account);
+  const {colorMode} = useColorMode();
 
   const globalScreenOptions: StackNavigationOptions = {
     headerShown: false,
@@ -39,151 +47,158 @@ const Navigation = () => {
   });
 
   return (
-    <Stack.Navigator
-      initialRouteName={account ? 'MainFeed' : 'AuthWelcome'}
-      screenOptions={{cardStyleInterpolator: forFade}}>
-      {account ? (
-        <>
-          <Stack.Screen
-            name={'MainFeed'}
-            component={FeedScreen}
-            options={{...globalScreenOptions}}
-          />
+    <>
+      <StatusBar
+        animated={true}
+        barStyle={`${colorMode === 'light' ? 'dark' : 'light'}-content`}
+      />
 
-          <Stack.Screen
-            name={'MainDiscovery'}
-            component={DiscoveryScreen}
-            sharedElements={() => {
-              return [
-                {
-                  id: 'image-test',
-                  animation: 'fade',
-                  resize: 'clip',
-                },
-              ];
-            }}
-            options={{...globalScreenOptions}}
-          />
+      <Stack.Navigator
+        initialRouteName={account ? 'MainFeed' : 'AuthWelcome'}
+        screenOptions={{cardStyleInterpolator: forFade}}>
+        {account ? (
+          <>
+            <Stack.Screen
+              name={'MainFeed'}
+              component={FeedScreen}
+              options={{...globalScreenOptions}}
+            />
 
-          <Stack.Screen
-            name={'MainAnalytics'}
-            component={AnalyticsScreen}
-            sharedElements={() => {
-              return [
-                {
-                  id: 'image-test',
-                  animation: 'move',
-                  resize: 'clip',
-                },
-              ];
-            }}
-            options={{...globalScreenOptions}}
-          />
+            <Stack.Screen
+              name={'MainDiscovery'}
+              component={DiscoveryScreen}
+              sharedElements={() => {
+                return [
+                  {
+                    id: 'image-test',
+                    animation: 'fade',
+                    resize: 'clip',
+                  },
+                ];
+              }}
+              options={{...globalScreenOptions}}
+            />
 
-          <Stack.Screen
-            name={'MainProfile'}
-            component={ProfileScreen}
-            options={{...globalScreenOptions}}
-          />
-
-          <Stack.Screen
-            name={'MainPostDetails'}
-            component={PostDetailsScreen}
-            options={{...globalScreenOptions}}
-            sharedElements={route => {
-              const {data} = route.params;
-              let result: SharedElementsConfig = [];
-
-              if (data && data.content) {
-                data.content.forEach((entry: IContentItem, index: number) => {
-                  result.push({
-                    id: `post-item-${data.id}-${index}`,
+            <Stack.Screen
+              name={'MainAnalytics'}
+              component={AnalyticsScreen}
+              sharedElements={() => {
+                return [
+                  {
+                    id: 'image-test',
                     animation: 'move',
-                  });
+                    resize: 'clip',
+                  },
+                ];
+              }}
+              options={{...globalScreenOptions}}
+            />
 
-                  if (entry.type === ContentType.VIDEO) {
+            <Stack.Screen
+              name={'MainProfile'}
+              component={ProfileScreen}
+              options={{...globalScreenOptions}}
+            />
+
+            <Stack.Screen
+              name={'MainPostDetails'}
+              component={PostDetailsScreen}
+              options={{...globalScreenOptions}}
+              sharedElements={route => {
+                const {data} = route.params;
+                let result: SharedElementsConfig = [];
+
+                if (data && data.content) {
+                  data.content.forEach((entry: IContentItem, index: number) => {
                     result.push({
-                      id: `post-item-volume-controller-${data.id}-${index}`,
-                      animation: 'fade-in',
+                      id: `post-item-${data.id}-${index}`,
+                      animation: 'move',
                     });
-                  }
-                });
-              }
 
-              return result;
-            }}
-          />
+                    if (entry.type === ContentType.VIDEO) {
+                      result.push({
+                        id: `post-item-volume-controller-${data.id}-${index}`,
+                        animation: 'fade-in',
+                      });
+                    }
+                  });
+                }
 
-          <Stack.Screen
-            name={'ContentSelect'}
-            component={SelectContentScreen}
-            options={globalScreenOptions}
-          />
+                return result;
+              }}
+            />
 
-          <Stack.Screen
-            name={'ContentEdit'}
-            component={EditContentScreen}
-            options={globalScreenOptions}
-          />
+            <Stack.Screen
+              name={'ContentSelect'}
+              component={SelectContentScreen}
+              options={globalScreenOptions}
+            />
 
-          <Stack.Screen
-            name={'ContentDetails'}
-            component={DetailsContentScreen}
-            options={globalScreenOptions}
-          />
+            <Stack.Screen
+              name={'ContentEdit'}
+              component={EditContentScreen}
+              options={globalScreenOptions}
+            />
 
-          <Stack.Screen
-            name={'TrainingCurrentSession'}
-            component={CurrentSessionScreen}
-            options={globalScreenOptions}
-          />
+            <Stack.Screen
+              name={'ContentDetails'}
+              component={DetailsContentScreen}
+              options={globalScreenOptions}
+            />
 
-          <Stack.Screen
-            name={'TrainingCurrentSessionSummary'}
-            component={CurrentSessionSummaryScreen}
-            options={globalScreenOptions}
-          />
+            <Stack.Screen
+              name={'TrainingCurrentSession'}
+              component={CurrentSessionScreen}
+              options={globalScreenOptions}
+            />
 
-          <Stack.Screen
-            name={'TrainingCreateExerciseScreen'}
-            component={CreateExerciseScreen}
-            options={globalScreenOptions}
-          />
+            <Stack.Screen
+              name={'TrainingCurrentSessionSummary'}
+              component={CurrentSessionSummaryScreen}
+              options={globalScreenOptions}
+            />
 
-          <Stack.Screen
-            name={'TrainingExerciseSearch'}
-            component={ExerciseSearchScreen}
-            options={globalScreenOptions}
-          />
+            <Stack.Screen
+              name={'TrainingCreateExerciseScreen'}
+              component={CreateExerciseScreen}
+              options={globalScreenOptions}
+            />
 
-          <Stack.Screen
-            name={'TrainingAdditionalExerciseSearch'}
-            component={ExerciseAdditionalSearchScreen}
-            options={globalScreenOptions}
-          />
-        </>
-      ) : (
-        <>
-          <Stack.Screen
-            name={'AuthWelcome'}
-            component={WelcomeScreen}
-            options={globalScreenOptions}
-          />
+            <Stack.Screen
+              name={'TrainingExerciseSearch'}
+              component={ExerciseSearchScreen}
+              options={globalScreenOptions}
+            />
 
-          <Stack.Screen
-            name={'AuthLogin'}
-            component={LoginScreen}
-            options={globalScreenOptions}
-          />
+            <Stack.Screen
+              name={'TrainingAdditionalExerciseSearch'}
+              component={ExerciseAdditionalSearchScreen}
+              options={globalScreenOptions}
+            />
+          </>
+        ) : (
+          <>
+            <Stack.Screen
+              name={'AuthWelcome'}
+              component={WelcomeScreen}
+              options={globalScreenOptions}
+            />
 
-          <Stack.Screen
-            name={'AuthRegister'}
-            component={RegisterScreen}
-            options={globalScreenOptions}
-          />
-        </>
-      )}
-    </Stack.Navigator>
+            <Stack.Screen
+              name={'AuthLogin'}
+              component={LoginScreen}
+              options={globalScreenOptions}
+            />
+
+            <Stack.Screen
+              name={'AuthRegister'}
+              component={RegisterScreen}
+              options={globalScreenOptions}
+            />
+          </>
+        )}
+      </Stack.Navigator>
+    </>
   );
 };
 

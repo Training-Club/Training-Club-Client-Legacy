@@ -1,13 +1,13 @@
 import React from 'react';
+import {Dimensions} from 'react-native';
+import FastImage from 'react-native-fast-image';
+import {default as MaterialIcons} from 'react-native-vector-icons/MaterialIcons';
 import {RouteProp, useNavigation} from '@react-navigation/native';
 import {ContentType, IFeedData} from '../../../models/Content';
 import {SharedElement} from 'react-navigation-shared-element';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {ILocation, LocationType} from '../../../models/Location';
 import Animated, {FadeIn} from 'react-native-reanimated';
-import {Dimensions} from 'react-native';
-import FastImage from 'react-native-fast-image';
-import {default as MaterialIcons} from 'react-native-vector-icons/MaterialIcons';
 import {PostContentAudioControl} from '../../atoms/main/home/post/PostContentAudioControl';
 import {isSmallScreen} from '../../../utils/DeviceUtil';
 import {ExpandedPostAuthorDetails} from '../../atoms/main/home/post/details/ExpandedPostAuthorDetails';
@@ -16,6 +16,8 @@ import {ExpandedPostActionStack} from '../../atoms/main/home/post/details/Expand
 import {getMockExerciseData} from '../../../data/Training';
 import {ExerciseSummaryCard} from '../../molecules/training/ExerciseSummaryCard';
 import {getCurrentContentCarouselIndex} from '../../../data/Content';
+import {PostScrollIndicator} from '../../molecules/main/post/PostScrollIndicator';
+import {PostVideoWrapper} from '../../atoms/main/home/post/PostVideoWrapper';
 
 import {
   ExerciseInfo,
@@ -37,8 +39,6 @@ import {
   Box,
   useColorModeValue,
 } from 'native-base';
-import {PostScrollIndicator} from '../../molecules/main/post/PostScrollIndicator';
-import {PostVideoWrapper} from '../../atoms/main/home/post/PostVideoWrapper';
 
 type PostDetailsScreenProps = {
   route: RouteProp<{params: {data: IFeedData}}, 'params'>;
@@ -150,7 +150,6 @@ export const PostDetailsScreen = ({route}: PostDetailsScreenProps) => {
       const currentPage = getCurrentPage(scrollPos);
 
       if (currentPage !== carouselIndex) {
-        console.log(currentPage);
         setCarouselIndex(currentPage);
       }
     },
@@ -225,7 +224,7 @@ export const PostDetailsScreen = ({route}: PostDetailsScreenProps) => {
               }
 
               return (
-                <Box w={'100%'} h={'100%'}>
+                <Box w={cardWidth} h={cardHeight}>
                   <SharedElement
                     style={{
                       position: 'absolute',
@@ -247,7 +246,7 @@ export const PostDetailsScreen = ({route}: PostDetailsScreenProps) => {
                       uri={entry.destination}
                       styleProps={{
                         width: cardWidth ?? '100%',
-                        height: '100%',
+                        height: cardHeight ?? '100%',
                       }}
                     />
                   </SharedElement>

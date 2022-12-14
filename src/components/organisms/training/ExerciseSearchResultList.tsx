@@ -1,5 +1,6 @@
 import React from 'react';
 import {ExerciseInfo} from '../../../models/Training';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import ExerciseSearchResult from '../../molecules/training/ExerciseSearchResult';
 import {default as MaterialIcons} from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation} from '@react-navigation/core';
@@ -11,8 +12,8 @@ import {
   Flex,
   Icon,
   ScrollView,
-  useColorModeValue,
   View,
+  useColorModeValue,
 } from 'native-base';
 
 interface IExerciseSearchResultListProps {
@@ -28,7 +29,7 @@ const ExerciseSearchResultList = ({
   onPress,
   options,
 }: IExerciseSearchResultListProps): JSX.Element => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const avatarColor = useColorModeValue('apple.blue.light', 'apple.red.dark');
   const textColor = useColorModeValue('black', 'white');
 
@@ -55,10 +56,7 @@ const ExerciseSearchResultList = ({
   };
 
   const handleCreateNewContent = React.useCallback(() => {
-    navigation.navigate(
-      'Training' as never,
-      {screen: 'CreateExercise'} as never,
-    );
+    navigation.navigate('TrainingCreateExercise');
   }, [navigation]);
 
   return (

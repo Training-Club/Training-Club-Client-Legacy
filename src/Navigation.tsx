@@ -159,7 +159,7 @@ const Navigation = () => {
             />
 
             <Stack.Screen
-              name={'TrainingCreateExerciseScreen'}
+              name={'TrainingCreateExercise'}
               component={CreateExerciseScreen}
               options={globalScreenOptions}
             />

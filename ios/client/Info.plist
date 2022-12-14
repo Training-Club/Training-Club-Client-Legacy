@@ -21,7 +21,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>37</string>
+	<string>41</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -41,6 +41,8 @@
 	<string>Training Club requires access to your additions to share content</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Training Club requires access to your camera roll to share content</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Training Club requires access to your camera to enable all client features</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>fonts/Ionicons.ttf</string>

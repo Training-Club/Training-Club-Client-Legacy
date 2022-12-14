@@ -14,9 +14,9 @@ import TogglePill from '../../atoms/design/TogglePill';
 import InputField from '../../atoms/design/InputField';
 import ExerciseSearchResultList from '../../organisms/training/ExerciseSearchResultList';
 import useExerciseStore from '../../../store/ExerciseStore';
+import useAccountStore from '../../../store/AccountStore';
 import {default as MaterialIcons} from 'react-native-vector-icons/MaterialIcons';
 import {Box, Icon, View, VStack} from 'native-base';
-import useAccountStore from '../../../store/AccountStore';
 
 const ExerciseSearchScreen = (): JSX.Element => {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();

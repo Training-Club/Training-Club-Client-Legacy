@@ -189,12 +189,14 @@ export const PostDetailsScreen = ({route}: PostDetailsScreenProps) => {
         showsVerticalScrollIndicator={false}
         overScrollMode={'never'}
         contentContainerStyle={{paddingBottom: 128}}>
-        <Box zIndex={2} position={'absolute'} top={cardHeight} w={'100%'}>
-          <PostScrollIndicator
-            index={carouselIndex}
-            size={data.content?.length ?? 0}
-          />
-        </Box>
+        {data.content && data.content.length > 1 && (
+          <Box zIndex={2} position={'absolute'} top={cardHeight} w={'100%'}>
+            <PostScrollIndicator
+              index={carouselIndex - 1}
+              size={data.content?.length ?? 0}
+            />
+          </Box>
+        )}
 
         <ScrollView
           scrollEnabled={data.content && data.content.length > 1}

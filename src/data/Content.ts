@@ -128,7 +128,7 @@ export function getCurrentContentCarouselIndex(
   cardGap: number,
 ): number {
   for (let i = 0; i < contentSize; i++) {
-    const calculatedSize = cardWidth * i * cardGap;
+    const calculatedSize = cardWidth * i + cardGap * i;
 
     if (x <= calculatedSize) {
       return i + 1;

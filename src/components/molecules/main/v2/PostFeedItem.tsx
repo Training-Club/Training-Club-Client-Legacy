@@ -111,7 +111,10 @@ const PostFeedItem = ({
       />
 
       {data.content && data.content.length > 1 && (
-        <PostScrollIndicator index={carouselIndex} size={data.content.length} />
+        <PostScrollIndicator
+          index={carouselIndex - 1}
+          size={data.content.length}
+        />
       )}
 
       {data.trainingSession && (

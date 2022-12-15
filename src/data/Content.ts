@@ -95,7 +95,9 @@ export async function encodeVideoFile(inputPath: string): Promise<string> {
     await RNFS.mkdir(outputPath);
 
     const session = await FFmpegKit.execute(
-      `-i ${inputPath} -c:v mpeg4 ${outputPath + outputFile}`,
+      `-i ${inputPath} -c:v copy -c:a copy ${
+        outputPath + outputFile
+      }`,
     );
 
     const returnCode = await session.getReturnCode();
